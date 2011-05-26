@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldapConfiguration>
+  <connectionInfo>
+    <searchBase>ou=system</searchBase>
+    <systemUsername>@ldap.bind.dn@</systemUsername>
+	<!-- nexus 1.8 uses a clear password, 1.9.x won't -->
+    <systemPassword>@ldap.bind.password@</systemPassword>
+    <authScheme>simple</authScheme>
+    <protocol>ldap</protocol>
+    <host>localhost</host>
+    <port>@ldap.port@</port>
+  </connectionInfo>
+  <userAndGroupConfig>
+    <emailAddressAttribute>mail</emailAddressAttribute>
+    <ldapGroupsAsRoles>true</ldapGroupsAsRoles>
+    <groupBaseDn>ou=nexus,ou=groups</groupBaseDn>
+    <groupIdAttribute>cn</groupIdAttribute>
+    <groupMemberAttribute>uniqueMember</groupMemberAttribute>
+    <groupMemberFormat>uid=${username},@ldap.user.base@</groupMemberFormat>
+    <groupObjectClass>groupOfUniqueNames</groupObjectClass>
+    <userPasswordAttribute>userPassword</userPasswordAttribute>
+    <userIdAttribute>uid</userIdAttribute>
+    <userObjectClass>inetOrgPerson</userObjectClass>
+    <userBaseDn>ou=users</userBaseDn>
+    <userRealNameAttribute>cn</userRealNameAttribute>
+  </userAndGroupConfig>
+</ldapConfiguration>

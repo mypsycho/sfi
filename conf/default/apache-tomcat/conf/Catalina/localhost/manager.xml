@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context antiResourceLocking="false" privileged="true" >
+
+	<Realm className="org.apache.catalina.realm.JNDIRealm" debug="99"
+		connectionName="@ldap.bind.dn@"
+		connectionPassword="@ldap.bind.password@"
+		connectionURL="ldap://localhost:@ldap.port@"
+		userPattern="uid={0},@ldap.user.base@"
+        roleBase="ou=tomcat,ou=groups,ou=system"
+        roleName="cn"
+        roleSearch="(uniqueMember={0})"
+	/>
+
+</Context>

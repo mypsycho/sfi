@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context antiJARLocking="true">
+	<Environment name="port" value="@ldap.port@" type="java.lang.Integer" />
+	<Environment name="data" value="@basedir.java@/deploy/@directory.install.tofile@/data" type="java.lang.String" />
+</Context>

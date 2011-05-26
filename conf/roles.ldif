@@ -1,0 +1,74 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License niat
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# At least 1 uniqueMember is required in group.
+# we choose the admin
+
+# Define roles of "tomcat" : predefined 
+dn: ou=tomcat,ou=groups,ou=system
+objectClass: organizationalUnit
+ou: tomcat
+
+dn: cn=manager,ou=tomcat,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: manager
+uniqueMember: uid=admin,ou=system
+
+dn: cn=webdav,ou=tomcat,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: webdav
+uniqueMember: uid=admin,ou=system
+
+
+# Define roles of "jenkins" : mapping
+dn: ou=jenkins,ou=groups,ou=system
+objectClass: organizationalUnit
+ou: jenkins
+
+dn: cn=manager,ou=jenkins,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: manager
+uniqueMember: uid=admin,ou=system
+
+# Define roles of "nexus" : mapping
+dn: ou=nexus,ou=groups,ou=system
+objectClass: organizationalUnit
+ou: nexus
+
+dn: cn=admin,ou=nexus,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: manager
+uniqueMember: uid=admin,ou=system
+
+dn: cn=deployment,ou=nexus,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: manager
+uniqueMember: uid=admin,ou=system
+
+dn: cn=developer,ou=nexus,ou=groups,ou=system
+objectClass: groupOfUniqueNames
+cn: manager
+uniqueMember: uid=admin,ou=system
+
+# Define roles of "sonar" : none
+
+# Define roles of "redmine" : none
+
+#Note# correct field
+#dn: ${dn}
+#changetype: modify
+#replace: ${field}
+#cn: ${value}
+

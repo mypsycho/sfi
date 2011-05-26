@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Sonar-Execution" basedir="../.." >
+
+    <property name="sfi.dataBase.exec" value="${sfi.dataBase.name}.ant" />
+	<import file="${sfi.basedir}/bin/modules/${sfi.dataBase.exec}" />
+	
+	<target name="init" >
+		<createSchema schema="${sfi.sonar.db.user}" password="${sfi.sonar.db.password}" /> 
+	</target>
+		
+	<!-- We use script command, not java call to have the environment from setenv -->
+	<target name="startup">
+		<property name="sonar.plugin.path" value="org/codehaus/sonar/runtime" />
+		<!-- remove public runtime configuration -->
+	    <delete dir="${deploy.dir}/nexus/storage/sonar/${sonar.plugin.path}" />
+		<!-- remove local runtime configuration -->
+	    <delete dir="${deploy.dir}/apache-maven/localRepository/${sonar.plugin.path}" />
+	</target>
+
+    <!-- We use script command, not java call to have the environment from setenv -->
+	<target name="letmeadmin"> <!-- test qualityApp.letmeadmin -->
+		<echo>ldap plugin of sonar locks administrators out</echo>
+		<echo>Define sonar.admin.uid in conf/default.properties</echo>
+		<echo>type: test qualityTool.letmeadmin </echo>
+	    <input addproperty="sfi.sonar.admin.uid" >Enter administrator id</input>
+		<sqlScript schema="${sfi.sonar.db.user}" >
+		   <file file="${ant.file.Sonar-Execution}/../sonar-letmeadmin.sql" />
+		</sqlScript>
+	</target>
+
+</project>

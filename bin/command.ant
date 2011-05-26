@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Software-Factoy-Commands" >
+
+
+	
+	<macrodef name="nativeExec" > <!-- Macro is required to have a recursive interpretation of properties -->
+		<attribute name="command" />
+		<sequential>
+			<antcall target="module.${module.exec[@{command}]}" />
+		</sequential>
+	</macrodef>
+    
+    <target name="{-}assertModule" unless="module.name" >
+        <echo>Module '${module.id}' is not declared. Defined modules are: </echo>
+	  <echoproperties>
+	    <propertyset>
+	      <propertyref regex="^sfi\.([a-zA-Z]+)\.name$$"/>
+		  <regexpmapper from="^sfi\.([a-zA-Z]+)\.name$$" to="\1"/>
+	    </propertyset>
+		
+
+	  </echoproperties>
+		<fail>Unexpected module id</fail>
+        <!-- property name="module.exec[${module.command}]" "module.delegate" -->
+    </target>
+    
+	<target name="module.nativeExec" depends="{-}assertModule" if="module.exec[${module.command}]" >
+		<nativeExec command="${module.command}" />
+	</target>
+
+	<target name="module.exec" depends="module.nativeExec" unless="module.exec[${module.command}]" >
+
+	    <!-- antCall target="module.delegate" -->
+		<!-- module.exec est appele depuis bin/{temp}/{module} -->
+		<property name="module.exec" value="${module.name}.ant" /> <!-- default value -->    
+		<ant antfile="${sfi.basedir}/bin/modules/${module.exec}" target="${module.command}" dir="${sfi.basedir}" />
+	</target>
+
+	<target name="module.configure" >
+		<echo>Configure the deployed elements</echo>
+		<copy todir="${deploy.dir}" overwrite="true" >
+			<fileset dir="${conf.dir}/${sfi.config.path}" />
+			<filterset>
+			    <filtersfile file="${filter.file}" />
+				<filter token="basedir" value="${basedir}" />
+			</filterset>
+		</copy>
+		<chmod dir="${deploy.dir}" perm="ugo+rx" >
+			<include name="**/*.sh" />
+			<include name="**/*.ksh" />
+			<include name="**/*.csh" />
+		</chmod>
+	</target>
+	
+	
+    <target name="{-}fromdefined" >
+		<fail message="Define sfi.&lt;module&gt;.&lt;exec&gt;.fromfile or sfi.&lt;module&gt;.&lt;exec&gt;.fromdir to use function">
+		    <condition>
+			    <not>
+			        <or>
+			        	<isset property="module.exec.fromfile" />
+			            <isset property="module.exec.fromdir" />
+			    	</or>
+				</not>
+			</condition>
+		</fail>    
+    </target>
+    
+	<target name="module.ant" >
+	    <property name="module.exec" value="${module.name}.ant" /> <!-- default value -->
+	    <property name="module.exec.ant" value="../bin/modules/${module.exec}" /> <!-- default value -->
+	    <property name="module.exec.target" value="${module.command}" />
+	    <property name="module.exec.output" value="${module.exec.ant}" />
+	    <property name="module.exec.tofile" value="${module.exec.output}" />
+	    
+	    <echo>ANT Build ${module.exec.target} ${module.exec.output} using ${deploy.dir}/${module.exec.ant} </echo>
+	    
+		<ant antfile="${deploy.dir}/${module.exec.ant}" target="${module.exec.target}" useNativeBasedir="true" />
+		<move file="${deploy.dir}/${module.exec.output}" tofile="${deploy.dir}/${module.exec.tofile}" />
+	</target>
+
+	<target name="module.copy" depends="{-}fromdefined" > <!-- exemple un liste de plugins -->
+	    <condition property="module.exec.output" value="${module.exec.fromfile}" >
+	        <isset property="module.exec.fromfile" />
+		</condition>
+	    
+		<property name="module.exec.fromfile" value="**/*" />
+	    <property name="module.exec.fromdir" value="." />
+	    <property name="module.exec.todir" value="." />
+	    <property name="module.exec.output" value="." />
+	    <!-- if module.exec.tofile is not defined, move is neutral -->
+	    <property name="module.exec.tofile" value="${module.exec.output}" />
+
+	    <echo>Copy ${module.exec.fromdir}//${module.exec.fromfile} to ${deploy.dir}/${module.exec.todir} </echo>
+	    
+	    <mkdir dir="${deploy.dir}/${module.exec.todir}" />
+		<copy todir="${deploy.dir}/${module.exec.todir}" overwrite="true" >
+			<fileset dir="${repo.dir}/${module.exec.fromdir}" includes="${module.exec.fromfile}" />
+		</copy>
+
+	    <!-- Set the expected name -->
+	    <echo>Move ${deploy.dir}/${module.exec.todir}/${module.exec.output} to ${deploy.dir}/${module.exec.todir}/${module.exec.tofile}</echo>
+	    <move file="${deploy.dir}/${module.exec.todir}/${module.exec.output}" tofile="${deploy.dir}/${module.exec.todir}/${module.exec.tofile}" />
+	    
+	</target>
+	    
+
+
+	<target name="module.unpack" depends="{-}fromdefined" >
+		<property name="module.exec.fromdir" value="." />
+		<property name="module.exec.fromfile" value="**/*" />
+		<property name="module.exec.todir" value="." />
+	    <property name="module.exec.output" value="." />
+		<property name="module.exec.tofile" value="${module.exec.output}" />
+		
+	    <echo>Unpack ${repo.dir}/${module.exec.fromdir}//${module.exec.fromfile} to ${deploy.dir}/${module.exec.todir} </echo>	        
+	    <mkdir dir="${deploy.dir}/${module.exec.todir}" />
+		<unzip dest="${deploy.dir}/${module.exec.todir}" overwrite="true" >
+			<fileset dir="${repo.dir}/${module.exec.fromdir}" >
+				<filename name="${module.exec.fromfile}"/>
+				<exclude name="**/*.tar" />
+				<exclude name="**/*.tar.gz" />
+				<exclude name="**/*.tar.bz" />
+			</fileset>
+		</unzip>
+		<untar dest="${deploy.dir}/${module.exec.todir}" compression="none" overwrite="true" >
+			<fileset dir="${repo.dir}/${module.exec.fromdir}" >
+				<and>
+					<filename name="${module.exec.fromfile}"/>
+					<filename name="**/*.tar"/>
+				</and>
+			</fileset>
+		</untar>
+		<untar dest="${deploy.dir}/${module.exec.todir}" compression="gzip" overwrite="true" >
+			<fileset dir="${repo.dir}/${module.exec.fromdir}" >
+				<and>
+					<filename name="${module.exec.fromfile}"/>
+					<filename name="**/*.tar.gz"/>
+				</and>
+			</fileset>
+		</untar>
+		<untar dest="${deploy.dir}/${module.exec.todir}" compression="bzip2" overwrite="true" >
+			<fileset dir="${repo.dir}/${module.exec.fromdir}" >
+				<and>
+					<filename name="${module.exec.fromfile}"/>
+					<filename name="**/*.tar.bz"/>
+				</and>
+			</fileset>
+		</untar>
+		
+	    <echo>Move ${deploy.dir}/${module.exec.output} to ${deploy.dir}/${module.exec.tofile}</echo>
+	    <!-- Set the expected name -->
+	    <move file="${deploy.dir}/${module.exec.todir}/${module.exec.output}" tofile="${deploy.dir}/${module.exec.todir}/${module.exec.tofile}" />
+
+	</target>
+
+
+		
+</project>

@@ -1,0 +1,111 @@
+
+  List of softwares to download
+=================================
+
+
+This approach ensures the possibility to have a stand-alone installation.
+It also limits license issue as this product does not distribut any third-party product.
+Some softwares may require license agreement/registration before download.
+
+
+* Element to install/unpack:
+. Java2 development kit (>java6)
+  Implementation from Oracle
+  http://www.oracle.com/technetwork/java/javase/downloads/jdk-6u25-download-346242.html
+  (Address may vary)
+
+. Apache Ant 
+  http://archive.apache.org/dist/ant/binaries/apache-ant-1.8.1-bin.tar.gz
+  (Mirrors at http://ant.apache.org/bindownload.cgi)
+
+
+
+* Element to simply download:
+. Ant-contrib 1.0b3
+  http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download
+  (direct http://downloads.sourceforge.net/project/ant-contrib/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip?r=&ts=1304931863&use_mirror=freefr)
+
+
+. Apache Directory (1.5.5)
+  http://apache.multidist.com//directory/apacheds/unstable/1.5/1.5.5/apacheds-1.5.5.tar.gz
+  (Mirrors at http://directory.apache.org/apacheds/1.5/download/download-archive.cgi)
+
+. Apache Tomcat (6.0.29)
+  http://mirror.ibcp.fr/pub/apache/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.tar.gz
+  (Mirrors at http://tomcat.apache.org/download-60.cgi)
+
+. JRuby (1.5.6)
+  http://jruby.org.s3.amazonaws.com/downloads/1.6.1/jruby-bin-1.6.1.tar.gz
+  
+  List of required gems (available at http://rubygems.org/): to store in ruby-gems
+  http://rubygems.org/downloads/actionmailer-2.3.5.gem
+  http://rubygems.org/downloads/actionpack-2.3.5.gem
+  http://rubygems.org/downloads/activerecord-2.3.5.gem
+  http://rubygems.org/downloads/activerecord-jdbc-adapter-0.9.7-java.gem
+  http://rubygems.org/downloads/activeresource-2.3.5.gem
+  http://rubygems.org/downloads/activesupport-2.3.5.gem
+  http://rubygems.org/downloads/bouncy-castle-java-1.5.0146.1.gem
+  http://rubygems.org/downloads/i18n-0.4.2.gem
+  http://rubygems.org/downloads/jruby-jars-1.5.1.gem
+  http://rubygems.org/downloads/jruby-openssl-0.7.4.gem
+  http://rubygems.org/downloads/jruby-rack-1.0.1.gem
+  http://rubygems.org/downloads/net-ldap-0.2.2.gem
+  http://rubygems.org/downloads/rack-1.0.1.gem
+  http://rubygems.org/downloads/rails-2.3.5.gem
+  http://rubygems.org/downloads/rubyzip-0.9.4.gem
+  http://rubygems.org/downloads/warbler-1.1.0.gem
+
+
+. Mysql Community Server (5.1.48)
+  For Microsoft Windows
+  http://www.mysql.fr/get/Downloads/MySQL-5.1/mysql-5.1.57.zip/from/ftp://mirrors.ircam.fr/pub/mysql/
+  For Generic Linux
+  http://www.mysql.fr/get/Downloads/MySQL-5.1/mysql-5.1.57-linux-i686-glibc23.tar.gz/from/ftp://mirrors.ircam.fr/pub/mysql/
+  Other versions (choose zip or tar*)
+  http://www.mysql.fr/downloads/mysql/5.1.html#downloads
+
+
+. Apache Maven (3.0.3)
+  http://www.apache.org/dist//maven/binaries/apache-maven-3.0.3-bin.tar.gz 
+  (Mirrors at http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-maven-3.0.3-bin.tar.gz)
+
+
+. Jenkins CI (1.408)
+  http://mirrors.jenkins-ci.org/war/1.408/jenkins.war
+  (must be renamed in jenkins-<version>.war >
+
+  List of required Jenkins plugins (to store jenkins-plugins folder)
+  http://mirrors.jenkins-ci.org/plugins/cvs/1.2/cvs.hpi
+  http://mirrors.jenkins-ci.org/plugins/polarion/1.2/polarion.hpi
+  http://mirrors.jenkins-ci.org/plugins/redmine/0.9/redmine.hpi
+  http://mirrors.jenkins-ci.org/plugins/sonar/1.6.1/sonar.hpi
+  http://mirrors.jenkins-ci.org/plugins/violations/0.7.7/violations.hpi
+
+
+. sonar from SonarSource (2.7)
+  http://dist.sonar.codehaus.org/sonar-2.7.zip
+
+  Required sonar plugin (in sonar-plugin folder)
+  http://repository.codehaus.org/org/codehaus/sonar-plugins/sonar-ldap-plugin/1.0/sonar-ldap-plugin-1.0.jar
+
+
+. nexus from sonatype (1.9.1)
+  http://nexus.sonatype.org/downloads/older/nexus-webapp-1.9.1.war
+
+
+. redmine (1.1.2)
+  http://rubyforge.org/frs/download.php/74419/redmine-1.1.2.tar.gz
+
+  Required redmine plugin (in redmine-plugin folder)
+  http://r-labs.googlecode.com/files/redmine_hudson-1.0.6.1.zip
+
+. OpenDS from Oracle (2.2.1)
+  http://www.opends.org/promoted-builds/2.2.1/OpenDS-2.2.1.zip
+
+
+*** How to check content
+Expected result is listed in repository.lst file.
+To compare do not unpack the jdk and apache-ant.
+For Windows, type in the SFI directory:
+  tree repository /F /A > repository-current.lst
+  fc repository-current.lst repository.lst

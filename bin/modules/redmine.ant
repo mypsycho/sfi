@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Redmine-Execution" basedir="../.." >
+  	
+    <property name="sfi.ruby.exec" value="${sfi.ruby.name}.ant" />
+	<import file="${sfi.basedir}/bin/modules/${sfi.ruby.exec}" />
+
+
+    <property name="sfi.dataBase.exec" value="${sfi.dataBase.name}.ant" />
+	<import file="${sfi.basedir}/bin/modules/${sfi.dataBase.exec}" />
+
+    <property name="redmine.base.dir"  location="${deploy.dir}/${sfi.issueTool.install.tofile}" />
+    
+	<property name="sfi.redmine.lang" value="${user.language}" />
+	
+	<target name="init" >
+		<createSchema schema="${sfi.redmine.db.user}" password="${sfi.redmine.db.password}" /> 
+	    
+		<ruby dir="${redmine.base.dir}" command="rake" comment="Generate session store" >
+			<arg value="generate_session_store" />
+		</ruby>
+		<!-- Creation du Schema -->
+		<ruby dir="${redmine.base.dir}" command="rake" comment="Create/update SQL tables" >
+			<arg value="db:migrate" />
+			<arg value="RAILS_ENV=production" />
+		</ruby>
+		<!-- Initialisation avec les valeurs usines -->
+		<ruby dir="${redmine.base.dir}" command="rake" comment="load default" >
+			<arg value="redmine:load_default_data" />
+			<arg value="RAILS_ENV=production" />
+			<arg value="REDMINE_LANG=${sfi.redmine.lang}" />
+		</ruby>
+		
+	    <sqlScript user="${sfi.redmine.db.user}" password="${sfi.redmine.db.password}" schema="redmine" >
+			<file file="${redmine.base.dir}/script/integrate.sql" />
+	    </sqlScript>
+	        
+	</target>
+
+	<target name="build" >
+		
+		<!-- Creation du Schema -->
+		<ruby dir="${redmine.base.dir}" command="rake" comment="Create/update SQL tables" >
+			<arg value="db:migrate" />
+			<arg value="RAILS_ENV=production" />
+		</ruby>
+		
+		<ruby dir="${redmine.base.dir}" command="warble" >
+			<arg value="RAILS_ENV=production" />
+		</ruby>
+		
+	</target>
+
+	
+
+</project>
+<!--
+prefix="sfi."
+
+// Mysql:
+
+create database redmine character set utf8;
+create user 'redmine'@'localhost' identified by 'my_password';
+grant all privileges on redmine.* to 'redmine'@'localhost';
+
+rake generate_session_store
+(rake config/initializers/session_store.rb for older version)
+rake db:migrate RAILS_ENV=production
+rake redmine:load_default_data RAILS_ENV=production
+
+// Diver :
+Copy config/database.yml.example to config/database.yml
+production:
+  adapter: mysql
+  database: redmine
+  host: localhost
+  username: redmine
+  password: my_password
+
+
+
+// Test:
+mkdir tmp public/plugin_assets
+sudo chown -R redmine:redmine files log tmp public/plugin_assets
+sudo chmod -R 755 files log tmp public/plugin_assets
+ruby script/server webrick -e production
+
+warble config (or copy warble.rb)
+warble 
+cp redmine-VERSION.war $TOMCAT_HOME/webapps/redmine.war
+
+-->

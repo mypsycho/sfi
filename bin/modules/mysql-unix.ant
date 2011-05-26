@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MysqlServer-Execution-Unix" default="createSchemas" basedir="../.." >
+
+	<import file="${ant.file.MysqlServer-Execution-Unix}/../mysql.ant" />
+
+    <property name="mysql.script.dir"        location="${mysql.base.dir}/script" />
+	<property name="mysql.installation.flag" location="${mysql.base.dir}/data.installed" />
+    
+	<target name="startup" depends="ensureDataExits,startupConsole" if="noConsole" >
+        <exec executable="${mysql.binaries.dir}/mysqld" spawn="true" >
+			<arg value="--defaults-file=${mysql.defaults.file}" />
+			<arg value="--basedir=${mysql.base.dir}" />
+		</exec>
+		<echo>Wait for data base to start (${mysql.startup.delay}s)</echo>
+		<sleep seconds="${mysql.startup.delay}" />
+	</target>
+	
+
+	<target name="startupConsole" unless="noConsole">
+	    
+		<echo>
+			${mysql.binaries.dir}\mysqld.exe --console --defaults-file=${mysql.defaults.file} --basedir=${mysql.base.dir}
+		</echo>
+		<exec executable="xterm" dir="${mysql.base.dir}" spawn="true" failonerror="true">
+			<arg value="-e" />
+			<arg value="${mysql.binaries.dir}/mysqld" />
+			<arg value="--defaults-file=${mysql.defaults.file}" />
+			<arg value="--basedir=${mysql.base.dir}" />
+			<arg value="--console"/>
+		</exec>
+		<echo>Wait for data base to start (${mysql.startup.delay}s)</echo>
+		<sleep seconds="${mysql.startup.delay}" />
+	</target>
+
+
+	<target name="ensureDataExits" depends="checkDataExits" unless="mysqlDataExists" >
+		<exec executable="${mysql.script.dir}/mysql_install_db" >
+			<arg value="--defaults-file=${mysql.defaults.file}" />
+			<arg value="--basedir=${mysql.base.dir}" />
+		</exec>
+	    <tstamp />
+		<echo file="${mysql.installation.flag}" >Database installed at ${TSTAMP} the ${DSTAMP}</echo>
+	</target>
+	
+	<target name="checkDataExits" >
+		<chmod perm="ugo+x" dir="${mysql.binaries.dir}" includes="*" />
+		<chmod perm="ugo+x" dir="${mysql.script.dir}" includes="*" />
+		<available property="mysqlDataExists" file="${mysql.installation.flag}" type="file" />
+	</target>
+	
+
+	<target name="shutdown" >
+		<exec executable="${mysql.binaries.dir}/mysqladmin" dir="${mysql.base.dir}" >
+			<arg value="--defaults-file=${mysql.defaults.file}" />
+            <arg value="--user=${mysql.admin.user}"/>
+            <arg value="--password=${mysql.admin.password}"/>
+            <arg value="shutdown"/>
+        </exec>
+		<echo>Wait for data base to stop (${mysql.shutdown.delay}s)</echo>
+		<sleep seconds="${mysql.shutdown.delay}" />
+	</target>
+	
+	
+</project>

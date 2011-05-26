@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Software-Factoy-Engine" default="engine" basedir=".." >
+
+    <description>Interpret commands on the Software factory.</description>
+    
+	<property name="os.type" value="win32" />
+	
+
+    <property name="config" value="default" />
+	<property name="sfi.basedir" value="${basedir}" />
+	<property name="sfi.exeTmpdir" value="${sfi.basedir}/run/" />
+    <property name="sfi.config.path" value="${config}" />
+    <property name="sfi.exec.mode" value="" /> <!-- May be worth TEST -->
+	
+	<import file="${ant.file}/../command${sfi.exec.mode}.ant" />
+
+
+	<target name="execModuleCommand" >
+		<!-- basename property="module.command.id" file="${basedir}" /-->
+		<pathconvert property="module.id" > <!-- extract module.id from basedir -->
+			<file basedir="" file="${basedir}" />
+			<regexpmapper handledirsep="true" from="^(.+)/([^/]+)\.([^/\.]+)$$" to="\2" />
+		</pathconvert>
+		<pathconvert property="command.id" > <!-- extract command.id from basedir -->
+			<file basedir="" file="${basedir}" />
+			<regexpmapper handledirsep="true" from="^(.+)/([^/]+)\.([^/\.]+)$$" to="\3" />
+		</pathconvert>
+
+	    
+		<echo>###</echo>
+		<echo>### Execute ${command.id} for module ${module.id}</echo>
+		<echo>###</echo>
+		
+		<antcall target="module.exec" >
+			<param name="module.command" value="${command.id}" />
+			<propertyset >
+				<propertyref prefix="sfi.${module.id}." />
+				<firstmatchmapper>
+					<globmapper from="sfi.${module.id}.${command.id}.*" to="module.exec.*" />
+					<globmapper from="sfi.${module.id}.*" to="module.*" />
+				</firstmatchmapper>
+				
+			</propertyset>
+		</antcall>
+
+		<!--
+		<execModule name="${module.id}" command="${command}" />
+		-->
+	</target>
+		
+	
+    <target name="loadConfiguration" >
+	    <!-- 
+			Special runtime properties. 
+			Use java.home/.., because of ANT force its to inner jre.
+			We need relative path of ANT and JDK.
+		-->
+	    <basename file="${java.home}/.." property="sfi.javaSDK.path"/> 
+	    <basename file="${ant.home}" property="sfi.ant.path"/>
+        <property name="sfi.basedir" value="${basedir}" />
+        <pathconvert property="sfi.basedir.java" dirsep="/" >
+			<path location="${basedir}" />
+		</pathconvert>
+		<hostinfo prefix="sfi.hostinfo" />
+	
+		<property file="${basedir}/bin/commands/engine_${os.type}.properties" />
+		<property file="${basedir}/bin/commands/engine.properties" />
+	    <property file="${basedir}/conf/${config}.properties" prefix="sfi"/>
+	
+		<mkdir dir="${deploy.dir}" />
+        <!--                                                    -->
+        <!--    Convert properties sfi.* into filter values     -->
+        <!--                                                    -->
+		<tempfile property="command.dir" deleteonexit="false" destdir="${sfi.exeTmpdir}" prefix="run" />	
+		<mkdir dir="${command.dir}" />
+		
+		<property name="filter.file" location="${deploy.dir}/config.properties" />
+
+
+		
+        <!-- Creation of Filters -->
+        <echoproperties destfile="${filter.file}">
+	        <propertyset>
+	          <propertyref prefix="sfi."/>
+	          <mapper type="glob" from="sfi.*" to="*"/>
+	        </propertyset>
+		</echoproperties>
+        <echo>Parameter values are defined at ${filter.file}</echo>
+    </target>
+    
+    <target name="clean" >
+		<delete dir="${deploy.dir}" />
+	</target>
+  
+    
+	<target name="engine" depends="loadConfiguration" >
+		<fail unless="command" message="command is required" />
+		<!-- load the sequence file  -->
+		<property name="commands.file" location="${basedir}/bin/commands/${command}.modules" />
+		
+		
+		<pathconvert property="modules" >
+			<resourcelist>
+				<file file="${commands.file}"/>
+				<filterchain>
+					<ignoreblank />
+					<striplinecomments>
+						<comment value="#"/>
+					</striplinecomments>
+					<tokenfilter>
+						<replaceregex pattern="^([^\.]+)$$" replace="\1.${command}" />
+					</tokenfilter>
+					<prefixlines prefix="${command.dir}/"/>
+				</filterchain>
+			</resourcelist>
+		</pathconvert>
+		<echo>modules : ${modules}</echo>
+		
+		
+		<touch mkdirs="true" >
+			<resourcelist>
+				<file file="${commands.file}"/>
+				<filterchain>
+					<ignoreblank />
+					<striplinecomments>
+						<comment value="#"/>
+					</striplinecomments>
+					<tokenfilter>
+						<replaceregex pattern="^([^\.]+)$$" replace="\1.${command}" />
+					</tokenfilter>
+					<prefixlines prefix="${command.dir}/"/>
+					<suffixlines suffix="/stub"/>
+				</filterchain>
+			</resourcelist>
+		</touch>
+		
+		<subant genericantfile="${ant.file}" target="execModuleCommand" inheritall="true" >
+			<resourcelist>
+				<file file="${commands.file}"/>
+				<filterchain>
+					<ignoreblank />
+					<striplinecomments>
+						<comment value="#"/>
+					</striplinecomments>
+					<tokenfilter>
+						<replaceregex pattern="^([^\.]+)$$" replace="\1.${command}" />
+					</tokenfilter>
+					<prefixlines prefix="${command.dir}/"/>
+				</filterchain>
+			</resourcelist>			
+		</subant>
+
+		<delete dir="${command.dir}" />
+    </target>
+	
+
+    
+	<target name="testModule">
+	      <input message="Commands of modules to execute ?" addproperty="modules" />
+
+		<fail unless="modules" message="modules list is required" />
+		<tempfile property="commands.file" destDir="${sfi.exeTmpdir}" prefix="exec" suffix=".modules" deleteonexit="true" />
+		<property name="command" value="exec" />
+		<concat destfile="${commands.file}" >
+			<resources>
+				<string value="${modules}" />
+			</resources>
+			<filterchain>
+				<tokenfilter>
+					<replacestring from=" " to="${line.separator}"/>
+				</tokenfilter>
+			</filterchain>
+		</concat>
+        <antcall target="engine" />
+	</target>
+	
+
+    
+</project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Apache-DS" default="war">
+
+	<!-- We use script command, not java call to have the environment from setenv -->	
+	<target name="war" >
+		<mkdir dir="target/classes" />
+		<delete>
+            <fileset dir="target/classes" includes="**/*" />
+        </delete>
+
+		
+		<javac srcdir="src/main/java"
+               destdir="target/classes"
+               debug="on" >
+			<classpath>
+				<fileset dir="../lib">
+					<include name="**/*.jar" /> 
+				</fileset>
+
+				<fileset dir="../../apache-tomcat">
+					<!-- tomcat 6.x.x path  : include name="lib/**/*.jar" -->
+					<!-- tomcat 5.5.x path  : include name="common/lib/**/*.jar" -->
+					<include name="lib/**/*.jar" />
+				</fileset>
+			</classpath>
+        </javac>
+		<copy todir="target/classes" >
+			<fileset dir="src/main/resources" />
+		</copy>
+		
+        <war destfile="target/apacheds.war" basedir="src/main/webapp" >
+			<!-- webxml="src/main/webapp/WEB-INF/web.xml" -->
+            <!-- les classes et fichier de configuration -->
+            <classes dir="target/classes" />
+			<!-- from tomcat 6+ : excludes="servlet-api-2.5-6.1.14.jar" -->
+            <lib dir="../lib" includes="*.jar" excludes="servlet-api-2.5-6.1.14.jar" />
+		</war>
+	</target>
+
+
+
+
+</project>
