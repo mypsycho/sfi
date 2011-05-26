@@ -1,0 +1,35 @@
+SFI : Software Factory Installer
+
+
+This tool is an open source installer of web application and solution stack.
+
+Basic stack is java-developer oriented but this tool provides global mechanisms 
+which allow integration of small-footprinted applications.
+It includes following applications:
+- Redmine
+- Sonar of Sonarsource
+- Sonatype Nexus
+- Jenkins CI
+- Apache Maven
+
+It works with :
+- Apache Tomcat as Web server
+- Mysql as database
+- ApacheDS as ldap
+
+
+Candidates for integrable application:
+- Java or ruby (through JRuby) Virtual-machine applications
+- small footprint: no resources required in any special place like etc or 'user home' folder 
+(except places handled by another SFI-application).
+- Configurable through ASCII file.
+ 
+
+
+This implementation can be seen as an alternative of Bitnami.
+Benefits:
+- Its not a repackaging, it does not hide what should be done to install 
+- You can build your own stack if you find the right candidate application for you. 
+No need to wait to be integrated if you know how to use it.
+- A set of simple functions wrap Apache ANT commands.
+ 
