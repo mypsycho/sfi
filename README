@@ -1,7 +1,7 @@
 SFI : Software Factory Installer
 
 
-This tool is an open source installer of web application and solution stack.
+This tool is an open source installer of web applications and solution stack.
 
 Basic stack is java-developer oriented but this tool provides global mechanisms 
 which allow integration of small-footprinted applications.
