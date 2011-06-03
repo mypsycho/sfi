@@ -3,9 +3,23 @@ SFI : Software Factory Installer
 
 This tool is an open source installer of web applications and solutions stack.
 
+
+Concept
+--------------
+Most of current applications are based on the similar pattern:
+- installation by unpack
+- copy of plugins in a specific directory
+- SQL and  LDAP compatibles
+The main idea is to combine a simple descriptor with basic functions to create 
+open and integrated solutions server.
+
+
+Description
+--------------
 Basic stack is java-developer oriented but this tool provides global mechanisms 
-which allow integration of small-footprinted applications.
-It includes following applications:
+to integration of small-footprinted applications.
+
+Basic stack includes following applications:
 - Redmine
 - Sonar of Sonarsource
 - Sonatype Nexus
