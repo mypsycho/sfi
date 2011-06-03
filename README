@@ -12,24 +12,32 @@ It includes following applications:
 - Jenkins CI
 - Apache Maven
 
-It works with :
+It works on following middlewares :
 - Apache Tomcat as Web server
 - Mysql as database
-- ApacheDS as ldap
+- ApacheDS as ldap for users management
+
 
 
 Candidates for integrable application:
 - Java or ruby (through JRuby) Virtual-machine applications
-- small footprint: no resources required in any special place like etc or 'user home' folder 
-(except places handled by another SFI-application).
+- Small footprint installation: 
+    + no resources required in any special place like 'etc' or 
+    '${user.home}' folder.
+    + no update of regedit
+    + no several place installations: for example, avoid
+		"program files\XXX" AND "program files\common files\XXX" AND "Documents and Settings\All Users\XXX"
+    (except places handled by another SFI-application).
 - Configurable through ASCII file.
- 
-
+- Intallation must be incrementale: unpack an application must not override data changed when using the application. 
+- No interactive installation: as installing a full stack can last several minuts 
 
 This implementation can be seen as an alternative of Bitnami.
 Benefits:
 - Its not a repackaging, it does not hide what should be done to install 
 - You can build your own stack if you find the right candidate application for you. 
 No need to wait to be integrated if you know how to use it.
+Any version can used as long as they are compatible with other choosen components (the hardest trick).  
 - A set of simple functions wrap Apache ANT commands.
- 
+- No only you define the lifecycle of installation, but supplementary lifecycles can be easily added.
+- Predefined lifecycle are : install, startup, shutdown
