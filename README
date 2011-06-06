@@ -61,12 +61,25 @@ Candidates for integrable application:
 
 Building a stack
 --------------
-1. Descriptor engine.properties
+1. Descriptor 'bin/commands/engine.properties'
 - Define all the commands 
-- Define an OS variation with engine_<os.version>.properties.
+- Define an OS variation with 'bin/commands/engine_<os.version>.properties' files
 
 2. The meta-commands
-A meta-command is sequence of command on 
+A meta-command is sequence of commands of one or more modules.
+They are stored on 'bin/commands' folder with '*.modules' extension
+Provided meta-commands are:
+install: install, start the applications and perform initialisation tasks 
+startup: start the applications once installed
+shutdown: stop the applications 
+users: import '*.ldif' files in LDAP server
+
+meta-command syntax is a list of <module>[.<command>]
+where 
+  module is the name of an module defined in the descriptor.
+  command is the command to execute. If ommitted, the meta-command is used. 
+
+
 
 3. The build-in functions
 ant module (default)
