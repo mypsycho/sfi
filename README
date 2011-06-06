@@ -13,6 +13,16 @@ Most of current applications are based on the similar pattern:
 The main idea is to combine a simple descriptor with basic functions to create 
 open and integrated solutions server.
 
+This implementation can be seen as an alternative of Bitnami.
+Benefits:
+- Its not a repackaging, it does not hide what should be done to install. 
+- You can build your own stack if you find an application you need. 
+    + No need to wait to be integrated by another provider if you know how to use it.
+    + Any version can be used as long as they are compatible with other choosen components (the hardest trick).  
+- A set of simple functions wrap Apache ANT commands.
+- No only you define the lifecycle of installation, but supplementary lifecycles can be easily added.
+- Predefined lifecycle are : install, startup, shutdown
+
 
 Description
 --------------
@@ -32,7 +42,8 @@ It works on following middlewares :
 - ApacheDS as ldap for users management
 
 
-
+Description
+--------------
 Candidates for integrable application:
 - Java or ruby (through JRuby) Virtual-machine applications
 - Small footprint installation: 
@@ -42,16 +53,25 @@ Candidates for integrable application:
     + no several place installations: for example, avoid
 		"program files\XXX" AND "program files\common files\XXX" AND "Documents and Settings\All Users\XXX"
     (except places handled by another SFI-application).
-- Configurable through ASCII file.
-- Intallation must be incrementale: unpack an application must not override data changed when using the application. 
+- Configurable through ASCII files.
+- Intallation must be incremental: 
+    + unpack an application must not override data changed when using the application. 
 - No interactive installation: as installing a full stack can last several minuts 
 
-This implementation can be seen as an alternative of Bitnami.
-Benefits:
-- Its not a repackaging, it does not hide what should be done to install 
-- You can build your own stack if you find the right candidate application for you. 
-No need to wait to be integrated if you know how to use it.
-Any version can used as long as they are compatible with other choosen components (the hardest trick).  
-- A set of simple functions wrap Apache ANT commands.
-- No only you define the lifecycle of installation, but supplementary lifecycles can be easily added.
-- Predefined lifecycle are : install, startup, shutdown
+
+Building a stack
+--------------
+1. Descriptor engine.properties
+- Define all the commands 
+- Define an OS variation with engine_<os.version>.properties.
+
+2. The meta-commands
+A meta-command is sequence of command on 
+
+3. The build-in functions
+ant module (default)
+download
+unpack
+copy
+ant
+configure 
