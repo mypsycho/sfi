@@ -15,16 +15,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# We are at %SFINSTALL_HOME%\deploy\apache-tomcat\bin
-SF_INSTALL_HOME=`dirname $0`/../../..
+# We are at ${SF_INSTALL_HOME}/deploy/apache-tomcat/bin
+# Using $0 is not possible, this script is called by '.' interpreter. 
+SF_INSTALL_HOME=${CATALINA_HOME}/../..
+
 
 # For copy-and-run reason, we do not generate this value the using ${java.home}
-export JAVA_HOME=${SF_INSTALL_HOME}/repository/@javaSDK.path@
-# We hope it used by jenkins
+export JAVA_HOME=@jdk.home@
+
 export MAVEN_HOME=${SF_INSTALL_HOME}/deploy/@buildTool.install.tofile@
 export PLEXUS_NEXUS_WORK=${SF_INSTALL_HOME}/deploy/nexus
 
 
 # We must avoid path from properties file for portability reason
-export CATALINA_OPTS=-Xmx1024m -XX:PermSize=256m
-export CATALINA_OPTS=${CATALINA_OPTS} -DJENKINS_HOME=${SF_INSTALL_HOME%}deploy/@intContTool.name@
+export CATALINA_OPTS="-Xmx512m -XX:PermSize=256m"
+# Jenkins options
+export CATALINA_OPTS="${CATALINA_OPTS} -Djava.awt.headless=true -DJENKINS_HOME=${SF_INSTALL_HOME}/deploy/@intContTool.name@"

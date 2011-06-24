@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sfi-engine-test" basedir=".." >
+    
+    <property file="test.properties" />
+
+    
+    <macrodef name="run" >
+        <attribute name="name" />
+        <sequential>
+            <ant antfile="bin/engine/engine.ant" inheritall="false" >
+                <property name="command" value="@{name}" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <target name="all" depends="download,install,users" />
+        
+    <target name="download" >
+        <run name="download" />
+    </target>
+
+    <target name="install" >
+        <run name="install" />
+    </target>
+
+    <target name="users" >
+        <run name="users" />
+    </target>
+
+</project>

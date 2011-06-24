@@ -6,19 +6,19 @@
   <useSecurity>true</useSecurity>
   <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy"/>
   <securityRealm class="hudson.security.LDAPSecurityRealm">
-    <server>localhost:10389</server>
+    <server>localhost:@ldap.port@</server>
     <rootDN></rootDN>
-    <userSearchBase>ou=users,ou=system</userSearchBase>
+    <userSearchBase>ou=users,@ldap.root.dn@</userSearchBase>
     <userSearch>uid={0}</userSearch>
-    <groupSearchBase>ou=jenkins,ou=groups,ou=system</groupSearchBase>
-    <managerDN>uid=admin,ou=system</managerDN>
-    <managerPassword>c2VjcmV0</managerPassword>
+    <groupSearchBase>ou=jenkins,ou=groups,@ldap.root.dn@</groupSearchBase>
+    <managerDN>@ldap.bind.dn@</managerDN>
+    <managerPassword>@ldap.bind.password.base64@</managerPassword>
   </securityRealm>
   <markupFormatter class="hudson.markup.RawHtmlMarkupFormatter"/>
   <jdks>
     <jdk>
-      <name>@javaSDK.path@</name>
-      <home>@basedir@/repository/@javaSDK.path@</home>
+      <name>DefaultJdk</name>
+      <home>@jdk.home@</home>
       <properties/>
     </jdk>
   </jdks>

@@ -1,1 +1,1 @@
-call "%~dp0.\engine.bat" startup %*
+call "%~dp0.\engine\engine.bat" startup %*

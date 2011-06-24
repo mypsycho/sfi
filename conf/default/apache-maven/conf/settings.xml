@@ -116,13 +116,13 @@ under the License.
       <username>deployment</username>
       <password>deployment123</password>
     </server>
-	
+    
     <server>
       <id>snapshots</id>
       <username>deployment</username>
       <password>deployment123</password>
     </server>
-	
+    
     <!-- server
      | Specifies the authentication information to use when connecting to a particular server, identified by
      | a unique name within the system (referred to by the 'id' attribute below).
@@ -170,14 +170,14 @@ under the License.
       <url>http://my.repository.com/repo/path</url>
     </mirror>
      -->
-	 <!-- sfi-comment: declare artifactory as mirror -->
-	<!--mirror> 
+     <!-- sfi-comment: declare artifactory as mirror -->
+    <!--mirror> 
       <id>artifacory</id>
       <mirrorOf>*</mirrorOf>
       <name>The proxy repository Archifactory</name>
       <url>http://localhost:@server.port@/artifactory/repo</url>
     </mirror-->
-	 
+     
 
 
     <mirror>
@@ -212,35 +212,35 @@ under the License.
    |
    |-->
   <profiles>
-	<profile> <!-- sfi.comment: tools integration -->
+    <profile> <!-- sfi.comment: tools integration -->
       <id>softwareFactoryInstall</id>
 
-	  <properties>
-		<main.server.url>http://localhost:@server.port@</main.server.url>
-	  
-		<sonar.jdbc.driver>@db.driver@</sonar.jdbc.driver>
-		<sonar.jdbc.url>@db.url.root@/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
-		<sonar.jdbc.username>@sonar.db.user@</sonar.jdbc.username>
-		<sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
+      <properties>
+        <main.server.url>http://localhost:@server.port@</main.server.url>
+      
+        <sonar.jdbc.driver>@db.driver@</sonar.jdbc.driver>
+        <sonar.jdbc.url>@db.url.root@/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
+        <sonar.jdbc.username>@sonar.db.user@</sonar.jdbc.username>
+        <sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
 
-		<!-- tools -->
-		<sonar.host.url>${main.server.url}/sonar</sonar.host.url>
-		<deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
-		<ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
-		<issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
-		
+        <!-- tools -->
+        <sonar.host.url>${main.server.url}/sonar</sonar.host.url>
+        <deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
+        <ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
+        <issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
+        
         <svn.server>localhost</svn.server>
-		<svn.port>443</svn.port>
+        <svn.port>443</svn.port>
         <svn.path>/svn/soft_factory</svn.path>
         <svn.user>jenkins</svn.user>
         <svn.password>jenkins</svn.password>
         <svn.url>https://${svn.user}:${svn.password}@${svn.server}/${svn.path}</svn.url>
         <scm.root.url>scm:svn:${svn.url}</scm.root.url>
-		
-	  </properties>
+        
+      </properties>
 
-	  <repositories>
-	  <!--
+      <repositories>
+      <!--
         <repository>
           <snapshots>
             <enabled>false</enabled>
@@ -255,15 +255,15 @@ under the License.
           <name>repo</name>
           <url>http://localhost:@server.port@/artifactory/repo</url>
         </repository>
-		-->
+        -->
 
-		<repository>
+        <repository>
           <id>thirdparty</id>
           <name>3rd party repo</name>
           <url>${deploy.url.root}/thirdparty</url>
         </repository>
-		
-		<repository>
+        
+        <repository>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -271,18 +271,18 @@ under the License.
           <name>releases repo</name>
           <url>${deploy.url.root}/releases</url>
         </repository>
-		
+        
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>snapshots repo</name>
           <url>${deploy.url.root}/snapshots</url>
         </repository>
-		
+        
       </repositories>
-	  
+      
       <pluginRepositories>
-	  <!--
+      <!--
         <pluginRepository>
           <snapshots>
             <enabled>false</enabled>
@@ -297,16 +297,16 @@ under the License.
           <name>plugins-snapshots</name>
           <url>http://localhost:@server.port@/artifactory/plugins-snapshots</url>
         </pluginRepository>
-		-->
+        -->
       </pluginRepositories>
-	  
+      
     </profile>
 
 
 
 
 
-			
+            
   
     <!-- profile
      | Specifies a set of introductions to the build process, to be activated using one or more of the

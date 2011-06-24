@@ -34,9 +34,10 @@ BASEDIR=`cd "$PRGDIR/.." ; pwd`
 
 
 
-JAVA_HOME="${BASEDIR}/repository/jdk1.6.0_25"
-ANT_HOME="${BASEDIR}/repository/apache-ant-1.8.2"
+JAVA_HOME="${BASEDIR}/lib/jdk1.6.0_25"
+ANT_HOME="${BASEDIR}/lib/apache-ant-1.8.2"
 chmod u+x ${ANT_HOME}/bin/*
 
+
 # -Dsfi.exec.mode=TEST
-${ANT_HOME}/bin/ant -f "${BASEDIR}/bin/engine.ant" -Dos.type=linux -Dmodules="$@" testModule
+"${ANT_HOME}/bin/ant" -f "${BASEDIR}/bin/engine/engine.ant"  exec

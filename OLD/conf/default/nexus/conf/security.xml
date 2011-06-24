@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<security>
+  <version>2.0.3</version>
+  <users>
+    <user>
+      <id>admin</id>
+      <name>Administrator</name>
+	  <!-- sfi: password is not the default one -->
+      <password>d033e22ae348aeb5660fc2140aec35850c4da997</password>
+      <status>active</status>
+      <email>changeme@yourcompany.com</email>
+    </user>
+    <user>
+      <id>deployment</id>
+      <name>Deployment User</name>
+      <password>b2a0e378437817cebdf753d7dff3dd75483af9e0</password>
+      <status>active</status>
+      <email>changeme1@yourcompany.com</email>
+    </user>
+    <user>
+      <id>anonymous</id>
+      <name>Nexus Anonynmous User</name>
+      <password>0a92fab3230134cca6eadd9898325b9b2ae67998</password>
+      <status>active</status>
+      <email>changeme2@yourcompany.com</email>
+    </user>
+  </users>
+
+  <roles>
+    <role>
+      <id>manager</id>
+      <name>manager</name>
+      <description>External mapping for manager (LDAP)</description>
+      <roles>
+        <role>admin</role>
+      </roles>
+    </role>
+  </roles>
+  
+  <userRoleMappings>
+    <userRoleMapping>
+      <userId>admin</userId>
+      <source>default</source>
+      <roles>
+        <role>admin</role>
+      </roles>
+    </userRoleMapping>
+    <userRoleMapping>
+      <userId>deployment</userId>
+      <source>default</source>
+      <roles>
+        <role>deployment</role>
+        <role>repository-any-full</role>
+      </roles>
+    </userRoleMapping>
+    <userRoleMapping>
+      <userId>anonymous</userId>
+      <source>default</source>
+      <roles>
+        <role>anonymous</role>
+        <role>repository-any-read</role>
+      </roles>
+    </userRoleMapping>
+  </userRoleMappings>
+
+  
+</security>

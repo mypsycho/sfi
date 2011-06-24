@@ -114,11 +114,11 @@ under the License.
     <server>
       <id>releases</id>
     </server>
-	
+    
     <server>
       <id>snapshots</id>
     </server>
-	
+    
     <!-- server
      | Specifies the authentication information to use when connecting to a particular server, identified by
      | a unique name within the system (referred to by the 'id' attribute below).
@@ -166,10 +166,10 @@ under the License.
       <url>http://my.repository.com/repo/path</url>
     </mirror>
      -->
-	 
-	 
-	  <!-- sfi-comment: declare a maven proxy as mirror -->
-	  
+     
+     
+      <!-- sfi-comment: declare a maven proxy as mirror -->
+      
 
     <mirror>
       <id>Nexus</id>
@@ -177,8 +177,8 @@ under the License.
       <mirrorOf>*</mirrorOf>
       <url>http://@hostinfo.NAME@:@server.port@/nexus/content/groups/public</url>
     </mirror>
-	 
-	 
+     
+     
   </mirrors>
 
   <!-- profiles
@@ -203,42 +203,42 @@ under the License.
    |
    |-->
   <profiles>
-	<profile> <!-- sfi.comment: tools integration -->
+    <profile> <!-- sfi.comment: tools integration -->
       <id>softwareFactoryInstall</id>
 
-	  <properties>
-		<main.server.url>http://@hostinfo.NAME@:@server.port@</main.server.url>
-	  
-		<sonar.jdbc.driver>@db.driver@</sonar.jdbc.driver>
-		<sonar.jdbc.url>@db.url.publicroot@/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
-		<sonar.jdbc.username>@sonar.db.user@</sonar.jdbc.username>
-		<sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
+      <properties>
+        <main.server.url>http://@hostinfo.NAME@:@server.port@</main.server.url>
+      
+        <sonar.jdbc.driver>@db.driver@</sonar.jdbc.driver>
+        <sonar.jdbc.url>@db.url.publicroot@/sonar?useUnicode=true&amp;characterEncoding=utf8</sonar.jdbc.url>
+        <sonar.jdbc.username>@sonar.db.user@</sonar.jdbc.username>
+        <sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
 
-		<!-- tools -->
-		<sonar.host.url>${main.server.url}/sonar</sonar.host.url>
-		<deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
-		<ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
-		<issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
-		
+        <!-- tools -->
+        <sonar.host.url>${main.server.url}/sonar</sonar.host.url>
+        <deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
+        <ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
+        <issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
+        
         <svn.server>@hostinfo.NAME@</svn.server>
-		<svn.port>443</svn.port>
+        <svn.port>443</svn.port>
         <svn.path>/svn/soft_factory</svn.path>
         <svn.user>x</svn.user>
         <svn.password>x</svn.password>
         <svn.url>https://${svn.user}:${svn.password}@${svn.server}/${svn.path}</svn.url>
         <scm.root.url>scm:svn:${svn.url}</scm.root.url>
-		
-	  </properties>
-	  
+        
+      </properties>
+      
       <repositories>
-	  
-		<repository>
+      
+        <repository>
           <id>thirdparty</id>
           <name>3rd party repo</name>
           <url>${deploy.url.root}/thirdparty</url>
         </repository>
-		
-		<repository>
+        
+        <repository>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -246,18 +246,18 @@ under the License.
           <name>releases repo</name>
           <url>${deploy.url.root}/releases</url>
         </repository>
-		
+        
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>snapshots repo</name>
           <url>${deploy.url.root}/snapshots</url>
         </repository>
-		
+        
       </repositories>
-	  
+      
       <pluginRepositories>
-	  <!--
+      <!--
         <pluginRepository>
           <snapshots>
             <enabled>false</enabled>
@@ -272,16 +272,16 @@ under the License.
           <name>plugins-snapshots</name>
           <url>http://@hostinfo.NAME@:@server.port@/nexus/content/repositories/plugins-snapshots</url>
         </pluginRepository>
-		-->
+        -->
       </pluginRepositories>
-	  
+      
     </profile>
 
 
 
 
 
-			
+            
   
     <!-- profile
      | Specifies a set of introductions to the build process, to be activated using one or more of the

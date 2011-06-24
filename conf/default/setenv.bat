@@ -21,14 +21,14 @@ set SFI_HOME=%~dp0.\..
 
 set M2_HOME=%SFI_HOME%\deploy\@buildTool.install.tofile@
 set RUBY_HOME=%SFI_HOME%\deploy\@ruby.install.tofile@
-set JAVA_HOME=%SFI_HOME%\repository\@javaSDK.path@
-set ANT_HOME=%SFI_HOME%\repository\@ant.path@
+set JAVA_HOME=@jdk.home@
+set ANT_HOME=@ant.home@
 
-set PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%PATH%
+set PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
 
 set RAILS_ENV=production
 
 REM utilisé par GEM
-set HTTP_PROXY=http://proxy.mdp:3128
+set HTTP_PROXY=http://@proxy.host@:@proxy.port@
 
 set mvn=call "%M2_HOME%\bin\mvn.bat" -s %M2_HOME%\conf\maven-user-settings.xml

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MysqlServer-Execution" basedir="../.." >
+
+    <loadproperties>
+        <string>    
+    deploy.dir = deploy
+    repo.dir = repository
+    sfi.java.drivers = java-libs
+    sfi.dataBase.install.tofile = mysql-server
+    
+    mysql.startup.delay = 5
+    mysql.shutdown.delay = 5
+    mysql.admin.user = root
+    mysql.admin.password = 
+        </string>
+    </loadproperties>
+
+    <property name="mysql.base.dir"       location="${deploy.dir}/${sfi.dataBase.install.tofile}" />
+    <property name="mysql.defaults.file"  location="${mysql.base.dir}/my.ini" />
+    <property name="mysql.binaries.dir"   location="${mysql.base.dir}/bin" />
+    <property name="mysql.script.dir"     location="${mysql.base.dir}/scripts" />
+    
+    
+
+    <path id="mysql.driver.classpath" >
+        <fileset dir="${repo.dir}/${sfi.java.drivers}">
+            <include name="**/mysql-connector-java*.jar"/>
+        </fileset>
+    </path>
+    
+    <macrodef name="sqlScript" ><!--  create-*-mysql.sql -->
+        <attribute name="user" default="${mysql.admin.user}" />
+        <attribute name="password" default="${mysql.admin.password}" />
+        <attribute name="schema" default="" />
+        <attribute name="show" default="true" />
+        
+        <element name="sqlResources" implicit="yes"/>
+        <sequential>
+            <sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop"
+                    url="jdbc:mysql://localhost:${sfi.db.port}/@{schema}" 
+                    userid="@{user}" password="@{password}" showtrailers="false" >
+                <resources>
+                    <sqlResources />
+
+                </resources>
+            </sql>
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="createSchema" ><!--  create-*-mysql.sql -->
+        <attribute name="schema" />
+        <attribute name="user" default="@{schema}"/>
+        <attribute name="password" default="@{user}"/>
+        <attribute name="options" default="CHARACTER SET utf8" />
+        <sequential>
+            <sqlScript schema="" show="false" >
+                <string>
+                    CREATE DATABASE IF NOT EXISTS @{schema} @{options};
+                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'localhost' IDENTIFIED BY '@{password}';
+                    GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'%'         IDENTIFIED BY '@{password}';
+                    FLUSH PRIVILEGES;
+                    SHOW DATABASES;
+                </string>
+            </sqlScript>
+        </sequential>
+    </macrodef>
+    
+    <target name="createDb" >
+        <echo> create schema ${module.name} with ${module.db.user} (${module.db.password}) </echo>
+    </target>
+
+        
+        
+    <target name="createSchemas" depends="startup" >
+
+        <!-- Port is defined in my.ini file of configuration -->
+        <!-- Remote rights are granted for maven-plugin-sonar calls -->
+        
+        <!-- If the db exists, continue ant -->
+<!--                        
+            CREATE DATABASE sonar CHARACTER SET utf8 COLLATE utf8_general_ci;
+            grant all privileges on sonar.* to '${sfi.db.sonar.user}'@'localhost' identified by '${sfi.db.sonar.password}';
+            grant all privileges on sonar.* to '${sfi.db.sonar.user}'@'%' identified by '${sfi.db.sonar.password}';
+            
+            CREATE DATABASE artifactory;
+            GRANT all privileges on artifactory.* TO '${sfi.db.artifactory.user}'@'localhost' IDENTIFIED BY '${sfi.db.artifactory.password}';
+
+            create database redmine character set utf8;
+            grant all privileges on redmine.* to '${sfi.db.redmine.user}'@'localhost' IDENTIFIED BY '${sfi.db.redmine.password}';
+
+
+-->
+
+        <sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop"
+                    url="jdbc:mysql://localhost:${sfi.db.port}/" 
+                    userid="${mysql.admin.user}" password="${mysql.admin.password}" >
+            <resources>
+                <fileset dir="${ant.file.MysqlServer-Execution}/.." includes="create-*-mysql.sql" />
+                <string>
+                    flush privileges;
+                    SHOW DATABASES;
+                </string>
+            </resources>
+        </sql>
+        
+        <antcall target="shutdown" />
+    </target>
+    
+    
+
+    <property name="mysql.script.dir"        location="${mysql.base.dir}/script" />
+    <property name="mysql.installation.flag" location="${mysql.base.dir}/data.installed" />
+    
+    <target name="startup" depends="ensureDataExits,startQuiet,startConsole" >
+        <echo>Wait for data base to start (${mysql.startup.delay}s)</echo>
+        <sleep seconds="${mysql.startup.delay}" />
+    </target>
+
+
+    <target name="startQuiet" if="noConsole" >
+        <exec executable="${mysql.binaries.dir}/mysqld" dir="${mysql.base.dir}" spawn="true" >
+            <arg value="--defaults-file=${mysql.defaults.file}" />
+            <arg value="--basedir=${mysql.base.dir}" />
+        </exec>
+    </target>
+    
+
+    <target name="startConsole" unless="noConsole">
+        <exec executable="xterm" dir="${mysql.base.dir}" spawn="true" >
+            <arg value="-e" />
+            <arg value="${mysql.binaries.dir}/mysqld" />
+            <arg value="--defaults-file=${mysql.defaults.file}" />
+            <arg value="--basedir=${mysql.base.dir}" />
+            <arg value="--console"/>
+        </exec>
+    </target>
+
+
+    <target name="ensureDataExits" depends="checkDataExits" unless="mysqlDataExists" >
+        <exec executable="${mysql.script.dir}/mysql_install_db" >
+            <arg value="--defaults-file=${mysql.defaults.file}" />
+            <arg value="--basedir=${mysql.base.dir}" />
+        </exec>
+        <tstamp />
+        <echo file="${mysql.installation.flag}" >Database installed at ${TSTAMP} the ${DSTAMP}</echo>
+    </target>
+    
+    <target name="checkDataExits" >
+        <chmod perm="ugo+x" dir="${mysql.binaries.dir}" includes="*" />
+        <chmod perm="ugo+x" dir="${mysql.script.dir}" includes="*" />
+        <available property="mysqlDataExists" file="${mysql.installation.flag}" type="file" />
+    </target>
+    
+
+    <target name="shutdown" >
+        <exec executable="${mysql.binaries.dir}/mysqladmin" dir="${mysql.base.dir}" >
+            <arg value="--defaults-file=${mysql.defaults.file}" />
+            <arg value="--user=${mysql.admin.user}"/>
+            <arg value="--password=${mysql.admin.password}"/>
+            <arg value="shutdown"/>
+        </exec>
+        <echo>Wait for data base to stop (${mysql.shutdown.delay}s)</echo>
+        <sleep seconds="${mysql.shutdown.delay}" />
+    </target>
+    
+</project>

@@ -2,8 +2,8 @@
 <hudson.tasks.Ant_-DescriptorImpl>
   <installations>
     <hudson.tasks.Ant_-AntInstallation>
-      <name>@ant.path@</name>
-      <home>@basedir@/repository/@ant.path@</home>
+      <name>DefaultAnt</name>
+      <home>@ant.home@</home>
       <properties/>
     </hudson.tasks.Ant_-AntInstallation>
   </installations>

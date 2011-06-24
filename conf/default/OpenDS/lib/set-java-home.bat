@@ -13,4 +13,4 @@ REM   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 REM   See the License for the specific language governing permissions and
 REM   limitations under the License.
 
-set OPENDS_JAVA_HOME=%~dp0.\..\..\..\repository\@javaSDK.path@
+set OPENDS_JAVA_HOME=@jdk.home@

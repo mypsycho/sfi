@@ -2,19 +2,27 @@
 
 <project name="Apache-DS" basedir="../../deploy/apacheds/war" default="war">
 
-	<!-- We use script command, not java call to have the environment from setenv -->
-	<path id="build.classpath">
+    <!-- default value -->
+    <property name="sfi.ldapClient.exec" value="${sfi.ldapClient.name}.ant" />
+    <import file="${sfi.basedir}/bin/modules/${sfi.ldapClient.exec}" />
+
+
+    <property name="apacheds.bind.user" value="${sfi.ldap.bind.dn}" />
+    <property name="apacheds.bind.builtin.password" value="secret" />
+
+    <!-- We use script command, not java call to have the environment from setenv -->
+    <path id="build.classpath">
         <fileset dir="../lib">
             <include name="**/*.jar" />
         </fileset>
     </path>
-	
-	<target name="war" >
-		<mkdir dir="target/classes" />
-		<delete>
+    
+    <target name="war" >
+        <mkdir dir="target/classes" />
+        <delete>
             <fileset dir="target/classes" includes="**/*" />
         </delete>
-		<javac srcdir="src/main/java"
+        <javac srcdir="src/main/java"
                destdir="target/classes"
                debug="on"
                classpathref="build.classpath">
@@ -24,10 +32,27 @@
             <!-- les classes et fichier de configuration -->
             <classes dir="target/classes" />
             <lib dir="../lib" includes="*.jar" />
-		</war>
-	</target>
+        </war>
+    </target>
 
-
+    <target name="securePassword" >
+        <tempfile property="ldapScript" destdir="${deploy.dir}" prefix="ldap" suffix=".ldif" />  
+        
+        <concat destfile="${ldapScript}" >
+			<!-- Note: return carriages are an issue -->
+            <string>dn: ${apacheds.bind.user}
+changetype: modify
+replace: userPassword
+userPassword:: ${sfi.ldap.bind.password.base64}</string>
+        </concat>
+        
+        <ldap script="ldapmodify" >
+            <arg line="-ac" />
+            <arg value="-f" /><arg file="${ldapScript}" />
+            <arg line="-h 127.0.0.1 -p ${sfi.ldap.port}"/> <!-- host -->
+            <arg line="-D ${apacheds.bind.user} -w ${apacheds.bind.builtin.password}"/> <!-- login -->
+        </ldap>
+    </target>
 
 
 </project>

@@ -15,6 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#We are in lib dir of OpenDS
-SF_INSTALL_HOME=`dirname $0`/../../..
-export OPENDS_JAVA_HOME=${SF_INSTALL_HOME}/repository/@javaSDK.path@
+export OPENDS_JAVA_HOME=@jdk.home@

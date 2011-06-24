@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldapConfiguration>
+  <connectionInfo>
+    <searchBase>@ldap.root.dn@</searchBase>
+    <systemUsername>@ldap.bind.dn@</systemUsername>
+	<!-- note: Nexus uses a encoded password but some version support clear password -->
+    <systemPassword>@ldap.bind.password@</systemPassword>
+    <authScheme>simple</authScheme>
+    <protocol>ldap</protocol>
+    <host>localhost</host>
+    <port>@ldap.port@</port>
+  </connectionInfo>
+  <userAndGroupConfig>
+    <emailAddressAttribute>mail</emailAddressAttribute>
+    <ldapGroupsAsRoles>true</ldapGroupsAsRoles>
+    <groupBaseDn>ou=nexus,ou=groups</groupBaseDn>
+    <groupIdAttribute>cn</groupIdAttribute>
+    <groupMemberAttribute>uniqueMember</groupMemberAttribute>
+    <groupMemberFormat>uid=${username},@ldap.user.base@</groupMemberFormat>
+    <groupObjectClass>groupOfUniqueNames</groupObjectClass>
+    <userPasswordAttribute>userPassword</userPasswordAttribute>
+    <userIdAttribute>uid</userIdAttribute>
+    <userObjectClass>inetOrgPerson</userObjectClass>
+    <userBaseDn>ou=users</userBaseDn>
+    <userRealNameAttribute>cn</userRealNameAttribute>
+  </userAndGroupConfig>
+</ldapConfiguration>

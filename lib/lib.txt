@@ -1,0 +1,2 @@
+JAVA jdk1.6.0_10_win32
+ANT apache-ant-1.8.2

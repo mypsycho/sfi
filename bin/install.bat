@@ -1,1 +1,1 @@
-call "%~dp0.\engine.bat" install %*
+call "%~dp0.\engine\engine.bat" install %*

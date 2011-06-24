@@ -1,0 +1,22 @@
+Description of the default stack
+--------------
+Basic stack is java-developer oriented but this tool provides global mechanisms 
+to integration of small-footprinted applications.
+
+Basic stack includes following applications:
+- Redmine              : Project management
+- Sonar of Sonarsource : Quality watch
+- Sonatype Nexus       : Resource proxy and hierarcical publishing 
+- Jenkins CI           : Continuouse integration
+- Apache Maven         : Software Build tool 
+
+It works with following middlewares :
+- Apache Tomcat : Web server
+- Mysql         : SQL RDMS
+- ApacheDS      : Users directory
+
+
+This approach ensures the possibility to have a stand-alone installation.
+It also limits license issue as this product does not distribut any third-party product.
+Some softwares may require license agreement/registration before download.
+

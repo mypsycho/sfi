@@ -1,1 +1,1 @@
-call "%~dp0.\engine.bat" shutdown %*
+call "%~dp0.\engine\engine.bat" shutdown %*

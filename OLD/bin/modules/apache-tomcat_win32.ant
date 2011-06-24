@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Apache-Tomcat-Win32" basedir="../.." >
+
+    <import file="${ant.file.Apache-Tomcat-Win32}/../apache-tomcat.ant" />
+
+    <target name="startup" depends="startQuiet,startConsole" >
+        <echo>Wait for Server to start (~${tomcat.startup.delay}s)</echo>
+        <sleep seconds="${tomcat.startup.delay}" />
+        <tempfile prefix="tomcat" property="tomcat.run" deleteonexit="true"/>
+        <get dest="${tomcat.run}" src="http://localhost:${sfi.server.port}"/>
+    </target>
+
+    
+    
+	<!-- We use script command, not java call to have the environment from setenv -->
+	<target name="startQuiet" if="noConsole">
+	    <exec executable="cmd" dir="${tomcat.binaries.dir}" spawn="true">
+			<env key="CATALINA_HOME" file="${tomcat.base.dir}" />
+			<arg value="/c" />
+			<arg file="${tomcat.binaries.dir}/catalina.bat" />
+			<arg value="run" />
+	    </exec>
+	</target>
+
+	<target name="startConsole" unless="noConsole" >
+	    <exec executable="cmd" dir="${tomcat.binaries.dir}" >
+		    <env key="CATALINA_HOME" file="${tomcat.base.dir}" />
+			<arg value="/c" />
+			<arg file="${tomcat.binaries.dir}/startup.bat" />
+	    </exec>
+	</target>
+
+
+	
+	<!-- We use script command, not java call to have the environment from setenv -->
+	<target name="shutdown" >
+		<exec executable="cmd" dir="${tomcat.binaries.dir}" > <!-- The command does not fork -->
+			<env key="CATALINA_HOME" file="${tomcat.base.dir}" />
+			<arg value="/c" />
+			<arg file="${tomcat.binaries.dir}/shutdown.bat" />
+		</exec>
+		<echo>Wait for Server to stop (~${tomcat.shutdown.delay}s)</echo>
+		<sleep seconds="${tomcat.shutdown.delay}" />
+	</target>
+
+
+</project>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ldapConfiguration>
   <connectionInfo>
-    <searchBase>ou=system</searchBase>
+    <searchBase>@ldap.root.dn@</searchBase>
     <systemUsername>@ldap.bind.dn@</systemUsername>
-	<!-- nexus 1.8 uses a clear password, 1.9.x won't -->
+    <!-- note: Nexus uses a encoded password but some version support clear password -->
     <systemPassword>@ldap.bind.password@</systemPassword>
     <authScheme>simple</authScheme>
     <protocol>ldap</protocol>

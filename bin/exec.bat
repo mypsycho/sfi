@@ -17,14 +17,13 @@ REM   limitations under the License.
 
 @setlocal
 set BASEDIR=%~dp0.\..
-set JAVA_HOME=%BASEDIR%\repository\jdk1.6.0_10_win32
-set ANT_HOME=%BASEDIR%\repository\apache-ant-1.8.1
+for /F "tokens=1,*" %%i in ( %BASEDIR%\lib\lib.txt ) do set %%i_HOME=%BASEDIR%\lib\%%j
 
-set sfi.exec=call "%ANT_HOME%\bin\ant.bat" -f "%BASEDIR%\bin\engine.ant" testModule 
 set sfi.option=
-REM set sfi.option=%sfi.option% -Dsfi.exec.mode=TEST
+REM  -Dsfi.exec.mode=TEST
 
-%sfi.exec% %sfi.option% "-Dmodules=%*"
-REM exemple: test  config.install issueTool.init issueApp.install server.startup
+call "%ANT_HOME%\bin\ant.bat" -f "%BASEDIR%\bin\engine\engine.ant" -Dsfi.profile=win32 %sfi.option% exec 
+REM  "-Dmodules=%*"
+REM example: echo config.install issueTool.init issueApp.install server.startup | exec
 
 @endlocal

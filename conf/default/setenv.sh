@@ -17,19 +17,18 @@
 
 
 # We are at <SFI_HOME>/deploy
-
 export SFI_HOME=`dirname $0`
 
 export M2_HOME=$SFI_HOME/deploy/@buildTool.install.tofile@
 export RUBY_HOME=$SFI_HOME/deploy/@ruby.install.tofile@
-export JAVA_HOME=$SFI_HOME/repository/@javaSDK.path@
-export ANT_HOME=$SFI_HOME/repository/@ant.path@
+export JAVA_HOME=@jdk.home@
+export ANT_HOME=@ant.home@
 
-export PATH=$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$PATH
+export PATH=$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$ANT_HOME/bin;$PATH
 
 export RAILS_ENV=production
 
 # utilisé par GEM
-export HTTP_PROXY=http://proxy.mdp:3128
+export HTTP_PROXY=http://@proxy.host@:@proxy.port@
 
-export mvn="M2_HOME/bin/mvn.bat" -s $M2_HOME/conf/maven-user-settings.xml
+export mvn="M2_HOME/bin/mvn -s $M2_HOME/conf/maven-user-settings.xml"

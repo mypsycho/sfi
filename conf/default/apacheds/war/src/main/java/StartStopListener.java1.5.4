@@ -56,26 +56,26 @@ public class StartStopListener implements ServletContextListener
             ldapServer.setDirectoryService( directoryService );
 
             // Set LDAP port to 10389
-			InitialContext ic = new InitialContext();
-			int port = 10389; // Default LDAP
-			try {
-				port = (Integer) ic.lookup("java:comp/env/port");
-			} catch ( NamingException ignore ) { }
-			ldapServer.setIpPort(port);
-			ldapServer.setAllowAnonymousAccess( true );
-			SocketAcceptor socketAcceptor = new SocketAcceptor(null);
-			ldapServer.setSocketAcceptor(socketAcceptor);
-			
+            InitialContext ic = new InitialContext();
+            int port = 10389; // Default LDAP
+            try {
+                port = (Integer) ic.lookup("java:comp/env/port");
+            } catch ( NamingException ignore ) { }
+            ldapServer.setIpPort(port);
+            ldapServer.setAllowAnonymousAccess( true );
+            SocketAcceptor socketAcceptor = new SocketAcceptor(null);
+            ldapServer.setSocketAcceptor(socketAcceptor);
+            
 //            TcpTransport ldapTransport = new TcpTransport( port );
 //            ldapServer.setTransports( ldapTransport );
 
             // Determine an appropriate working directory
             ServletContext servletContext = evt.getServletContext();
             File workingDir = ( File ) servletContext.getAttribute( "javax.servlet.context.tempdir" );
-			try {
-				workingDir = new File((String) ic.lookup("java:comp/env/data"));
-			} catch ( NamingException ignore ) { }
-			
+            try {
+                workingDir = new File((String) ic.lookup("java:comp/env/data"));
+            } catch ( NamingException ignore ) { }
+            
             directoryService.setWorkingDirectory( workingDir );
 
             directoryService.startup();

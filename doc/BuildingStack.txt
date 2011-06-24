@@ -1,0 +1,126 @@
+
+
+Choosing a stack
+--------------
+This chapter describes the 
+Candidates for integrable application are:
+. Java or ruby (through JRuby) Virtual-machine applications
+. Small footprint installation: 
+ . no resources required in any special place like 'etc' or '${user.home}' 
+   folder.
+ . no update of OS Registry or user profile 
+ . no several place installations: for example, avoid software which requires
+    "program files\XXX" 
+    AND "program files\common files\XXX" 
+    AND "Documents and Settings\All Users\XXX"
+    (except when the different places are handled by other SFI-applications).
+. Configurable through ASCII files.
+. Intallation must be incremental. Unpacking an application must not override 
+  files changed when using the application. 
+. No interactive installation. As installing a full stack can last several 
+  minutes, executable with GUI should be avoid. 
+  (Especially when pushing 'next' button is the only required action.)
+
+
+Installation layout
+--------------
+
+<Install>
+|   LICENSE ___________ Project license
+|   NOTICE ____________ Project copyrights
+|   README ____________ Document introduction
+|   
++---bin ___________________________________ ** Runnable commands **
+|   |   exec.{ bat | sh } _________________ Unitary execution
+|   |   <command_name>.{ bat | sh } _______ Shortcut for modules launching
+|   |
+|   +---engine
+|   |       command.ant ___________________ Build-in tasks 
+|   |       engine.ant ____________________ Engine of commands executions
+|   |       engine.{ bat | sh } ___________ Scripts to run
+|   |       messages.properties ___________ Messages printed at runtime
+|   |
+|   +---commands
+|   |       <command_name>.modules* _______ Listings of tasks in a command
+|   |       engine.properties _____________ Description of the stack
+|   |       engine_<profile>.properties* __ Os/plateform specifities
+|   |
+|   +---modules
+|   |       <module_name>.ant* ____________ Application specific tasks
+|   |
+|   \---urls
+|           urls.properties _______________ Application location descriptor
+|           <downloadable_subList>.urls* __ Supplementary listings for download
+|
++---conf ___________________________ ** Configurations **
+|   |   default.properties _________ Default configuration properties
+|   |
+|   +---default 
+|   |   |   setenv.{ bat | sh } ____ Environment for command line execution
+|   |   |
+|   |   +---<module_name>*
+|   |       <configuration-file>* __ Configuration resources of modules 
+|   |
+|   \---users
+|           roles.ldif _____________ List of roles
+|           users.ldif _____________ List of users
+|           autorizations.ldif _____ List of role/user relations
+|
++---doc ____________________________ ** Detailed documentation **
+|   |   BuildingStack.txt
+|   |   ProvidedStack.txt
+|   |   repository.txt
+|   |
+|   \---repository
+|           repository_win32.tree
+|
++---lib
+|       lib.txt ____________________ Path of Apache ANT Java SDK
+|
+\---repository _____________________ 
+
+
+Building a stack
+--------------
+
+
+1. Descriptor 'bin/commands/engine.properties'
+- Define modules and the command
+sfi.<module>.name : required property to define a module
+sfi.<module>.exec : ant file to execute specific command
+  Default value is based on module name with .ant extension. 
+sfi.<module>.exec[<command>] : the function to call for <command> command
+  Default commant invoke sfi.<module>.exec ant file with command as 
+
+- Define an OS variation with 'bin/commands/engine_<os.version>.properties' files
+
+
+2. The commands
+A command is sequence of function invocations of one or more modules.
+They are similar as lifecycle in Apache Maven.
+ 
+They are stored on 'bin/commands' folder with '*.modules' extension
+
+Provided commands are:
+- install: install, start the applications and perform initialisation tasks 
+- startup: start the applications once installed
+- shutdown: stop the applications 
+- loadUsers: import 'ldif' files in LDAP server
+
+Syntax of command file is a list of <module>[.<command>] separated by a new line.
+Where:
+  - module is the name of an module defined in the descriptor.
+  - command is the command to execute. If ommitted, the meta-command is used. 
+Empty lines and lines started by '#' character are ignored.
+
+
+3. The build-in functions
+delegate (default)
+download
+unpack
+copy
+configure 
+
+
+4. Miscellaneous
+Wrapping an application in WAR

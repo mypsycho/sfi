@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="JRuby-Execution" basedir="../.." >
+
+    <loadproperties>
+    	<string>
+    deploy.dir = deploy
+    sfi.ruby.install.tofile = jruby
+	sfi.ruby.native = i386-Windows/jffi-1.0.dll
+    ruby.default.mem = 500m
+    ruby.default.stack = 1024k
+        </string>
+	</loadproperties>
+	<property name="ruby.base.dir" location="${deploy.dir}/${sfi.ruby.install.tofile}" />
+
+	
+	<!--
+Darwin
+i386-FreeBSD
+i386-Linux
+i386-Windows
+ppc-AIX
+ppc-Linux
+sparc-SunOS
+sparcv9-SunOS
+x86_64-FreeBSD
+x86_64-Linux
+x86_64-Windows
+	-->
+	
+	
+	<macrodef name="ruby" >
+		<attribute name="ruby.mem" default="${ruby.default.mem}" />
+		<attribute name="ruby.stack" default="${ruby.default.stack}" />
+		<!-- command or script is required -->
+		<attribute name="command" default="" />
+		<attribute name="comment" default="" />
+		<attribute name="script" default="${ruby.base.dir}/bin/@{command}"/>
+		<attribute name="dir" default="${ruby.base.dir}" />
+		<element name="args" implicit="true" optional="true" /> <!-- list of <arg> -->
+
+		<sequential>
+			<echo>Running @{script} @{comment}</echo>
+			<java taskname="ruby" classname="org.jruby.Main" failonerror="true" fork="true" dir="@{dir}" >
+				<env key="JAVA_HOME" file="${java.home}" />
+				<jvmarg value="-Xmx@{ruby.mem}" />
+				<jvmarg value="-Xss@{ruby.stack}" />
+
+				<sysproperty key="jffi.boot.library.path" file="${ruby.base.dir}/lib/native/${sfi.ruby.native}" />
+				<sysproperty key="jruby.memory.max" value="@{ruby.mem}" />
+				<sysproperty key="jruby.stack.max" value="@{ruby.stack}" />
+				<sysproperty key="jruby.home" file="${ruby.base.dir}" />
+				<sysproperty key="jruby.lib" file="${ruby.base.dir}/lib" />
+				<sysproperty key="jruby.script" value="jruby" />
+				<!--sysproperty key="jruby.shell" value="?? /bin/sh ??" /-->
+
+				<bootclasspath path="${ruby.base.dir}/lib/jruby.jar" > 
+					<pathelement path="${java.home}/lib/rt.jar" />
+					<pathelement path="${ruby.base.dir}/lib/jruby.jar" />
+				</bootclasspath>
+
+				<classpath>
+					 <fileset dir="${ruby.base.dir}/lib">
+						<include name="*.jar"/>
+						<exclude name="jruby.jar"/>
+						<exclude name="jruby-complete.jar"/>
+					</fileset>
+				</classpath>
+				 
+				<arg value="-S" />
+				<arg file="@{script}" />
+				<args />
+			
+			</java>
+		</sequential>
+	</macrodef>
+
+
+	<target name="gems" >
+		<pathconvert property="gem.list" pathsep=" " >
+			<fileset dir="${repo.dir}/ruby-gems" includes="*.gem" />
+		</pathconvert>
+		<echo>gem.list  ${gem.list} </echo>
+		<ruby command="gem" >
+			<arg value="install" />
+			<arg value="--force" />
+			<arg value="--local" />
+			<arg value="--no-ri" />
+			<arg value="--no-rdoc" />
+			<arg line="${gem.list}" />
+		</ruby>
+	</target>
+	
+
+	<target name="gems-list" >
+		<ruby command="gem" >
+			<arg value="list" />
+		</ruby>
+	</target>
+	
+</project>

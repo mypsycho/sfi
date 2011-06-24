@@ -1,0 +1,39 @@
+# Unpack elements
+runtime.plugins
+ruby
+ruby.drivers
+ruby.gems
+server
+server.drivers
+dataBase
+directory
+
+buildTool
+intContTool
+intContTool.plugins
+qualityTool
+qualityTool.plugins
+repositoryTool
+issueTool
+
+
+# Copy the configuration items
+runtime.configure
+
+# Init database parts
+dataBase.startup
+
+issueTool.init
+# For redmine, plugins can not be run with 1rst migration
+issueTool.plugins
+issueTool.build
+issueTool.deploy
+
+qualityTool.init
+# Build of sonar must be performed after configuration
+qualityTool.build
+directory.build
+ldapClient.install
+
+server.startup
+

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="OpenDS-Execution" basedir="../.." xmlns:antcontrib="antlib:net.sf.antcontrib" >
+
+    
+    <loadproperties>
+    	<string>
+    deploy.dir = deploy
+	sfi.runtime.plugins.todir=ant-libs
+    sfi.ldapClient.install.tofile = OpenDS
+    ldap.default.mem = 500m
+        </string>
+	</loadproperties>
+	<property name="ldap.base.dir"       location="${deploy.dir}/${sfi.ldapClient.install.tofile}" />
+	
+	
+    
+	<!-- 
+	  Loading the script classes from OpenDS scripts : They all have the same partern.
+	-->
+    <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <fileset dir="${deploy.dir}/${sfi.runtime.plugins.todir}/ant-contrib" includes="ant-contrib*.jar" />
+        </classpath>
+	</taskdef>
+
+    <antcontrib:for param="scriptfile" >
+        <fileset dir="${ldap.base.dir}/bin" >
+            <and>
+			    <filename name="*" />
+	            <type type="file" />
+            </and>
+		</fileset>
+        <sequential>
+	        <local name="script" />
+	        <basename property="script" file="@{scriptfile}" />
+            <loadproperties>
+	            <concat>
+	                <fileset file="@{scriptfile}" />
+	                <filterchain>
+	                    <linecontainsregexp>
+	                      	<regexp pattern='OPENDS_INVOKE_CLASS\=\"(.+)\"'/>
+	                    </linecontainsregexp>
+	                    <tokenfilter>
+	                        <replaceregex pattern='OPENDS_INVOKE_CLASS\=\"(.+)\"' 
+	                            replace="ldap.class.${script} \1" />
+	                    </tokenfilter>
+	            	</filterchain>
+	            </concat>
+	        </loadproperties>
+        </sequential>
+    </antcontrib:for>
+
+	<!--
+	<echoproperties>
+		<propertyset>
+			<propertyref prefix="ldap.class."/>
+		</propertyset>
+	</echoproperties>
+    -->
+	
+	<macrodef name="ldap" >
+		<attribute name="ldap.mem" default="${ldap.default.mem}" />
+		<attribute name="script" />
+		<attribute name="comment" default="" />
+		<attribute name="dir" default="${basedir}" />
+		<element name="args" implicit="true" optional="true" /> <!-- list of <arg> -->
+
+
+		<sequential>
+			<echo>[LDAP] @{script} @{comment}</echo>
+		    <echo level="info"> class ${ldap.class.@{script}}</echo>
+
+			<java classname="${ldap.class.@{script}}" failonerror="true" fork="false" dir="@{dir}" >
+				<env key="JAVA_HOME" file="${java.home}" />
+				<jvmarg value="-Xmx@{ldap.mem}" />
+
+				<sysproperty key="org.opends.server.scriptName" value="@{script}" />
+
+			    <classpath>
+					 <fileset dir="${ldap.base.dir}/lib">
+						<include name="*.jar"/>
+					</fileset>
+				</classpath>
+				 
+				<args />
+			
+			</java>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="ldapServer" >
+		<attribute name="ldap.mem" default="${ldap.default.mem}" />
+		<attribute name="script" />
+		<attribute name="comment" default="" />
+		<attribute name="dir" default="${basedir}" />
+		<element name="args" implicit="true" optional="true" /> <!-- list of <arg> -->
+
+		<sequential>
+		    <ldap ldap.mem="@{ldap.mem}" script="@{script}" comment="@{comment}" dir="@{dir}" >
+		        <arg line="--configClass org.opends.server.extensions.ConfigFileHandler" />
+		        <arg value="--configFile"/><arg file="${ldap.base.dir}/config/config.ldif" />
+		        <args />
+			</ldap>
+		</sequential>
+	</macrodef>
+
+	
+	<target name="test" >
+	    <echoproperties prefix="ldap.class" />
+	    <ldap script="ldapcompare" />
+	</target>
+	
+	<target name="import" >
+	    <fail unless="module.exec.ldif" />
+	    <property name="module.exec.options" value="-ac" />
+	    <ldap script="ldapmodify" >
+	        <arg line="${module.exec.options}" />
+	        <arg value="-f" /><arg file="${module.exec.ldif}" />
+	        <arg line="-h localhost -p ${sfi.ldap.port}"/> <!-- host -->
+	        <arg line="-D ${sfi.ldap.bind.dn} -w ${sfi.ldap.bind.password}"/> <!-- login -->
+		</ldap>
+	</target>
+	
+	<target name="client" >
+	    <fail unless="module.exec.script" />
+	    <ldap script="${module.exec.script}" >
+	        <arg line="${module.exec.options}" />
+		</ldap>
+	</target>
+
+	<target name="server" >
+	    <fail unless="module.exec.script" />
+	    <ldapServer script="${module.exec.script}" >
+	        <arg line="${module.exec.options}" />
+		</ldapServer>
+	</target>	
+	
+	
+</project>

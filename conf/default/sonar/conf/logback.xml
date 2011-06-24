@@ -21,9 +21,9 @@
 
   <!-- appender used when using sonar with the provided jetty web container -->
   <appender name="SONAR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>logs/sonar.log</File>
+    <File>${catalina.home}/logs/sonar.log</File>
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <param name="FileNamePattern" value="logs/sonar.%i.log"/>
+      <param name="FileNamePattern" value="${catalina.home}/logs/sonar.%i.log"/>
       <param name="MinIndex" value="1"/>
       <param name="MaxIndex" value="3"/>
     </rollingPolicy>
@@ -46,7 +46,7 @@
 
   <!-- JRuby on Rails. Uncomment in order to log HTTP and SQL requests -->
   <!--<logger name="rails">
-  	<level value="DEBUG"/>
+      <level value="DEBUG"/>
   </logger>-->
 
   <logger name="org.hibernate.cache.ReadWriteCache">

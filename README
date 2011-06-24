@@ -13,78 +13,49 @@ Most of current applications are based on the similar pattern:
 The main idea is to combine a simple descriptor with basic functions to create 
 open and integrated solutions server.
 
-This implementation can be seen as an alternative of Bitnami.
-Benefits:
-- Its not a repackaging, it does not hide what should be done to install. 
-- You can build your own stack if you find an application you need. 
+This software can be seen as an alternative of Bitnami. It provides 
+Benefits are:
+- Its not a repackaging, it does not hide what should be done to install a product.
+    + Supplementary task can be added at any moment in installation and usage procedures.
+    + Details of each action in a procedure are transparent and can be tuned.
+     
+- Stack can be changed/simplified/extended at will. 
     + No need to wait to be integrated by another provider if you know how to use it.
     + Any version can be used as long as they are compatible with other choosen components (the hardest trick).  
 - A set of simple functions wrap Apache ANT commands.
-- No only you define the lifecycle of installation, but supplementary lifecycles can be easily added.
+- Basic lifecycle of installation, but supplementary lifecycles can be easily added.
 - Predefined lifecycle are : install, startup, shutdown
 
 
-Description
+
+Content
 --------------
-Basic stack is java-developer oriented but this tool provides global mechanisms 
-to integration of small-footprinted applications.
 
-Basic stack includes following applications:
-- Redmine
-- Sonar of Sonarsource
-- Sonatype Nexus
-- Jenkins CI
-- Apache Maven
+This tool is provided with a consistent stack. This stack is mostly java-development oriented.
 
-It works on following middlewares :
-- Apache Tomcat as Web server
-- Mysql as database
-- ApacheDS as ldap for users management
+The document folder contains:
+ProvidedStack.txt : Description of the provided selection of applications.
+BuildingStack.txt : Description of the engine and how to create a new stack it.
 
 
-Description
+Quick start step
 --------------
-Candidates for integrable application:
-- Java or ruby (through JRuby) Virtual-machine applications
-- Small footprint installation: 
-    + no resources required in any special place like 'etc' or 
-    '${user.home}' folder.
-    + no update of regedit
-    + no several place installations: for example, avoid
-		"program files\XXX" AND "program files\common files\XXX" AND "Documents and Settings\All Users\XXX"
-    (except places handled by another SFI-application).
-- Configurable through ASCII files.
-- Intallation must be incremental: 
-    + unpack an application must not override data changed when using the application. 
-- No interactive installation: as installing a full stack can last several minuts 
 
+1. Download Apache ANT (>=1.8.2) and Java SDK 6
 
-Building a stack
---------------
-1. Descriptor 'bin/commands/engine.properties'
-- Define all the commands 
-- Define an OS variation with 'bin/commands/engine_<os.version>.properties' files
+2. Install them 'lib' folder, update 'lib/lib.txt' is necessary
 
-2. The meta-commands
-A meta-command is sequence of commands of one or more modules.
-They are stored on 'bin/commands' folder with '*.modules' extension
-Provided meta-commands are:
-install: install, start the applications and perform initialisation tasks 
-startup: start the applications once installed
-shutdown: stop the applications 
-users: import '*.ldif' files in LDAP server
+3. (Unix only) chmod +x bin/*.sh bin/*/*.sh
 
-meta-command syntax is a list of <module>[.<command>]
-where 
-  module is the name of an module defined in the descriptor.
-  command is the command to execute. If ommitted, the meta-command is used. 
+4. Launch 'bin/download' (duration approx. 30 min) 
 
+5. (Optional) Update passwords in 'conf/default.properties'
 
+6. Launch 'bin/install' (duration approx. 10 min)
 
-3. The build-in functions
-ant module (default)
-download
-unpack
-copy
-ant
-configure 
+7. (Optional) Defines users in 'conf/users/users.ldif' and rights in 
+   'conf/users/authorisations.ldif'
+
+8. Launch 'bin/loadUsers' 
+
+9. Enjoy at http://localhost:8080/
