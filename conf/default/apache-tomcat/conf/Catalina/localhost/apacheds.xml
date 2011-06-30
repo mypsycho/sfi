@@ -2,7 +2,7 @@
 
 <Context antiJARLocking="true">
     <Environment name="port" value="@ldap.port@" type="java.lang.Integer" />
-    <Environment name="data" value="@basedir.java@/deploy/@directory.install.tofile@/data" type="java.lang.String" />
+    <Environment name="data" value="@deploy.java-dir@/@directory.install.tofile@/data" type="java.lang.String" />
     <Environment name="partitionDn" value="@ldap.root.dn@" type="java.lang.String" />
 
 </Context>

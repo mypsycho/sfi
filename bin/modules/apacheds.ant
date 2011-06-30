@@ -1,45 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Apache-DS" basedir="../../deploy/apacheds/war" default="war">
+<project name="Apache-DS" basedir="../.." >
 
-    <!-- default value -->
+    <!-- default value : should be provided by calling context -->
+    <property name="modules.dir" location="bin/modules" />
+    <property name="sfi.ldapClient.name" value="OpenDS" />
+
     <property name="sfi.ldapClient.exec" value="${sfi.ldapClient.name}.ant" />
-    <import file="${sfi.basedir}/bin/modules/${sfi.ldapClient.exec}" />
+    <import file="${modules.dir}/${sfi.ldapClient.exec}" />
 
 
     <property name="apacheds.bind.user" value="${sfi.ldap.bind.dn}" />
     <property name="apacheds.bind.builtin.password" value="secret" />
 
-    <!-- We use script command, not java call to have the environment from setenv -->
-    <path id="build.classpath">
-        <fileset dir="../lib">
-            <include name="**/*.jar" />
-        </fileset>
-    </path>
-    
-    <target name="war" >
-        <mkdir dir="target/classes" />
-        <delete>
-            <fileset dir="target/classes" includes="**/*" />
-        </delete>
-        <javac srcdir="src/main/java"
-               destdir="target/classes"
-               debug="on"
-               classpathref="build.classpath">
-        </javac>
-
-        <war destfile="target/apacheds.war" webxml="src/webapp/WEB-INF/web.xml">
-            <!-- les classes et fichier de configuration -->
-            <classes dir="target/classes" />
-            <lib dir="../lib" includes="*.jar" />
-        </war>
-    </target>
 
     <target name="securePassword" >
         <tempfile property="ldapScript" destdir="${deploy.dir}" prefix="ldap" suffix=".ldif" />  
         
         <concat destfile="${ldapScript}" >
-			<!-- Note: return carriages are an issue -->
+			<!-- Note: return carriages are an issue. Do not change. -->
             <string>dn: ${apacheds.bind.user}
 changetype: modify
 replace: userPassword

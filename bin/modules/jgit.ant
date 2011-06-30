@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="jgit" default="jar" basedir="../.." >
+
+
+  <property name="deploy.dir" location="deploy" />
+  <property name="sfi.scm.install.todir" location="${deploy.dir}/jgit" />
+  <property name="sfi.scm.install-client.lib" location="${sfi.scm.install.todir}/lib" />
+  
+  <target name="jar">
+
+
+    <!--
+    <java classname="org.apache.directory.shared.ldap.schema.ldif.extractor.impl.ClAwareSchemaLdifExtractor">
+      <classpath>
+        <pathelement location="target/classes" />
+
+        <fileset dir="../lib">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </java>
+    -->
+
+    <pathconvert property="jar.classpath" pathsep=" " dirsep="/">
+      <fileset dir="${sfi.scm.install-client.lib}" includes="**/*.jar" />
+      <map from="${sfi.scm.install-client.lib}" to="." />
+    </pathconvert>
+      
+    <jar destfile="${sfi.scm.install-client.lib}/jgit-cli.jar" excludes="**/*" >
+      <manifest>
+        <attribute name="Main-Class" value="org.eclipse.jgit.pgm.Main" />
+        <attribute name="Class-Path" value="${jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
+</project>

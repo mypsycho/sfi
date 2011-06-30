@@ -4,7 +4,6 @@
 
   <description>Interpret commands on the Software factory.</description>
     
-
   <property name="config" value="default" />
   <property name="sfi.basedir" location="${ant.file.sfi-engine}/../../.." />
   <property name="binaries.dir" location="${sfi.basedir}/bin" />
@@ -13,23 +12,8 @@
   <property name="sfi.exeResume" value="${sfi.tmp.dir}/rerun.properties" />
   
   <property name="sfi.config.path" value="${config}" />
-  <property name="sfi.exec.mode" value="" /> <!-- May be worth TEST -->
-  <property file="${binaries.dir}/engine/messages.properties" 
-      prefix="message" /> <!-- todo: find a localization -->
-  
-  <macrodef name="message" >
-    <attribute name="name" />
-    <sequential>
-      <concat taskname=" sfi " >
-        <string>${message.@{name}}</string>
-        <filterchain>
-          <expandproperties/>
-        </filterchain>
-      </concat>
-    </sequential>
-  </macrodef>
-  
-  <import file="${binaries.dir}/engine/command${sfi.exec.mode}.ant" />
+
+  <import file="${binaries.dir}/engine/command.ant" />
 
 
   <target name="execCommand" >
@@ -61,14 +45,31 @@
     
   
   <target name="loadConfiguration" >
+      <loadproperties prefix="message" >
+        <concat fixlastline="true" > <!-- Concatenation provides post-redefinition -->
+            <resources>
+                <fileset file="${binaries.dir}/engine/messages.properties" />
+                <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
+                <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
+            </resources>
+            <!--
+          <path>
+            <pathelement location="${binaries.dir}/engine/messages.properties" />
+            <pathelement location="${binaries.dir}/engine/messages_${user.language}.properties" />
+            <pathelement location="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
+          </path>
+          -->
+        </concat>
+      </loadproperties>
+      
     <!-- 
       Special runtime properties. 
       Use java.home/.., because of ANT force its to inner jre.
       We need relative path of ANT and JDK.
     -->
     <property name="sfi.jdk.home" location="${java.home}/.."  /> 
-    <basename property="sfi.ant.home" location="${ant.home}"  />
-    <property name="sfi.basedir" value="${basedir}" />
+    <property name="sfi.ant.home" location="${ant.home}"  />
+    <property name="sfi.basedir"  location="${basedir}" />
     
 	<pathconvert property="sfi.basedir.java" dirsep="/" >
       <path location="${basedir}" />
@@ -82,7 +83,7 @@
 
 	
     <hostinfo prefix="sfi.hostinfo" />
-    <loadfile property="sfi.profile" srcFile="${basedir}/profil.cfg" failonerror="false" >
+    <loadfile property="sfi.profile" srcFile="profil.cfg" failonerror="false" quiet="true">
       <filterchain>
         <trim/>
         <striplinebreaks/>
@@ -108,6 +109,14 @@
       </concat>
     </loadproperties>
     
+    <fail unless="conf.dir" >'conf.dir' property is required</fail>
+    <fail unless="deploy.dir" >'deploy.dir' property is required</fail>
+    <!-- define canonical path -->
+    <property name="sfi.deploy.dir" location="${deploy.dir}" /> <!-- host native path -->
+	<property name="sfi.repo.dir" location="${repo.dir}" /> <!-- host native path -->
+    <pathconvert property="sfi.deploy.java-dir" dirsep="/" >
+      <path location="${sfi.deploy.dir}" />
+    </pathconvert>
 
     <property name="config" value="default" />
     <property file="${conf.dir}/${config}.properties" prefix="sfi" />
@@ -230,7 +239,6 @@
     <antcall target="engine" >
       <param name="command" value="exec" />
     </antcall>
-    
     <delete file="${commands.file}" />
   </target>
   

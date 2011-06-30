@@ -15,16 +15,13 @@ REM   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 REM   See the License for the specific language governing permissions and
 REM   limitations under the License.
 
-
-REM We are at %SFINSTALL_HOME%\deploy
-set SFI_HOME=%~dp0.\..
-
-set M2_HOME=%SFI_HOME%\deploy\@buildTool.install.tofile@
-set RUBY_HOME=%SFI_HOME%\deploy\@ruby.install.tofile@
+set M2_HOME=@deploy.dir@\@buildTool.install.tofile@
+set RUBY_HOME=@deploy.dir@\@ruby.install.tofile@
 set JAVA_HOME=@jdk.home@
 set ANT_HOME=@ant.home@
+set JGIT_HOME=@deploy.dir@\jgit
 
-set PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
+set PATH=%JGIT_HOME%\bin;%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
 
 set RAILS_ENV=production
 

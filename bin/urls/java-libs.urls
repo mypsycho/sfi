@@ -1,1 +1,3 @@
 ${maven.central.url}/mysql/mysql-connector-java/5.1.16/mysql-connector-java-5.1.16.jar
+https://hudson.eclipse.org/hudson/job/jgit/ws/org.eclipse.jgit.pgm/target/jgit-cli.jar
+http://downloads.sourceforge.net/project/jsch/jsch.jar/0.1.44/jsch-0.1.44.jar?r=http%3A%2F%2Fwww.jcraft.com%2Fjsch%2F&ts=1309207243&use_mirror=freefr

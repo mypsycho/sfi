@@ -1,7 +1,0 @@
-
-ldapClient.roles
-ldapClient.users
-ldapClient.autorizations
-
-# sonar specific
-qualityTool.letmeadmin

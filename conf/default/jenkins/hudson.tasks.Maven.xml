@@ -3,7 +3,7 @@
   <installations>
     <hudson.tasks.Maven_-MavenInstallation>
       <name>apache-maven_2.2.1</name>
-      <home>@basedir@/deploy/apache-maven</home>
+      <home>@deploy.java-dir@/apache-maven</home>
       <properties/>
     </hudson.tasks.Maven_-MavenInstallation>
   </installations>

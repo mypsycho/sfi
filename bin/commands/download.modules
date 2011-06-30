@@ -1,4 +1,6 @@
-runtime
+runtime.license
+
+# runtime  
 runtime.download-plugins
 runtime.download-libs
 ruby
@@ -16,5 +18,5 @@ issueTool.download-plugins
 directory
 ldapClient
 
+runtime.license
 
-# repositoryTool.download issueTool.download issueTool.download-plugins directory.download ldapClient.download

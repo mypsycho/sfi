@@ -53,7 +53,7 @@ under the License.
   <localRepository>/path/to/local/repo</localRepository>
   -->
   <!-- sfi.comment: local repository for jenkins -->
-  <localRepository>@basedir.java@/deploy/@buildTool.name@/localRepository</localRepository>
+  <localRepository>@deploy.java-dir@/@buildTool.name@/localRepository</localRepository>
 
   <!-- interactiveMode
    | This will determine whether maven prompts you when it needs input. If set to false,

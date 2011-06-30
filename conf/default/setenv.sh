@@ -15,16 +15,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-
-# We are at <SFI_HOME>/deploy
-export SFI_HOME=`dirname $0`
-
-export M2_HOME=$SFI_HOME/deploy/@buildTool.install.tofile@
-export RUBY_HOME=$SFI_HOME/deploy/@ruby.install.tofile@
+export M2_HOME=@deploy.dir@/@buildTool.install.tofile@
+export RUBY_HOME=@deploy.dir@/@ruby.install.tofile@
 export JAVA_HOME=@jdk.home@
 export ANT_HOME=@ant.home@
+export JGIT_HOME=@deploy.dir@\jgit
 
-export PATH=$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$ANT_HOME/bin;$PATH
+export PATH=$JGIT_HOME/bin;$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$ANT_HOME/bin;$PATH
 
 export RAILS_ENV=production
 

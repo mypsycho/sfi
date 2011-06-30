@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sfi-engine-test" basedir=".." >
+<project name="sfi-test" basedir=".." >
+
+  <property file="test/test.properties" />
     
-    <property file="test.properties" />
+  <macrodef name="run" >
+    <attribute name="name" />
+    <sequential>
+      <ant antfile="${basedir}/bin/engine/engine.ant" target="engine" >
+        <property name="command" value="@{name}" />
+      </ant>
+    </sequential>
+  </macrodef>
 
+  <target name="all" depends="download,install,users" />
     
-    <macrodef name="run" >
-        <attribute name="name" />
-        <sequential>
-            <ant antfile="bin/engine/engine.ant" inheritall="false" >
-                <property name="command" value="@{name}" />
-            </ant>
-        </sequential>
-    </macrodef>
+  <target name="download" ><run name="download" /></target>
 
-    <target name="all" depends="download,install,users" />
-        
-    <target name="download" >
-        <run name="download" />
-    </target>
+  <target name="install" ><run name="install" /></target>
 
-    <target name="install" >
-        <run name="install" />
-    </target>
+  <target name="users" ><run name="users" /></target>
 
-    <target name="users" >
-        <run name="users" />
-    </target>
+  <target name="startup" ><run name="startup" /></target>
+
+  <target name="shutdown" ><run name="shutdown" /></target>
+
+  <target name="test" >
+      <ant antfile="${basedir}/bin/engine/engine.ant" target="exec" >
+        <property name="modules" value="${tested}" />
+      </ant>
+  </target>
+    
+  <target name="test+" ><run name="test" /></target>
 
 </project>

@@ -1,0 +1,15 @@
+This document must contain a use case of the applications.
+
+From a provided project.
+- Build it with maven
+- Publish (maven-deploy) in nexus as snapshot
+- Evaluate quality with sonar
+- Commit in git with webdav ? (svn)
+- Register it in jenkins
+- Register it in redmine
+- Create an issue in redmine
+- Modify the code (add a test case)
+- Check the improvement in sonar
+- Check the improvement in jenkins
+- Check tracking in redmine
+- Perform a delivery in nexus
