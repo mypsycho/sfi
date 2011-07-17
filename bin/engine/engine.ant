@@ -47,18 +47,11 @@
   <target name="loadConfiguration" >
       <loadproperties prefix="message" >
         <concat fixlastline="true" > <!-- Concatenation provides post-redefinition -->
-            <resources>
-                <fileset file="${binaries.dir}/engine/messages.properties" />
-                <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
-                <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
-            </resources>
-            <!--
-          <path>
-            <pathelement location="${binaries.dir}/engine/messages.properties" />
-            <pathelement location="${binaries.dir}/engine/messages_${user.language}.properties" />
-            <pathelement location="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
-          </path>
-          -->
+          <resources>
+            <file file="${binaries.dir}/engine/messages.properties" /> <!-- This one required -->
+            <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
+            <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
+          </resources>
         </concat>
       </loadproperties>
       
@@ -74,10 +67,10 @@
 	<pathconvert property="sfi.basedir.java" dirsep="/" >
       <path location="${basedir}" />
     </pathconvert>
-    <pathconvert property="sfi.ant.home.java" dirsep="/" >
+    <pathconvert property="sfi.ant.home.java" dirsep="/" ><!-- @todo ant.java-home-->
       <path location="${sfi.ant.home}" />
     </pathconvert>
-    <pathconvert property="sfi.jdk.home.java" dirsep="/" >
+    <pathconvert property="sfi.jdk.home.java" dirsep="/" ><!-- @todo jdk.java-home-->
       <path location="${sfi.jdk.home}" />
     </pathconvert>
 
@@ -190,7 +183,7 @@
 
     
     <!-- Running commands -->
-    <subant genericantfile="${ant.file}" target="execCommand" inheritall="true" >
+    <subant genericantfile="${ant.file.sfi-engine}" target="execCommand" inheritall="true" >
       <resourcelist> 
         <!-- Note:
         to keep order, we must use ${commands.file} and resourceList.

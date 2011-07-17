@@ -1,0 +1,172 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>base-assembly</artifactId>
+
+  <packaging>pom</packaging>
+  
+  <name>Basic reference of assembly pom</name>
+
+  <parent>
+    <groupId>com.psycho.maven.poms</groupId>
+    <artifactId>poms-root</artifactId>
+    <version>0.0.1</version>
+  </parent>
+
+  <properties>
+    <assembly.runtime.path>assembly-runtime</assembly.runtime.path>
+    <assembly.sources>${project.build.directory}/${assembly.runtime.path}/tmp</assembly.sources>
+    <assembly.build>${project.build.directory}/${assembly.runtime.path}/real</assembly.build>
+    <assembly.descriptor>main/bin/assembly.xml</assembly.descriptor>
+    <!-- default assembly expect but one resoure -->
+    <project.build.resource>${assembly.sources}/main/resources</project.build.resource>
+    <project.build.template>${assembly.sources}/main/templates</project.build.template>
+    
+    <!-- 
+      An ant includes pattern to remove undesired files:
+        Default value include < and > : the pattern cannot match a file.
+     -->
+    
+    
+    <assembly.deprecated>&lt;none&lt;</assembly.deprecated>
+  </properties>
+
+ 
+
+  <build>
+    <!--
+    
+validate
+initialize
+generate-sources   : extract super (in abstract)
+process-sources    : copy to tmp
+generate-resources : copy static resource
+process-resources 
+compile            : copy template (+generate jar, for ex.)  
+process-classes    : delete deprecated
+
+
+generate-test-sources
+process-test-sources
+generate-test-resources
+process-test-resources
+test-compile
+process-test-classes
+test
+
+prepare-package
+package            : run assemblies
+pre-integration-test
+integration-test
+post-integration-test
+verify
+install            : default
+deploy             : default
+    
+    
+    -->
+    <sourceDirectory>src</sourceDirectory>
+
+    <plugins>
+         
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>create-assembly-content</id>
+            <phase>process-sources</phase>
+            <goals><goal>copy-resources</goal></goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${assembly.sources}</outputDirectory>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <resources>
+                <resource>
+                  <directory>${project.build.sourceDirectory}</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          
+          <execution><!-- Assembly does not support mass filtering -->
+            <id>copy-result-content</id>
+            <phase>generate-resources</phase>
+            <goals><goal>copy-resources</goal></goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${assembly.build}</outputDirectory>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <resources>
+                <resource>
+                  <directory>${project.build.resource}</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>filter-templates</id>
+            <phase>compile</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <target>
+                <copy todir="${assembly.build}" overwrite="true" >
+                  <fileset dir="${project.build.template}" />
+                  <filterchain>
+                    <expandproperties/>
+                  </filterchain>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>remove-deprecated-resources</id>
+            <phase>process-classes</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <target>
+                <delete>
+                    <fileset dir="${assembly.build}" includes="${assembly.deprecated}" />
+                </delete>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <id>assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+            <configuration>
+              <descriptors>
+                <descriptor>${assembly.sources}/${assembly.descriptor}</descriptor>
+                <!-- source assembly must be in ${assembly.template} to be available to children -->
+                <descriptor>${assembly.sources}/main/bin/sources.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+
+
+</project>

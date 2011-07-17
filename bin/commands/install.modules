@@ -7,6 +7,7 @@ server
 server.drivers
 dataBase
 directory
+ldapClient
 
 buildTool
 intContTool
@@ -15,30 +16,36 @@ qualityTool
 qualityTool.plugins
 repositoryTool
 issueTool
+issueTool.plugins
 
+scm
+scm.plugins
+scm.install-git
+scm.install-svn
+
+codereview
+codereview.drivers
 
 # Copy the configuration items
 runtime.configure
+server.patch
+scm.build-git
+# Build of sonar must be performed after configuration
+qualityTool.build
+directory.build
+
 
 # Init database parts
 dataBase.startup
 
 issueTool.init
-# For redmine, plugins can not be run with 1rst migration
-issueTool.plugins
+# Redmine build must be performed after init
 issueTool.build
-issueTool.deploy
 
 qualityTool.init
-# Build of sonar must be performed after configuration
-qualityTool.build
-directory.build
-ldapClient.install
+
 
 server.startup
 directory.secure
 
 
-scm.install-client
-scm.build-client
-scm.install-server

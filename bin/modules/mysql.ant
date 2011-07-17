@@ -17,7 +17,7 @@
 
         </string>
     </loadproperties>
-
+    
     <property name="mysql.base.dir"       location="${deploy.dir}/${sfi.dataBase.install.tofile}" />
     <property name="mysql.defaults.file"  location="${mysql.base.dir}/my.ini" />
     <property name="mysql.binaries.dir"   location="${mysql.base.dir}/bin" />
@@ -39,11 +39,13 @@
         
         <element name="sqlResources" implicit="yes"/>
         <sequential>
-            <sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" print="true" onerror="stop"
+            <sql driver="com.mysql.jdbc.Driver" classpathref="mysql.driver.classpath" 
+                print="true" onerror="stop"  
                     url="jdbc:mysql://localhost:${sfi.db.port}/@{schema}" 
                     userid="@{user}" password="@{password}" showtrailers="false" >
                 <resources>
-                    <sqlResources />
+
+                       <sqlResources />
 
                 </resources>
             </sql>
@@ -57,6 +59,7 @@
         <attribute name="options" default="CHARACTER SET utf8" />
         <sequential>
             <sqlScript schema="" show="false" >
+                <resources >
                 <string>
                     CREATE DATABASE IF NOT EXISTS @{schema} @{options};
                     GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'localhost' IDENTIFIED BY '@{password}';
@@ -64,6 +67,7 @@
                     FLUSH PRIVILEGES;
                     SHOW DATABASES;
                 </string>
+                    </resources>
             </sqlScript>
         </sequential>
     </macrodef>

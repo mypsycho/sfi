@@ -1,15 +1,99 @@
-This document must contain a use case of the applications.
+Introduction
+-------------------------------
+This document contain a use case of the applications.
+This is a quick tour of the installed applications, building a realistic 
+'hello world' application.
+This tutorial will not teach you how to code. Solid basis in software 
+development (espcially java) and project management are required. 
 
+Note: This tutorial is for unix-like environment.
+For Windows installation, change '/' into '\' and '.sh' into '.bat' and so on.
+
+
+Summary of the tutorial
+-------------------------------
 From a provided project.
 - Build it with maven
 - Publish (maven-deploy) in nexus as snapshot
 - Evaluate quality with sonar
-- Commit in git with webdav ? (svn)
-- Register it in jenkins
-- Register it in redmine
+- Share it with git
+- Register it in jenkins (continuous integration)
+- Register it in redmine (bug-tracker and project manager)
 - Create an issue in redmine
 - Modify the code (add a test case)
 - Check the improvement in sonar
 - Check the improvement in jenkins
 - Check tracking in redmine
 - Perform a delivery in nexus
+
+
+Syntax
+-------------------------------
+[this/that] : alternatives
+> : command to type
+@ : Browser navigation/interaction
+(...) : Description of current action 
+
+
+Steps
+-------------------------------
+
+0. Install and start the server
+[For the first time]
+> bin/download.sh
+(Be patient, wait for ~30min., integrated-applications are downloaded)
+> bin/install.sh
+(Be patient, wait for ~10min., integrated-applications are installed and 
+started)
+> bin/loadUsers.sh
+(See other documents for descriptions of performed actions and/or 
+troublesooting)
+
+[If previously installed]
+> bin/startup.sh
+
+@ http://localhost:8080/manager/html : Check your installation
+(With default configuration, use login/password : pnico/pnico)
+
+
+1. Setup environment 
+> deploy/setenv.sh
+(Set work environment for current command interpretor)
+
+2. Prepare tutorial
+> mkdir deploy/tutorial
+> cp -r doc/samples/* deploy/tutorial
+
+
+3. Compile and publish a provided application 
+(Required for following steps)
+> cd tutorial/com.psycho.maven.poms
+> mvn deploy
+> cd ../..
+(We check maven and nexus are installed properly)
+(We deploy releases of a set of pom)
+@ http://localhost:8080/nexus : check the existence of the compiled projects
+@ Navigate in 'release' repository.
+
+4. Create a git repository
+> cd share
+> git --git-dir test-java.git init bare
+> cd ..
+
+5. Fetch (check-out) the repository and create content
+> cd tutorial
+> git clone http://localhost:8080/share/git/test-java.git test-java
+> cp -r com.psycho.test.java/* test-java
+(Instead of editing files, we copy some existing).
+> cd test-java
+> git commit -m "My first commit" --author myname@mymail.com
+(Git local commit)
+> git push ...
+(Git repository commit)
+
+
+git push http://localhost:8080/share/git/test-java.git
+
+git clone http://localhost:8080/share/git/test-java.git 
+
+rmdir /S/Q test-java

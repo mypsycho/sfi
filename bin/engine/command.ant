@@ -4,12 +4,11 @@
 
   <macrodef name="message">
     <attribute name="name" />
+	<attribute name="level" default="   info  " />
     <sequential>
-      <concat taskname="   info  " >
+      <concat taskname="@{level}" >
         <string>${message.@{name}}</string>
-        <filterchain>
-          <expandproperties />
-        </filterchain>
+        <filterchain><expandproperties/></filterchain>
       </concat>
     </sequential>
   </macrodef>
@@ -18,15 +17,13 @@
     <attribute name="name" />
     <element name="assert" implicit="true" />
     <sequential>
-      <loadfile property="sfi-failure[@name]" >
+      <loadfile property="sfi-failure[@{name}]" >
         <concat>
           <string>${message.error.@{name}}</string>
-          <filterchain>
-            <expandproperties />
-          </filterchain>
+          <filterchain><expandproperties/></filterchain>
         </concat>
       </loadfile>
-      <fail message="${sfi-failure[@name]}" taskname=" error ">
+      <fail message="${sfi-failure[@{name}]}" taskname=" error ">
         <condition>
           <not>
             <assert />
@@ -70,12 +67,12 @@
 
 
   <target name="module.configure">
-    <message name="exec.configure" />
 
     <property name="module.exec.fromfile" value="**/*" />
     <property name="module.exec.fromdir" value="${conf.dir}/${config}" />
     <property name="module.exec.todir" value="${deploy.dir}" />
 
+    <message name="exec.configure" />
     <copy todir="${module.exec.todir}" overwrite="true">
       <fileset dir="${module.exec.fromdir}" includes="${module.exec.fromfile}" />
       <filterset>
@@ -91,9 +88,8 @@
   </target>
 
 
-  <target name="module.move" if="module.exec.output">
-    <!-- if module.exec.tofile is not defined, move is neutral -->
-    <property name="module.exec.tofile" value="${module.exec.output}" />
+  <target name="module.move" if="module.exec.tofile">
+    <property name="module.exec.output" value="${module.exec.fromfile}" />
 
     <message name="exec.move" />
     <move file="${deploy.dir}/${module.exec.todir}/${module.exec.output}" 
@@ -110,8 +106,8 @@
     </condition>
 
     <property name="module.exec.target" value="${module.command}" />
-    <message name="exec.delegate" />
 
+    <message name="exec.delegate" />
     <ant antfile="${module.exec.antfile}" target="${module.exec.target}" 
         useNativeBasedir="true" />
 
@@ -124,14 +120,56 @@
 
   <target name="downloadList" if="module.exec.urls">
     <property name="module.exec.todir" value="." />
+	<echo>module.exec.base ${module.exec.base}</echo>
+	 <!-- car than cannot math a url : by default flatten -->
+	<property name="module.exec.base" value="&gt;" />
+	
     <mkdir dir="${download.dir}/${module.exec.todir}" />
-    <get dest="${download.dir}/${module.exec.todir}">
+	
+	<pathconvert property="downloadedFiles" >
+	   <resourcelist>
+        <file file="${module.exec.urls}" />
+        <filterchain>
+          <expandproperties />
+        </filterchain>
+      </resourcelist>
+	
+	  <chainedmapper>
+	    <firstmatchmapper>
+          <globmapper from="${module.exec.base}*" to="*"/>
+          <flattenmapper/>
+        </firstmatchmapper>
+		<globmapper from="*" to="${download.dir}/${module.exec.todir}/*" />
+      </chainedmapper>
+	</pathconvert>
+	  
+	<!-- Get does not create path but touch does -->
+	<echo>downloadedFiles ${downloadedFiles}</echo>
+	<touch mkdirs="true">
+      <path>
+        <pathelement path="${downloadedFiles}"/>
+      </path>
+	</touch>
+	
+    <delete> <!-- this remove files, not dir -->
+      <path>
+        <pathelement path="${downloadedFiles}"/>
+      </path>
+    </delete>
+
+	
+    <get dest="${download.dir}/${module.exec.todir}" >
       <resourcelist>
         <file file="${module.exec.urls}" />
         <filterchain>
           <expandproperties />
         </filterchain>
       </resourcelist>
+
+	  <firstmatchmapper>
+        <globmapper from="${module.exec.base}*" to="*"/>
+        <flattenmapper/>
+      </firstmatchmapper>
     </get>
   </target>
 
@@ -154,17 +192,20 @@
         <isset property="module.exec.fromdir" />
       </or>
     </assert>
-  </target>
-
-
-  <target name="module.copy" depends="assertFromDefined">
-    <condition property="module.exec.output" value="${module.exec.fromfile}">
-      <isset property="module.exec.fromfile" />
-    </condition>
 
     <property name="module.exec.fromfile" value="**/*" />
     <property name="module.exec.fromdir" value="." />
     <property name="module.exec.todir" value="." />
+        
+    <assert name="emptyFrom" >
+      <resourcecount when="greater" count="0" >
+        <fileset dir="${repo.dir}/${module.exec.fromdir}" includes="${module.exec.fromfile}" />
+      </resourcecount>
+    </assert>
+  </target>
+
+
+  <target name="module.copy" depends="assertFromDefined">
 
     <message name="exec.copy" />
     <mkdir dir="${deploy.dir}/${module.exec.todir}" />
@@ -180,51 +221,128 @@
 
 
   <target name="module.unpack" depends="assertFromDefined">
-    <property name="module.exec.fromdir" value="." />
-    <property name="module.exec.fromfile" value="**/*" />
-    <property name="module.exec.todir" value="." />
-
     <message name="exec.unpack" />
 
-    <echo></echo>
     <mkdir dir="${deploy.dir}/${module.exec.todir}" />
+    <property name="module.exec.compress[${module.exec.compress}]" value="" />
+      
     <unzip dest="${deploy.dir}/${module.exec.todir}" overwrite="true">
       <fileset dir="${repo.dir}/${module.exec.fromdir}">
-        <filename name="${module.exec.fromfile}" />
-        <exclude name="**/*.tar" />
-        <exclude name="**/*.tar.gz" />
-        <exclude name="**/*.tar.bz" />
+        <or>
+          <selector unless="module.exec.compress" >
+            <and>
+              <filename name="${module.exec.fromfile}" />
+              <filename name="**/*.tar" negate="true" />
+              <filename name="**/*.tar.gz" negate="true" />
+              <filename name="**/*.tar.bz" negate="true" />
+            </and>
+          </selector>
+          <selector if="module.exec.compress[zip]" >
+            <filename name="${module.exec.fromfile}" />
+          </selector>
+        </or>
       </fileset>
     </unzip>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="none" overwrite="true">
       <fileset dir="${repo.dir}/${module.exec.fromdir}">
-        <and>
-          <filename name="${module.exec.fromfile}" />
-          <filename name="**/*.tar" />
-        </and>
+        <or>
+          <selector unless="module.exec.compress" >
+            <and>
+              <filename name="${module.exec.fromfile}" />
+              <filename name="**/*.tar" />
+            </and>
+          </selector>
+          <selector if="module.exec.compress[tar]" >
+            <filename name="${module.exec.fromfile}" />
+          </selector>
+        </or>
       </fileset>
     </untar>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="gzip" overwrite="true">
       <fileset dir="${repo.dir}/${module.exec.fromdir}">
-        <and>
-          <filename name="${module.exec.fromfile}" />
-          <filename name="**/*.tar.gz" />
-        </and>
+        <or>
+          <selector unless="module.exec.compress" >
+            <and>
+              <filename name="${module.exec.fromfile}" />
+              <filename name="**/*.tar.gz" />
+            </and>
+          </selector>
+          <selector if="module.exec.compress[gzip]" >
+            <filename name="${module.exec.fromfile}" />
+          </selector>
+        </or>
       </fileset>
     </untar>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="bzip2" overwrite="true">
       <fileset dir="${repo.dir}/${module.exec.fromdir}">
-        <and>
-          <filename name="${module.exec.fromfile}" />
-          <filename name="**/*.tar.bz" />
-        </and>
+        <or>
+          <selector unless="module.exec.compress" >
+            <and>
+              <filename name="${module.exec.fromfile}" />
+              <filename name="**/*.tar.bz" />
+            </and>
+          </selector>
+          <selector if="module.exec.compress[bzip2]" >
+            <filename name="${module.exec.fromfile}" />
+          </selector>
+        </or>
       </fileset>
     </untar>
 
     <antcall target="module.move" />
-
   </target>
 
+<!--
+  <target name="module.get" >
+    <assert>
+      <isset property="module.exec.urls" />
+    </assert>
+    <property name="module.exec.todir" value="." />
+      
+    
+    <mkdir dir="${download.dir}/${module.exec.todir}" />
 
+    
+    <pathconvert property="downloadedFiles" >
+      <resourcelist>
+          <file file="${module.exec.urls}" />
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </resourcelist>
+      
+        <chainedmapper>
+          <firstmatchmapper>
+            <globmapper from="${module.exec.base}*" to="*"/>
+            <flattenmapper/>
+          </firstmatchmapper>
+          <globmapper from="*" to="${download.dir}/${module.exec.todir}/*" />
+        </chainedmapper>
+      </pathconvert>
+        
 
+      <echo>downloadedFiles ${downloadedFiles}</echo>
+      <touch mkdirs="true">
+        <path>
+          <pathelement path="${downloadedFiles}"/>
+        </path>
+      </touch>
+      
+     
+      <get dest="${download.dir}/${module.exec.todir}" >
+        <resourcelist>
+          <file file="${module.exec.urls}" />
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </resourcelist>
+
+        <firstmatchmapper>
+          <globmapper from="${module.exec.base}*" to="*"/>
+          <flattenmapper/>
+        </firstmatchmapper>
+      </get>
+    </target>
+-->
+    
 </project>

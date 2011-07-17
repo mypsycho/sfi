@@ -10,8 +10,8 @@ production:
   adapter: jdbc
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost:@db.port@/redmine?characterEncoding=utf8
-  username: @db.redmine.user@
-  password: @db.redmine.password@
+  username: @redmine.db.user@
+  password: @redmine.db.password@
  
 development:
   adapter: mysql

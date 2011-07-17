@@ -15,11 +15,12 @@
 
 
     <target name="securePassword" >
-        <tempfile property="ldapScript" destdir="${deploy.dir}" prefix="ldap" suffix=".ldif" />  
+        <tempfile property="ldapScript" destdir="${sfi.tmp.dir}" prefix="ldap" suffix=".ldif" />  
         
         <concat destfile="${ldapScript}" >
 			<!-- Note: return carriages are an issue. Do not change. -->
-            <string>dn: ${apacheds.bind.user}
+            <string>#
+dn: ${apacheds.bind.user}
 changetype: modify
 replace: userPassword
 userPassword:: ${sfi.ldap.bind.password.base64}</string>

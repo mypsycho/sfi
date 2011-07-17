@@ -19,9 +19,10 @@ set M2_HOME=@deploy.dir@\@buildTool.install.tofile@
 set RUBY_HOME=@deploy.dir@\@ruby.install.tofile@
 set JAVA_HOME=@jdk.home@
 set ANT_HOME=@ant.home@
-set JGIT_HOME=@deploy.dir@\jgit
+set JGIT_HOME=@deploy.dir@\tools\git
+set SVN_HOME=@deploy.dir@\tools\svn
 
-set PATH=%JGIT_HOME%\bin;%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
+set PATH=%SVN_HOME%;%JGIT_HOME%;%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
 
 set RAILS_ENV=production
 

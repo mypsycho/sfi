@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>abstract-assembly</artifactId>
+
+  <packaging>pom</packaging>
+  <parent>
+    <groupId>com.psycho.maven.poms</groupId>
+    <artifactId>base-assembly</artifactId>
+    <version>0.0.1</version>
+    <relativePath>../base-assembly/pom.xml</relativePath>
+  </parent>
+  <name>Abstract assembly</name>
+
+
+
+
+  <build>
+
+    <plugins>
+
+    	<plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-dependency-plugin</artifactId>
+    		<version>2.1</version>
+                <executions>
+          <execution>
+            <id>unpack-parent</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.parent.groupId}</groupId>
+                  <artifactId>${project.parent.artifactId}</artifactId>
+                  <version>${project.parent.version}</version>
+                  <type>zip</type>
+                  <classifier>sources</classifier>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${assembly.sources}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+              <!-- other configurations here -->
+            </configuration>
+          </execution>
+        </executions>
+        
+    	</plugin>
+    </plugins>
+  </build>
+
+
+</project>

@@ -15,20 +15,37 @@
 
 
 # Define tomcat admin
-dn: cn=manager,ou=tomcat,ou=groups,ou=system
+dn: cn=manager,ou=tomcat,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
-uniqueMember: uid=pnico,ou=users,ou=system
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
+# Define tomcat admin
+dn: cn=admin,ou=scm,ou=tomcat,${sfi.ldap.group.base}
+changetype: modify
+add: uniqueMember
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
+
+# Authorize webdav access
+dn: cn=share,ou=tomcat,${sfi.ldap.group.base}
+changetype: modify
+add: uniqueMember
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
+
+# Authorize webdav access
+dn: cn=admin,ou=scm,${sfi.ldap.group.base}
+changetype: modify
+add: uniqueMember
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
 # Define nexus admin
-dn: cn=admin,ou=nexus,ou=groups,ou=system
+dn: cn=admin,ou=nexus,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
-uniqueMember: uid=pnico,ou=users,ou=system
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
 # Define jenkins admin ?
-dn: cn=manager,ou=jenkins,ou=groups,ou=system
+dn: cn=manager,ou=jenkins,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
-uniqueMember: uid=pnico,ou=users,ou=system
+uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}

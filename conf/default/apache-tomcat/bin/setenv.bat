@@ -20,10 +20,12 @@ REM For copy-and-run reason, we do not generate this value the using ${java.home
 set JAVA_HOME=@jdk.home@
 
 set MAVEN_HOME=@deploy.dir@\@buildTool.install.tofile@
-set PLEXUS_NEXUS_WORK=@deploy.dir@\nexus
 
 
 REM We must avoid path from properties file for portability reason
 set CATALINA_OPTS=-Xmx512m -XX:PermSize=256m
-REM Jenkins options
-set CATALINA_OPTS=%CATALINA_OPTS% -Djava.awt.headless=true "-DJENKINS_HOME=@deploy.java-dir@/@intContTool.name@"
+REM Jenkins requires awt.headless
+set CATALINA_OPTS=%CATALINA_OPTS% -Djava.awt.headless=true 
+set CATALINA_OPTS=%CATALINA_OPTS% "-DJENKINS_HOME=@deploy.java-dir@/@intContTool.name@"
+set CATALINA_OPTS=%CATALINA_OPTS% "-Dplexus.nexus-work=@deploy.dir@\nexus"
+set CATALINA_OPTS=%CATALINA_OPTS% "-Dscm.home=@deploy.dir@\scm"

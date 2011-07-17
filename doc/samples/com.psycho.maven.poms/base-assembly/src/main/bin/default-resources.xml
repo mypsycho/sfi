@@ -1,0 +1,42 @@
+<component xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/component/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/component/1.1.2 http://maven.apache.org/xsd/component-1.1.2.xsd">
+
+  <fileSets>
+    <fileSet>
+      <outputDirectory>.</outputDirectory>
+      <excludes>
+        <exclude>**/*.ksh</exclude>
+        <exclude>**/*.csh</exclude>
+        <exclude>**/*.sh</exclude>
+        <exclude>**/*.bat</exclude>
+      </excludes>
+      <directory>${assembly.build}</directory>
+      <lineEnding>keep</lineEnding>
+    </fileSet>
+    
+    <fileSet>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>**/*.bat</include>
+      </includes>
+      <directory>${assembly.build}</directory>
+      <lineEnding>crlf</lineEnding>
+      <filtered>true</filtered>
+    </fileSet>
+    
+    <fileSet>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>**/*.ksh</include>
+        <include>**/*.csh</include>
+        <include>**/*.sh</include>
+      </includes>
+      <fileMode>755</fileMode>
+      <directory>${assembly.build}</directory>
+      <lineEnding>lf</lineEnding>
+      <filtered>true</filtered>
+    </fileSet>
+  </fileSets>
+
+
+</component>

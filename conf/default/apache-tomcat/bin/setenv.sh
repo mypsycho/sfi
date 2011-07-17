@@ -20,10 +20,12 @@
 export JAVA_HOME=@jdk.home@
 
 export MAVEN_HOME=@deploy.dir@/@buildTool.install.tofile@
-export PLEXUS_NEXUS_WORK=@deploy.dir@/nexus
 
 
 # We must avoid path from properties file for portability reason
 export CATALINA_OPTS="-Xmx512m -XX:PermSize=256m"
-# Jenkins options
-export CATALINA_OPTS="${CATALINA_OPTS} -Djava.awt.headless=true -DJENKINS_HOME=@deploy.java-dir@/@intContTool.name@"
+# Jenkins requires awt.headless
+export CATALINA_OPTS="${CATALINA_OPTS} -Djava.awt.headless=true"
+export CATALINA_OPTS="${CATALINA_OPTS} -DJENKINS_HOME=@deploy.java-dir@/@intContTool.name@"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dplexus.nexus-work=@deploy.dir@/nexus"
+export CATALINA_OPTS="${CATALINA_OPTS} -Dscm.home=@deploy.dir@/scm"

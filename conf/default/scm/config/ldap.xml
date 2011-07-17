@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ldap-config>
+<!--
+https://bitbucket.org/tludewig/scm-auth-ldap-plugin/src/93d6886dffc1/src/main/java/sonia/scm/auth/ldap/LDAPConfig.java
+
+hard-code
+
+  /** Field description */
+  public static final String ATTRIBUTE_GROUP_NAME = "cn";
+
+  /** Field description */
+  public static final String FILTER_GROUP =
+    "(&(objectClass=groupOfUniqueNames)(uniqueMember={0}))";
+
+
+-->
+
+    <attribute-name-fullname>cn</attribute-name-fullname>
+    <attribute-name-id>uid</attribute-name-id>
+    <attribute-name-mail>mail</attribute-name-mail>
+    <attribute-name-group>group</attribute-name-group>
+    <base-dn>@ldap.root.dn@</base-dn>
+    <connection-dn>@ldap.bind.dn@</connection-dn>
+    <connection-password>@ldap.bind.password@</connection-password>
+    <host-url>ldap://localhost:@ldap.port@</host-url>
+    <search-filter>uid={0}</search-filter>
+    <search-scope>one</search-scope>
+    <unit-groups>ou=scm,@ldap.group.path@</unit-groups>
+    <unit-people>@ldap.user.path@</unit-people>
+</ldap-config>

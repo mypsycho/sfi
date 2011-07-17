@@ -14,16 +14,23 @@
     <property name="sfi.redmine.lang" value="${user.language}" />
     
     <target name="init" >
-        <createSchema schema="${sfi.redmine.db.user}" password="${sfi.redmine.db.password}" /> 
+        <createSchema schema="redmine" user="${sfi.redmine.db.user}" password="${sfi.redmine.db.password}" /> 
         
         <ruby dir="${redmine.base.dir}" command="rake" comment="Generate session store" >
             <arg value="generate_session_store" />
         </ruby>
         <!-- Creation du Schema -->
-        <ruby dir="${redmine.base.dir}" command="rake" comment="Create/update SQL tables" >
+        <ruby dir="${redmine.base.dir}" command="rake" comment="Create/Update DB" >
             <arg value="db:migrate" />
             <arg value="RAILS_ENV=production" />
         </ruby>
+		
+        <!-- Creation du Schema -->
+        <ruby dir="${redmine.base.dir}" command="rake" comment="Create/Update Plugins data" >
+            <arg value="db:migrate_plugins" />
+            <arg value="RAILS_ENV=production" />
+        </ruby>
+		
         <!-- Initialisation avec les valeurs usines -->
         <ruby dir="${redmine.base.dir}" command="rake" comment="load default" >
             <arg value="redmine:load_default_data" />
@@ -38,12 +45,7 @@
     </target>
 
     <target name="build" >
-        
-        <!-- Creation du Schema -->
-        <ruby dir="${redmine.base.dir}" command="rake" comment="Create/update SQL tables" >
-            <arg value="db:migrate" />
-            <arg value="RAILS_ENV=production" />
-        </ruby>
+
         
         <ruby dir="${redmine.base.dir}" command="warble" >
             <arg value="RAILS_ENV=production" />

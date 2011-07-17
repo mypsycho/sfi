@@ -1,8 +1,10 @@
 runtime.license
-
-# runtime  
+#runtime : download ant ? already using it !
 runtime.download-plugins
-runtime.download-libs
+# we need ant contrib for some elaborate downloads
+runtime.plugins
+
+runtime.download-drivers
 ruby
 ruby.download-gems
 server
@@ -19,4 +21,3 @@ directory
 ldapClient
 
 runtime.license
-

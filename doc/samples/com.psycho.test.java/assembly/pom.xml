@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.psycho.test.java</groupId>
+  <artifactId>assembly</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <name>Assembly of product</name>
+
+  <parent>
+    <groupId>com.psycho.maven.poms</groupId>
+    <artifactId>java-assembly</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  
+  <properties>
+    <project.scriptName>MVNTST</project.scriptName>
+    <project.build.mainClass>com.psycho.test.ui.Launch</project.build.mainClass>
+    <assembly.deprecated>bin/run.sh</assembly.deprecated>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>module2</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scm-config>
+    <admin-groups>admin</admin-groups>
+    <admin-users></admin-users>
+    <enableProxy>false</enableProxy>
+    <forwardPort>80</forwardPort>
+    <plugin-url>http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&amp;arch={arch}&amp;snapshot=false</plugin-url>
+    <proxyPort>@proxy.port@</proxyPort>
+    <proxyServer>@proxy.host@</proxyServer>
+    <servername>localhost</servername>
+    <enableSSL>false</enableSSL>
+    <enablePortForward>false</enablePortForward>
+    <sslPort>8181</sslPort>
+    <dateFormat>Y-m-d H:i:s</dateFormat>
+    <anonymousAccessEnabled>false</anonymousAccessEnabled>
+</scm-config>

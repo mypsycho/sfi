@@ -1,0 +1,27 @@
+<component xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/component/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/component/1.1.2 http://maven.apache.org/xsd/component-1.1.2.xsd">
+
+  <files>
+    <file>
+      <source>${project.build.directory}/${project.build.jar-finalName}.jar</source>
+      <outputDirectory>${project.build.jar-path}/${project.groupId}</outputDirectory>
+    </file>
+  </files>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>*:*:jar:*</include>
+      </includes>
+      <!-- 
+          Looks like a typo in plugin : 
+            dashClassifier instead of artifact.dashClassifier
+      -->
+      <outputFileNameMapping>${artifact.groupId}/${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <useTransitiveDependencies/>
+    </dependencySet>
+  </dependencySets>
+
+
+</component>

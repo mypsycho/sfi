@@ -15,7 +15,7 @@
 
 
 # Define a user entry for Nico
-dn: uid=pnico,ou=users,ou=system
+dn: uid=pnico,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
 uid: pnico
 sn: pp
@@ -24,14 +24,10 @@ cn: nico p
 mail: p.nico@mycompany.com
 userPassword: pnico
 
-# Authorize webdav access
-dn: cn=webdav,ou=tomcat,ou=groups,ou=system
-changetype: modify
-add: uniqueMember
-uniqueMember: uid=pnico,ou=users,ou=system
+
 
 # Define a user entry for Janet Jones
-dn: uid=jjones,ou=users,ou=system
+dn: uid=jjones,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
 uid: jjones
 sn: jones
@@ -40,14 +36,9 @@ cn: janet jones
 mail: j.jones@mycompany.com
 userPassword: janet
 
-# Authorize webdav access
-dn: cn=webdav,ou=tomcat,ou=groups,ou=system
-changetype: modify
-add: uniqueMember
-uniqueMember: uid=jjones,ou=users,ou=system
 
 # Define a user entry for Fred Bloggs
-dn: uid=fbloggs,ou=users,ou=system
+dn: uid=fbloggs,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
 uid: fbloggs
 sn: bloggs
@@ -56,8 +47,3 @@ cn: fred bloggs
 mail: f.bloggs@mycompany.com
 userPassword: fred
 
-# Authorize webdav access
-dn: cn=webdav,ou=tomcat,ou=groups,ou=system
-changetype: modify
-add: uniqueMember
-uniqueMember: uid=fbloggs,ou=users,ou=system

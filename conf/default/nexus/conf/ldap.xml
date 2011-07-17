@@ -13,7 +13,7 @@
   <userAndGroupConfig>
     <emailAddressAttribute>mail</emailAddressAttribute>
     <ldapGroupsAsRoles>true</ldapGroupsAsRoles>
-    <groupBaseDn>ou=nexus,ou=groups</groupBaseDn>
+    <groupBaseDn>ou=nexus,@ldap.group.path@</groupBaseDn>
     <groupIdAttribute>cn</groupIdAttribute>
     <groupMemberAttribute>uniqueMember</groupMemberAttribute>
     <groupMemberFormat>uid=${username},@ldap.user.base@</groupMemberFormat>
@@ -21,7 +21,7 @@
     <userPasswordAttribute>userPassword</userPasswordAttribute>
     <userIdAttribute>uid</userIdAttribute>
     <userObjectClass>inetOrgPerson</userObjectClass>
-    <userBaseDn>ou=users</userBaseDn>
+    <userBaseDn>@ldap.user.path@</userBaseDn>
     <userRealNameAttribute>cn</userRealNameAttribute>
   </userAndGroupConfig>
 </ldapConfiguration>

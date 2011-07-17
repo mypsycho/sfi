@@ -14,61 +14,115 @@
 # limitations under the License.
 
 # At least 1 uniqueMember is required in group.
-# we choose the admin
+# We choose the admin.
 
-# Define roles of "tomcat" : predefined 
-dn: ou=tomcat,ou=groups,ou=system
+
+
+##
+##  Server management
+## 
+# Define roles of 'Apache-Tomcat' : predefined 
+dn: ou=tomcat,${sfi.ldap.group.base}
 objectClass: organizationalUnit
 ou: tomcat
 
-dn: cn=manager,ou=tomcat,ou=groups,ou=system
+# Define roles of application 'manager'
+dn: cn=manager,ou=tomcat,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 cn: manager
-uniqueMember: uid=admin,ou=system
+uniqueMember: ${sfi.ldap.bind.dn}
 
-dn: cn=webdav,ou=tomcat,ou=groups,ou=system
+# Define roles of 'Share/Webdav'
+dn: cn=share,ou=tomcat,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: webdav
-uniqueMember: uid=admin,ou=system
+cn: share
+uniqueMember: ${sfi.ldap.bind.dn}
+
+dn: cn=share-read,ou=tomcat,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+cn: share-read
+uniqueMember: ${sfi.ldap.bind.dn}
 
 
-# Define roles of "jenkins" : mapping
-dn: ou=jenkins,ou=groups,ou=system
+##
+##  SCM management
+## 
+dn: ou=scm,${sfi.ldap.group.base}
+objectClass: organizationalUnit
+
+dn: cn=admin,ou=scm,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+cn: admin
+uniqueMember: ${sfi.ldap.bind.dn}
+
+
+
+##
+##  Jenkins management
+## 
+dn: ou=jenkins,${sfi.ldap.group.base}
 objectClass: organizationalUnit
 ou: jenkins
 
-dn: cn=manager,ou=jenkins,ou=groups,ou=system
+dn: cn=admin,ou=jenkins,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: manager
-uniqueMember: uid=admin,ou=system
+cn: admin
+uniqueMember: ${sfi.ldap.bind.dn}
 
-# Define roles of "nexus" : mapping
-dn: ou=nexus,ou=groups,ou=system
+dn: cn=project,ou=jenkins,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+cn: admin
+uniqueMember: ${sfi.ldap.bind.dn}
+
+dn: cn=developer,ou=jenkins,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+cn: admin
+uniqueMember: ${sfi.ldap.bind.dn}
+
+dn: cn=visitor,ou=jenkins,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+cn: admin
+uniqueMember: ${sfi.ldap.bind.dn}
+
+
+
+##
+##  Nexus management
+## 
+
+# mapping on existing roles
+dn: ou=nexus,${sfi.ldap.group.base}
 objectClass: organizationalUnit
 ou: nexus
 
-dn: cn=admin,ou=nexus,ou=groups,ou=system
+dn: cn=admin,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 cn: admin
-uniqueMember: uid=admin,ou=system
+uniqueMember: ${sfi.ldap.bind.dn}
 
-dn: cn=deployment,ou=nexus,ou=groups,ou=system
+dn: cn=deployment,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 cn: deployment
-uniqueMember: uid=admin,ou=system
+uniqueMember: ${sfi.ldap.bind.dn}
 
-dn: cn=developer,ou=nexus,ou=groups,ou=system
+dn: cn=developer,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 cn: developer
-uniqueMember: uid=admin,ou=system
+uniqueMember: ${sfi.ldap.bind.dn}
 
-# Define roles of "sonar" : none
 
-# Define roles of "redmine" : none
 
-#Note# correct field
-#dn: ${dn}
+# Define roles of 'sonar' : none (no externalization)
+
+
+
+# Define roles of 'redmine' : none (no externalization)
+
+
+
+# Note: Template to give a person a role
+#dn: ${role.dn}
 #changetype: modify
-#replace: ${field}
-#cn: ${value}
+#add: uniqueMember
+#uniqueMember: uid=${person.uid},${sfi.ldap.user.base}
 

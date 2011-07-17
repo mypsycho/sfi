@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.psycho.maven.poms</groupId>
+  <artifactId>poms-root</artifactId>
+  <version>0.0.1</version>
+
+  <packaging>pom</packaging>
+
+  <name>${project.groupId} Container project</name>
+  <properties>
+    <!--test.value>${issueManagement.url}</test.value-->
+  </properties>
+
+  <modules>
+    <module>abstract-assembly</module>
+    <module>base-assembly</module>
+    <module>java-assembly</module>
+  </modules>
+
+
+  <issueManagement>
+  	<url>${issueManagement.url.root}/com-psycho-maven-poms</url>
+  </issueManagement>
+  <ciManagement>
+  	<url>${ciManagement.url.root}</url>
+  </ciManagement>
+  <scm>
+  	<tag>trunk</tag>
+  	<url>${scm.root.url}/${project.groupId}</url>
+  </scm>
+
+  
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>${deploy.url.root}/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>${deploy.url.root}/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+</project>

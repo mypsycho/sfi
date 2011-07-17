@@ -20,7 +20,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     version="2.5"> 
 
-  <display-name>Webdav</display-name>
+  <display-name>share</display-name>
   <description>Web-based Distributed Authoring and Versioning level 2</description>
 
   <servlet>
@@ -41,45 +41,26 @@
       <param-value>false</param-value>
     </init-param>
   </servlet>
-  <servlet>
-     <servlet-name>git</servlet-name>
-     <servlet-class>org.eclipse.jgit.http.server.GitServlet</servlet-class>
-     <init-param>
-       <param-name>base-path</param-name>
-       <param-value>@deploy.dir@/share</param-value>
-     </init-param>
-     <init-param>
-       <param-name>export-all</param-name>
-       <param-value>0</param-value>
-     </init-param>
-  </servlet>
+
+
 
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Webdav Write Access</web-resource-name>
-      <url-pattern>/files/*</url-pattern>
+      <url-pattern>/*</url-pattern>
       
-         <http-method>PROPFIND</http-method>
-         <http-method>PROPPATCH</http-method>
-         <http-method>COPY</http-method>
-         <http-method>MOVE</http-method>
-         <http-method>LOCK</http-method>
-         <http-method>UNLOCK</http-method>
-         <http-method>PUT</http-method>
+        <http-method>PROPPATCH</http-method>
+        <http-method>COPY</http-method>
+        <http-method>MKCOL</http-method>
+        <http-method>DELETE</http-method>
+        <http-method>MOVE</http-method>
+        <http-method>LOCK</http-method>
+        <http-method>UNLOCK</http-method>
+        <http-method>PUT</http-method>
 
-      <!--
+        <!-- Level 3 -->
+      <!-- 
          <http-method>GETLIB</http-method>
-         <http-method>COPY</http-method>
-         <http-method>MOVE</http-method>
-         <http-method>DELETE</http-method>
-         <http-method>PROPFIND</http-method>
-         <http-method>GET</http-method>
-         <http-method>HEAD</http-method>
-         <http-method>PUT</http-method>
-         <http-method>MKCOL</http-method>
-         <http-method>PROPPATCH</http-method>
-         <http-method>LOCK</http-method>
-         <http-method>UNLOCK</http-method>
          <http-method>VERSION-CONTROL</http-method>
          <http-method>CHECKIN</http-method>
          <http-method>CHECKOUT</http-method>
@@ -91,38 +72,36 @@
     
     </web-resource-collection>
     <auth-constraint>
-      <role-name>share-admin</role-name>
+      <role-name>share</role-name>
     </auth-constraint>
-
   </security-constraint>
 
+  
+  
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Webdav Read Access</web-resource-name>
-      <url-pattern>/files/*</url-pattern>
-      <http-method>GET</http-method>
+      <url-pattern>/*</url-pattern>
+
+      <!-- Option must not be protected
+        <http-method>OPTIONS</http-method>
+       -->
+        <http-method>GET</http-method>
+        <http-method>HEAD</http-method>
+        <http-method>POST</http-method>
+        <http-method>PROPFIND</http-method>
+    
     </web-resource-collection>
     <auth-constraint>
-      <role-name>share-admin</role-name>
+      <role-name>share</role-name>
       <role-name>share-read</role-name>
     </auth-constraint>
   </security-constraint>
-  
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>git read smart http</web-resource-name>
-      <url-pattern>/git/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>share-admin</role-name>
-      <role-name>git</role-name>
-    </auth-constraint>
-  </security-constraint>
-  
-  
+
+
   <security-role>
-    <description>Read/write on dav and git</description>
-    <role-name>share-admin</role-name>
+    <description>Read/write on dav</description>
+    <role-name>share</role-name>
   </security-role>
 
   <security-role>
@@ -130,30 +109,15 @@
     <role-name>share-read</role-name>
   </security-role>
 
-  
-  <security-role>
-    <description>Read/write on dav and git</description>
-    <role-name>git-write</role-name>
-  </security-role>
-
-  <security-role>
-    <description>Read on dav and git</description>
-    <role-name>git-read</role-name>
-  </security-role>
-  
   <servlet-mapping>
     <servlet-name>webdav</servlet-name>
-    <url-pattern>/files/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>git</servlet-name>
-    <url-pattern>/git/*</url-pattern>
-  </servlet-mapping>
-  
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>Share</realm-name>
   </login-config>
 
+  
 </web-app>

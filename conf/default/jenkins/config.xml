@@ -8,9 +8,9 @@
   <securityRealm class="hudson.security.LDAPSecurityRealm">
     <server>localhost:@ldap.port@</server>
     <rootDN></rootDN>
-    <userSearchBase>ou=users,@ldap.root.dn@</userSearchBase>
+    <userSearchBase>@ldap.user.base@</userSearchBase>
     <userSearch>uid={0}</userSearch>
-    <groupSearchBase>ou=jenkins,ou=groups,@ldap.root.dn@</groupSearchBase>
+    <groupSearchBase>ou=jenkins,@ldap.group.base@</groupSearchBase>
     <managerDN>@ldap.bind.dn@</managerDN>
     <managerPassword>@ldap.bind.password.base64@</managerPassword>
   </securityRealm>

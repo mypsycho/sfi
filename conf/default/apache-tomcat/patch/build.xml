@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Apache-Tomcat-Patch" default="jar">
+
+  <!-- We use script command, not java call to have the environment from setenv -->
+  <property name="sfi.server.install.tofile" value="apache-tomcat" />
+  
+  <target name="jar">
+    <mkdir dir="target/classes" />
+    <delete includeemptydirs="true" >
+      <fileset dir="target/classes" includes="**/*" />
+    </delete>
+
+    <javac srcdir="src/main/java" destdir="target/classes" debug="on" >
+      <classpath>
+        <fileset dir="../lib">
+          <include name="**/*.jar" />
+        </fileset>
+
+        <fileset dir="../../${sfi.server.install.tofile}">
+          <!-- tomcat 6.x.x path  : include name="lib/**/*.jar" -->
+          <!-- tomcat 5.5.x path  : include name="common/lib/**/*.jar" -->
+          <include name="lib/**/*.jar" />
+		  <include name="bin/**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+    
+    <copy todir="target/classes">
+      <fileset dir="src/main/resources" />
+    </copy>
+
+
+	<jar destfile="target/tomcat-patch.jar" basedir="target/classes" />
+	
+  </target>
+
+</project>

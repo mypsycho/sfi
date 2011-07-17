@@ -43,6 +43,9 @@
               description="User database that can be updated and saved"
               factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
               pathname="conf/tomcat-users.xml" />
+              
+
+    
   </GlobalNamingResources>
 
   <!-- A "Service" is a collection of one or more "Connectors" that share
@@ -121,6 +124,7 @@
            available for use by the Realm.  -->
       <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
              resourceName="UserDatabase"/>
+      
 
       <!-- Define the default virtual host
            Note: XML Schema validation will not work with Xerces 2.2.

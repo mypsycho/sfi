@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="OpenDS-Execution" basedir="../.." 
+    xmlns:antcontrib="antlib:net.sf.antcontrib" >
+
+  <loadproperties>
+    <string>
+  deploy.dir = ${basedir}/deploy
+  sfi.runtime.plugins.todir = ant-libs
+     </string>
+  </loadproperties>   
+    
+    <!-- 
+      Loading the script classes from OpenDS scripts : They all have the same partern.
+    -->
+  <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset dir="${deploy.dir}/${sfi.runtime.plugins.todir}/ant-contrib" 
+             includes="ant-contrib*.jar" />
+    </classpath>
+  </taskdef>
+    
+  <!-- We use  < and > beacuse they cannot be used in url or path -->
+  <target name="module.downloads" >
+    <assert name="missingUrl">
+      <isset property="module.exec.urls" />
+    </assert>
+    <property name="module.exec.todir" value="." />
+          
+        
+    <mkdir dir="${download.dir}/${module.exec.todir}" />
+
+    <loadfile srcfile="${module.exec.urls}" property="module.exec.locMappings" >
+      <filterchain>
+        <expandproperties/>
+        <striplinecomments>
+          <comment value="#"/>
+        </striplinecomments>
+        <tokenfilter delimoutput="&lt;"/>
+      </filterchain>
+    </loadfile>
+
+    <antcontrib:for param="mapping" list="${module.exec.locMappings}" delimiter="&lt;" >
+      <sequential>
+        <local name="url"/>
+        <local name="path"/>
+        <loadresource property="url" >
+          <string>@{mapping}</string>
+          <filterchain>
+            <replaceregex pattern="^([^\>]+)(\>.*)$$" replace="\1"/>
+          </filterchain>
+        </loadresource>
+        <loadresource property="path" >
+          <string>@{mapping}</string>
+          <filterchain>
+            <replaceregex pattern="^([^\>]+)(\>(.*))?$$" replace="\3"/>
+            <prefixlines prefix="${download.dir}/${module.exec.todir}/"/>
+          </filterchain>
+        </loadresource>
+                
+        <pathconvert property="path"> <!-- if no element 3 : no path -->
+          <url url="${url}" />
+          <chainedmapper>
+          <flattenmapper/>
+            <globmapper from="*" to="${download.dir}/${module.exec.todir}/*"/>
+          </chainedmapper>
+        </pathconvert>
+        <touch file="${path}" mkdirs="true" />
+        <get dest="${path}" src="${url}" />
+      </sequential>
+    </antcontrib:for>
+  </target>
+    
+</project>

@@ -31,6 +31,6 @@
       </ant>
   </target>
     
-  <target name="test+" ><run name="test" /></target>
+  <target name="test+" ><run name="../../test/test" /></target>
 
 </project>
