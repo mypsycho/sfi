@@ -25,12 +25,12 @@
 
   <target name="shutdown" ><run name="shutdown" /></target>
 
-  <target name="test" >
+  <target name="testCommand" >
       <ant antfile="${basedir}/bin/engine/engine.ant" target="exec" >
         <property name="modules" value="${tested}" />
       </ant>
   </target>
     
-  <target name="test+" ><run name="../../test/test" /></target>
+  <target name="testModule" ><run name="../../test/test" /></target>
 
 </project>

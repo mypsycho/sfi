@@ -1,14 +1,5 @@
-!!!
-!!!
-!!! Git client is not fully tested: prefer SVN version.
-!!!
-!!! 
-
-
-
 Introduction
 -------------------------------
-
 This document contain a use case of the applications.
 This is a quick tour of the installed applications, building a realistic 
 'hello world' application.
@@ -19,13 +10,13 @@ Note: This tutorial is for unix-like environment.
 For Windows installation, change '/' into '\' and '.sh' into '.bat' and so on.
 
 
-Summary of the tutorial
+Objectives of the tutorial
 -------------------------------
 From a provided project.
 - Build it with maven
 - Publish (maven-deploy) in nexus as snapshot
 - Evaluate quality with sonar
-- Share it with git
+- Share it with svn
 - Register it in jenkins (continuous integration)
 - Register it in redmine (bug-tracker and project manager)
 - Create an issue in redmine
@@ -40,15 +31,19 @@ Syntax of the tutorial
 -------------------------------
 ? this/that ? : alternatives
 > : command to type
-@ : Browser navigation/interaction
+@ : Navigation/interaction using a Web Browser
 (...) : Description of current action 
 
+MS Windows equivalence:
+cp -r ... <=> xcopy
 
 Steps
 -------------------------------
 
 0. Install and start the server
+
 ? First execution ?
+> cd < SFI Installation >
 > bin/download.sh
 (Be patient, wait for ~30min., integrated-applications are downloaded)
 > bin/install.sh
@@ -59,8 +54,8 @@ started)
 troublesooting)
 
 ? Previously installed ?
+> cd < SFI Installation >
 > bin/startup.sh
-
 @ http://localhost:8080/manager/html : Check your installation
 (With default configuration, use login/password : pnico/pnico)
 
@@ -69,37 +64,54 @@ troublesooting)
 > deploy/setenv.sh
 (Set work environment for current command interpretor)
 
+
 2. Prepare tutorial
-> mkdir deploy/tutorial
-> cp -r doc/samples/* deploy/tutorial
+> mkdir tutorial
+> cp -r doc/samples/* tutorial
 
 
 3. Compile and publish a provided application 
-(Required for following steps)
+   (Required to check installation and for following steps)
 > cd tutorial/com.psycho.maven.poms
 > mvn deploy
 > cd ../..
-(We check maven and nexus are installed properly)
-(We deploy releases of a set of pom)
+(We checked maven and nexus are installed properly)
+(We deployed releases of a set of pom)
 @ http://localhost:8080/nexus : check the existence of the compiled projects
 @ Navigate in 'release' repository.
 
-4. Create a git repository
-> cd share
-> git --git-dir test-java.git init bare
-> cd ..
 
-5. Fetch (check-out) the repository and create content
+4. Create a shared project 'sample' 
+@ http://localhost:8080/scm : Go the SCM Manager
+(With default configuration, use login/password : pnico/pnico)
+@ Create a SVN repository 'sample'
+
+
+5. Edit the project
 > cd tutorial
-> git clone http://localhost:8080/share/git/test-java.git test-java
-> cp -r com.psycho.test.java/* test-java
+> jsvn co --username pnico --password pnico http://localhost:8080/scm/svn/sample
+(Checkout the project)
+> cp -r com.psycho.test.java/* sample
 (Instead of editing files, we copy some existing).
-> cd test-java
-> git commit -m "My first commit" --author myname@mymail.com
-(Git local commit)
-> git push ...
-(Git repository commit)
+> cd sample
+> jsvn add
+> jsvn ci --username pnico --password pnico -m Creation
+(SVN commit)
 
+6. Defining a project
+@ http://localhost:8080/jenkins : Go for continuous integration
+(With default configuration, connect as login/password : pnico/pnico)
+@ Create a maven-project 'sample': 
+  svn location : http://localhost:8080/scm/svn/sample  
+  check sonar option
+@ Launch the build of the project
+@ http://localhost:8080/sonar : Check the quality of the project
+(With default configuration, connect as login/password : pnico/pnico)
+
+7. Managing the project
+@ http://localhost:8080/redmine : Go for tracking
+@ Create the project 'sample'
+(Again)
 
 git push http://localhost:8080/share/git/test-java.git
 
@@ -110,7 +122,7 @@ rmdir /S/Q test-java
 
 
 
-mdkir tutorial
+mkdir tutorial
 cd tutorial
 jsvn co --username pnico --password pnico http://localhost:8080/scm/svn/sample
 cd sample

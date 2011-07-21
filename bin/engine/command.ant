@@ -73,6 +73,11 @@
     <property name="module.exec.todir" value="${deploy.dir}" />
 
     <message name="exec.configure" />
+    
+    <chmod dir="${module.exec.fromdir}" perm="ugo+rx">
+      <include name="${module.exec.fromfile}" />
+    </chmod>
+      
     <copy todir="${module.exec.todir}" overwrite="true">
       <fileset dir="${module.exec.fromdir}" includes="${module.exec.fromfile}" />
       <filterset>
@@ -80,11 +85,7 @@
         <filter token="basedir" value="${basedir}" />
       </filterset>
     </copy>
-    <chmod dir="${deploy.dir}" perm="ugo+rx">
-      <include name="**/*.sh" />
-      <include name="**/*.ksh" />
-      <include name="**/*.csh" />
-    </chmod>
+
   </target>
 
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="SCM-Manager" basedir="../.." 
+    xmlns:antcontrib="antlib:net.sf.antcontrib" >
+
+  <property name="deploy.dir" location="deploy" />
+  <property name="sfi.runtime.plugins.todir" value="ant-libs" />
+  <property name="sfi.scm.repositories" location="${deploy.dir}/scm/repositories" />
+  <property name="repoKinds" value="svn,git" />
+  <property name="hook[svn].pathes" value="hooks" />
+  <property name="hook[git].pathes" value="hooks" />
+
+    
+    <!-- 
+      Loading the script classes from OpenDS scripts : They all have the same partern.
+    -->
+  <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset dir="${deploy.dir}/${sfi.runtime.plugins.todir}/ant-contrib" 
+             includes="ant-contrib*.jar" />
+    </classpath>
+  </taskdef>
+    
+
+ 
+  <macrodef name="updateHooks">
+
+    <attribute name="kind" />
+      
+    <sequential>
+      
+      <chmod dir="${conf.dir}/${config}/scm/hooks/@{kind}" perm="ugo+rx" />
+      <echo>${sfi.scm.repositories}/@{kind} : ${hook[@{kind}].pathes}</echo> 
+        
+      <antcontrib:for param="repoHooks" >
+        <dirset dir="${sfi.scm.repositories}/@{kind}" includes="*/${hook[@{kind}].pathes}" />
+        <sequential>
+          <echo>Update hooks of @{repoHooks} from ${conf.dir}/${config}/scm/hooks/@{kind}</echo> 
+          <copy todir="@{repoHooks}" overwrite="true">
+            <fileset dir="${conf.dir}/${config}/scm/hooks/@{kind}" includes="**/*" />
+            <filterset>
+              <filtersfile file="${filter.file}" />
+              <filter token="basedir" value="${basedir}" />
+            </filterset>
+          </copy>
+        </sequential>
+      </antcontrib:for>
+      
+
+    
+    </sequential>
+
+  </macrodef>
+    
+    
+
+  <target name="updateHooks" >
+      <antcontrib:for param="kind" list="${repoKinds}" >
+          <sequential>
+              <updateHooks kind="@{kind}" />
+          </sequential>
+      </antcontrib:for>
+  </target>
+    
+</project>

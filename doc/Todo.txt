@@ -1,0 +1,3 @@
+Create a system user in:
+- jenkins (from redmine)
+- scm (from redmine, jenkins)

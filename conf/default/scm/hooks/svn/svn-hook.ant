@@ -1,153 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="svn-hook" basedir="." >
-    
-    <property name="svnkit.home" value="@deploy.dir@/tools/svn" />
-    <property name="tmp.dir" value="@tmp.dir@" />
-    <property name="drivers.dir" value="@java.drivers@" />
-    <macrodef name="redmineRequest">
-        <attribute name="result" />
-        <element name="request" implicit="true" />
-        <sequential>
-            <tempfile property="sqlOutput" destdir="${tmp.dir}" prefix="sql" suffix=".out"/>
-            
-            <sql driver="@db.driver@" url="@db.url.root@/redmine" 
-                userid="@redmine.db.user@" password="@redmine.db.password@" 
-                showheaders="false" showtrailers="false" print="false"
-                output="${sqlOutput}"
-                >
-                <classpath>
-                    <fileset dir="${drivers.dir}" includes="*.jar" />
-                </classpath>
-                <request />
-            </sql>
-            <loadfile property="@@{result}" srcfile="${sqlOutput}">
-                <filterchain>
-                    <tokenfilter delimoutput="," >
-                        <trim/>
-                    </tokenfilter>
-                </filterchain>
-            </loadfile>
-        </sequential>
-    </macrodef>
-    
-    
-    
-    
-    <macrodef name="message">
-      <attribute name="name" />
-      <attribute name="level" default="   info  " />
-      <sequential>
-        <concat taskname="@@{level}" >
-          <string>${message.@@{name}}</string>
-          <filterchain><expandproperties/></filterchain>
-        </concat>
-      </sequential>
-    </macrodef>
-    
-    <macrodef name="assert">
-      <attribute name="name" />
-      <element name="assert" implicit="true" />
-      <sequential>
-        <loadfile property="failure[@@{name}]" >
-          <concat>
-            <string>${message.error.@@{name}}</string>
-            <filterchain><expandproperties/></filterchain>
-          </concat>
-        </loadfile>
-        <fail message="${failure[@@{name}]}" taskname=" error ">
-          <condition>
-            <not>
-              <assert />
-            </not>
-          </condition>
-        </fail>
-      </sequential>
-    </macrodef>
-    
-    <loadproperties prefix="message" >
-      <concat fixlastline="true" > <!-- Concatenation provides post-redefinition -->
-        <resources>
-          <file file="messages.properties" /> <!-- This one required -->
-          <fileset file="messages_${user.language}.properties" />
-          <fileset file="messages_${user.language}_${user.country}.properties" />
-        </resources>
+<project name="svn-hook" basedir=".">
+
+  <property name="svnkit.home" value="@deploy.dir@/tools/svn" />
+  <property name="tmp.dir" value="@tmp.dir@" />
+  <property name="drivers.dir" value="@repo.dir@/@java.drivers@" />
+  <macrodef name="redmineRequest">
+    <attribute name="result" />
+    <element name="request" implicit="true" />
+    <sequential>
+      <tempfile property="sqlOutput" destdir="${tmp.dir}" prefix="sql" suffix=".out" />
+
+      <sql driver="@db.driver@" url="@db.url.root@/redmine?characterEncoding=utf8" 
+          userid="@redmine.db.user@" password="@redmine.db.password@" 
+          showheaders="false" showtrailers="false" print="true"
+          csvColumnSeparator="" output="${sqlOutput}" >
+        <classpath>
+          <fileset dir="${drivers.dir}" includes="*.jar" />
+        </classpath>
+        <request />
+      </sql>
+      <loadfile property="@{result}" srcfile="${sqlOutput}">
+        <filterchain>
+          <tailfilter skip="1" /> <!-- delete the last line -->
+          <tokenfilter delimoutput=",">
+            <trim />
+          </tokenfilter>
+          <tokenfilter delimoutput="">
+            <filetokenizer /> <!-- delete the , -->
+            <replaceregex pattern="^(.*)\,$$" replace="\1" />
+          </tokenfilter>
+        </filterchain>
+      </loadfile>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="normalize">
+    <attribute name="value" />
+    <attribute name="out" />
+
+    <sequential>
+      <loadresource property="@{out}">
+        <string>@{value},</string>
+        <filterchain>
+          <tokenfilter delimoutput="\n">
+            <stringtokenizer delims="," />
+            <trim />
+          </tokenfilter>
+          <sortfilter />
+          <uniqfilter /> <!-- works only after sort filter -->
+        </filterchain>
+      </loadresource>
+      <property name="@{out}" value="" /><!-- empty if not defined -->
+    </sequential>
+  </macrodef>
+
+
+
+  <macrodef name="message">
+    <attribute name="name" />
+    <attribute name="level" default="   info  " />
+    <sequential>
+      <concat taskname="@{level}">
+        <string>${message.@{name}}</string>
+        <filterchain>
+          <expandproperties />
+        </filterchain>
       </concat>
-    </loadproperties>   
-    
-    <macrodef name="svn">
-        <attribute name="class" default="org.tmatesoft.svn.cli.svn.SVN"/>
-        <attribute name="output" default="" />
-        <element name="args" implicit="true" optional="true"/>
-        
-        <sequential>
-            <java fork="true" output="@@{output}" >
-                <classpath>
-                    <fileset dir="${svnkit.home}" includes="*.jar"/>
-                </classpath>
-                <args />
-            </java>
-        </sequential>
-    </macrodef>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="assert">
+    <attribute name="name" />
+    <element name="assert" implicit="true" />
+    <sequential>
+      <loadfile property="failure[@{name}]">
+        <concat>
+          <string>${message.error.@{name}}</string>
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </concat>
+      </loadfile>
+      <fail message="${failure[@{name}]}" taskname=" error ">
+        <condition>
+          <not>
+            <assert />
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <loadproperties prefix="message">
+    <concat fixlastline="true"> <!-- Concatenation provides post-redefinition -->
+      <resources>
+        <file file="messages.properties" /> <!-- This one required -->
+        <fileset file="messages_${user.language}.properties" />
+        <fileset file="messages_${user.language}_${user.country}.properties" />
+      </resources>
+    </concat>
+  </loadproperties>
+
+  <macrodef name="svn">
+    <attribute name="class" default="org.tmatesoft.svn.cli.svn.SVN" />
+    <attribute name="output" default="" />
+    <element name="args" implicit="true" optional="true" />
+
+    <sequential>
+      <java fork="true" outputproperty="@{output}" classname="@{class}" logError="true">
+        <classpath>
+          <fileset dir="${svnkit.home}" includes="*.jar" />
+        </classpath>
+        <args />
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!-- Tips : Look at svnkit script to find classname -->
+  <macrodef name="svnlook">
+    <element name="args" implicit="true" optional="true" />
+    <attribute name="output" default="" />
+    <sequential>
+      <svn class="org.tmatesoft.svn.cli.svnlook.SVNLook" output="@{output}">
+        <args />
+      </svn>
+    </sequential>
+  </macrodef>
+
+
+
+  <target name="pre-commit">
+    <svnlook output="comment">
+      <arg value="log" />
+      <arg value="${repository}" />
+      <arg value="-t" />
+      <arg value="${transaction}" />
+    </svnlook>
+    <echo>comment of ${transaction} : ${comment}</echo>
+
+    <assert name="emptyComment">
+      <and>
+        <isset property="comment" />
+        <length string="${comment}" trim="true" when="gt" length="0" />
+      </and>
+    </assert>
+
+    <loadresource property="issues">
+      <string>${comment}</string>
+      <filterchain>
+        <headfilter lines="1" />
+        <tokenfilter delimoutput="">
+          <containsregex
+            pattern="^(refs\s|references\s|IssueID\s|fixes\s|closes\s|\#)([ \t]*\d+([ \t]*,[ \t]*\d+)*).*"
+            replace="\2" />
+        </tokenfilter>
+      </filterchain>
+    </loadresource>
+      <echo>Provided issues : ${issues}</echo> 
+    <normalize value="${issues}" out="sortedIssues" />
+    <echo>Provided issues : ${sortedIssues}</echo> 
+      
+      
+    <assert name="missingIssues">
+      <isset property="issues" />
+    </assert>
+
+    <redmineRequest result="closedIssues">
+      <string>
+        SELECT i.id
+        FROM Issues i
+        INNER JOIN Issue_Statuses s ON s.id = i.status_id
+        WHERE I.id in (${issues}) AND s.is_closed = 1
+      </string>
+    </redmineRequest>
+
+      <echo>closedIssues : ${closedIssues}</echo>
+    <assert name="closedIssues">
+      <not>
+        <isset property="closedIssues" />
+      </not>
+    </assert>
+
+    <redmineRequest result="existingIssues">
+      <string>
+        SELECT i.id
+        FROM Issues i
+        WHERE I.id in (${issues})
+        </string>
+    </redmineRequest>
+    <normalize value="${existingIssues}" out="sortedExistings" />
+
+    <echo>Existing issues : ${sortedExistings}</echo>
+    <assert name="undefinedIssues">
+      <equals arg1="${sortedExistings}" arg2="${sortedIssues}" trim="true" />
+    </assert>
+
+  </target>
 
     
-    <macrodef name="svnlook">
-        <element name="args" implicit="true" optional="true"/>
-        <attribute name="output" default="" />
-        <sequential>
-            <svn class="org.tmatesoft.svn.cli.svnlook.SVNLook" output="@@{output}">
-                <args />
-            </svn>
-        </sequential>
-    </macrodef>
     
-    
-    
-    <target name="pre-commit">
-        <svnlook output="comment" >
-            <arg value="log" />
-            <arg value="${repository}" />
-            <arg value="-t" />
-            <arg value="${transaction}" />
-        </svnlook>
-        
-        <assert name="emptyComment" >
-            <length string="${comment}" trim="true" when="gt" length="0" /> 
-        </assert>
-        
-        <loadresource property="issues" >
-            <string>${comment}</string>
-            <filterchain>
-                <headfilter lines="1"/>
-                <tokenfilter delimoutput="">
-                    <replaceregex 
-                        pattern="^(refs\s|references\s|IssueID\s|fixes\s|closes\s|\#)(\d+(,\d+)*).*" 
-                        replace="\2"/>
-                </tokenfilter>
-            </filterchain>
-        </loadresource>
-        
-        <assert name="missingIssues" >
-            <length string="${issues}" trim="true" when="gt" length="0" />
-        </assert>
-        
-        <redmineRequest result="closedIssues" >
-            <string>
-                SELECT I.id
-                FROM issues I 
-                  INNER JOIN issue_statuses S ON S.id = I.status_id 
-                WHERE S.is_closed = 'f' AND I.id in (${issues})
-            </string>
-        </redmineRequest>
+  <target name="post-commit">
 
-        <assert name="closedIssues" >
-            <length string="${closedIssues}" trim="true" when="eq" length="0" />
-        </assert>
-
-        
-    </target>
-    
-    <target name="post-commit">
-        
-    </target>
+  </target>
 </project>

@@ -1,8 +1,0 @@
-${maven.jgit.url}/org.eclipse.jgit/${sfi.scm.version}/org.eclipse.jgit-${sfi.scm.version}.jar
-${maven.jgit.url}/org.eclipse.jgit.iplog/${sfi.scm.version}/org.eclipse.jgit.iplog-${sfi.scm.version}.jar
-${maven.jgit.url}/org.eclipse.jgit.ui/${sfi.scm.version}/org.eclipse.jgit.ui-${sfi.scm.version}.jar
-${maven.jgit.url}/org.eclipse.jgit.console/${sfi.scm.version}/org.eclipse.jgit.console-${sfi.scm.version}.jar
-${maven.jgit.url}/org.eclipse.jgit.pgm/${sfi.scm.version}/org.eclipse.jgit.pgm-${sfi.scm.version}.jar
-${maven.jgit.url}/org.eclipse.jgit.http.server/${sfi.scm.version}/org.eclipse.jgit.http.server-${sfi.scm.version}.jar
-${maven.central.url}/args4j/args4j/2.0.12/args4j-2.0.12.jar
-${maven.central.url}/com/jcraft/jsch/0.1.44-1/jsch-0.1.44-1.jar

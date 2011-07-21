@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="OpenDS-Execution" basedir="../.." 
+<project name="Apache-ant" basedir="../.." 
     xmlns:antcontrib="antlib:net.sf.antcontrib" >
 
   <loadproperties>
