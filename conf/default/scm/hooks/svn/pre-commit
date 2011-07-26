@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export JAVA_HOME=@jdk.home@
+export ANT_HOME=@ant.home@
+
+basedir=`dirname "$0"
+
+"${ANT_HOME}/bin/ant" -f "${basedir}/svn-hook.ant" "-Drepository=$1" "-Dtransaction=$2" pre-commit 

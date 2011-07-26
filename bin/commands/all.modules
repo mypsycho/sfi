@@ -1,0 +1,81 @@
+runtime.license
+#runtime : download ant ? already using it !
+runtime.download-plugins
+# we need ant contrib for some elaborate downloads
+runtime.plugins
+
+runtime.download-drivers
+ruby.download
+ruby.download-gems
+server.download
+dataBase.download
+buildTool.download
+intContTool.download
+intContTool.download-plugins
+qualityTool.download
+qualityTool.download-plugins
+repositoryTool.download
+issueTool.download
+issueTool.download-plugins
+directory.download
+ldapClient.download
+
+runtime.license
+
+
+# Unpack elements
+runtime.plugins
+ruby.install
+ruby.drivers
+ruby.gems
+server.install
+server.drivers
+dataBase.install
+directory.install
+ldapClient.install
+
+buildTool.install
+intContTool.install
+intContTool.plugins
+qualityTool.install
+qualityTool.plugins
+repositoryTool.install
+issueTool.install
+issueTool.plugins
+
+scm.install
+scm.plugins
+scm.install-git
+scm.install-svn
+
+codereview.install
+codereview.drivers
+
+# Copy the configuration items
+runtime.configure
+server.patch
+scm.build-git
+# Build of sonar must be performed after configuration
+qualityTool.build
+directory.build
+
+
+# Init database parts
+dataBase.startup
+
+issueTool.init
+# Redmine build must be performed after init
+issueTool.build
+
+qualityTool.init
+
+
+server.startup
+directory.secure
+
+ldapClient.roles
+ldapClient.users
+ldapClient.autorizations
+
+# sonar specific
+qualityTool.letmeadmin

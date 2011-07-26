@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="svn-hook-tu" basedir="../conf/default/scm/hooks/svn" >
+    
+    <property file="${ant.file.svn-hook-tu}/../svn-hook-tu.properties" />
+    <echoproperties></echoproperties>
+    <import file="${basedir}/svn-hook.ant" />
+    
+    <target name="readCommit">
+        <property name="repository" value="M:\nperansin\soft_factory\deploy\scm\repositories\svn\sample" />
+        <basename property="project.id" file="${repository}" />
+        <property name="author" value="pnico" />
+        <loadresource property="comment">
+            <concat>
+                <string>This commit closes #4, #9&#xA;</string>
+                <string>add refs #3,#8 &amp; #9,#12&#xA;</string>
+                <string> fixes nothing&#xA;</string>
+                <string> fixes #3,&#xA;</string>
+            </concat>
+        </loadresource>
+    </target>
+    
+    <target name="testSetSort">
+      <setsort value="1, 5, 68, 5,44  " out="sorted" />
+      <echo>${sorted}</echo>
+      <fail>
+        <condition>
+          <not>
+            <equals arg1="${sorted}" arg2="1,44,5,68" />
+          </not>      
+        </condition>
+      </fail>
+    </target>
+    
+    <target name="testNoIssue">
+        <loadresource property="comment">
+            <concat>
+                <string>This commit closes nothing #a &#xA;</string>
+                <string> fixes nothing&#xA;</string>
+            </concat>
+        </loadresource>
+        <antcall target="pre-commit"/>
+    </target>
+    
+    <target name="testNotAuthorized">
+        <loadresource property="comment">
+          <string>This commit closes #2</string>
+        </loadresource>
+        
+        <property name="author" value="jjones" />
+        <antcall target="pre-commit"/>
+    </target>
+    
+    <target name="testNotOpened">
+        <loadresource property="comment">
+            <string>This commit closes #1</string>
+        </loadresource>
+        <antcall target="pre-commit"/>
+    </target>
+
+    <target name="testNotInProject">
+        <loadresource property="comment">
+            <string>This commit closes #4</string>
+        </loadresource>
+        <antcall target="pre-commit"/>
+    </target>
+
+    <target name="testNotExists">
+      <loadresource property="comment">
+        <string>This commit closes #666, #2</string>
+      </loadresource>
+      <antcall target="pre-commit"/>
+    </target>
+    
+    <target name="testOk">
+      <loadresource property="comment">
+        <string>This commit closes #2</string>
+      </loadresource>
+      <antcall target="pre-commit"/>
+    </target>
+    
+</project>

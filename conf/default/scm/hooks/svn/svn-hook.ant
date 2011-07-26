@@ -187,7 +187,8 @@
       <filterchain> <!-- remove lines without ids, pack ids in separate lines -->
         <tokenfilter delimoutput="\n">
           <containsregex flags="g"
-            pattern="(${commit_pattern})[ \t]*((\#\d+)([ \t]*[\,\&amp;][ \t]*(\#\d+))*)" replace="&#xA;\2&#xA;" /> <!-- &#xA; <=> \n -->
+            pattern="(${commit_pattern})[ \t]*((\#\d+)([ \t]*[\,\&amp;][ \t]*(\#\d+))*)" 
+            replace="&#xA;\2&#xA;" /> <!-- &#xA; <=> \n -->
         </tokenfilter>
 
         <tokenfilter delimoutput=""> <!-- remove space and sperator, create 1 line -->
@@ -254,7 +255,7 @@
 
         ) authorized
 
-        WHERE I.id in (${issues}) AND p.name = '${project.name}'
+        WHERE i.id in (${issues}) AND p.name = '${project.name}'
       </string>
     </redmineRequest>
     <setsort value="${accessibleIssues}" out="sortedExistings" />
