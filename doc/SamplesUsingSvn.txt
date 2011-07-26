@@ -9,6 +9,10 @@ development (espcially java) and project management are required.
 Note: This tutorial is for unix-like environment.
 For Windows installation, change '/' into '\' and '.sh' into '.bat' and so on.
 
+Read more at:
+http://www.redmine.org/projects/redmine/wiki/RedmineRepositories
+http://www.redmine.org/projects/redmine/wiki/RedmineRepository
+
 
 Objectives of the tutorial
 -------------------------------
@@ -129,3 +133,4 @@ cd sample
 xcopy ..\..\doc\samples\com.psycho.test.java .
 jsvn add trunk 
 jsvn ci --username pnico --password pnico -m init
+jsvn ci --username jjones --password janet -m ref 8

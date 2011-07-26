@@ -17,19 +17,16 @@
 # Define a user entry for Nico
 dn: uid=pnico,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
-uid: pnico
-sn: pp
+sn: p
 gn: nico
 cn: nico p
 mail: p.nico@mycompany.com
 userPassword: pnico
 
 
-
 # Define a user entry for Janet Jones
 dn: uid=jjones,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
-uid: jjones
 sn: jones
 gn: janet
 cn: janet jones
@@ -40,10 +37,8 @@ userPassword: janet
 # Define a user entry for Fred Bloggs
 dn: uid=fbloggs,${sfi.ldap.user.base}
 objectClass: inetOrgPerson
-uid: fbloggs
 sn: bloggs
 gn: fred
 cn: fred bloggs
 mail: f.bloggs@mycompany.com
 userPassword: fred
-

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sfi-command" basedir="../..">
+<project name="sfi-command" basedir="../.." 
+    xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors" >
 
   <macrodef name="message">
     <attribute name="name" />
@@ -65,33 +66,77 @@
     <message name="${module.exec.message}" />
   </target>
 
+  <target name="filteredCopy" >
+    <property name="binariesFile" value="${basedir}.binaries" />
+    <property name="deprecatedFile" value="${basedir}.deprecated" />
+    <condition property="binaries.available">
+      <resourceexists>
+        <file file="${binariesFile}"/>
+      </resourceexists>
+    </condition>      
 
-  <target name="module.configure">
+    <condition property="deprecated.available">
+      <resourceexists>
+        <file file="${deprecatedFile}"/>
+      </resourceexists>
+    </condition>      
 
-    <property name="module.exec.fromfile" value="**/*" />
-    <property name="module.exec.fromdir" value="${conf.dir}/${config}" />
-    <property name="module.exec.todir" value="${deploy.dir}" />
-
-    <message name="exec.configure" />
-    
-    <chmod dir="${module.exec.fromdir}" perm="ugo+rx">
-      <include name="${module.exec.fromfile}" />
+    <chmod perm="ugo+rx" >
+      <fileset dir="${basedir}" >
+        <type type="file" />
+      </fileset>
     </chmod>
-      
-    <copy todir="${module.exec.todir}" overwrite="true">
-      <fileset dir="${module.exec.fromdir}" includes="${module.exec.fromfile}" />
+    
+    <copy todir="${module.exec.todir}" overwrite="true" >
+      <fileset dir="${basedir}" >
+        <exclude name="**/*.exe" />
+        <excludesfile name="${binariesFile}" if="binaries.available" />
+      </fileset>
       <filterset>
         <filtersfile file="${filter.file}" />
-        <filter token="basedir" value="${basedir}" />
       </filterset>
     </copy>
+    
+    <copy todir="${module.exec.todir}" overwrite="true" >
+      <fileset dir="${basedir}" >
+        <include name="**/*.exe" />
+        <includesfile name="${binariesFile}" if="binaries.available" />
+      </fileset>
+    </copy>
+    
+    <delete failonerror="false" >
+      <fileset dir="${module.exec.todir}" >
+          <includesfile name="${deprecatedFile}" if="deprecated.available" />
+          <exclude name="**/*" unless="deprecated.available" />
+      </fileset>
+    </delete>
+      
+  </target>
+      
+  <target name="module.configure">
+    <property name="module.exec.todir" value="${deploy.dir}" />
+    <message name="exec.configure" />
+          
+    <pathconvert property="sfi.config.resPaths">
+      <path path="${sfi.config.propsPaths}" />
+      <chainedmapper>
+        <globmapper from="*.properties" to="*" />
+      </chainedmapper>
+    </pathconvert>
 
+    <!-- Note: Restict propagate Resource nature, Mapper don't -->
+    <subant genericantfile="${ant.file.sfi-command}" 
+       target="filteredCopy" inheritall="true" >
+      <restrict>
+        <path path="${sfi.config.resPaths}" />
+        <rsel:exists/>
+      </restrict>
+    </subant>
   </target>
 
 
   <target name="module.move" if="module.exec.tofile">
     <property name="module.exec.output" value="${module.exec.fromfile}" />
-
     <message name="exec.move" />
     <move file="${deploy.dir}/${module.exec.todir}/${module.exec.output}" 
         tofile="${deploy.dir}/${module.exec.todir}/${module.exec.tofile}" />
@@ -121,7 +166,7 @@
 
   <target name="downloadList" if="module.exec.urls">
     <property name="module.exec.todir" value="." />
-	<echo>module.exec.base ${module.exec.base}</echo>
+
 	 <!-- car than cannot math a url : by default flatten -->
 	<property name="module.exec.base" value="&gt;" />
 	
@@ -145,7 +190,7 @@
 	</pathconvert>
 	  
 	<!-- Get does not create path but touch does -->
-	<echo>downloadedFiles ${downloadedFiles}</echo>
+
 	<touch mkdirs="true">
       <path>
         <pathelement path="${downloadedFiles}"/>

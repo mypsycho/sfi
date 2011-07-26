@@ -1,3 +1,3 @@
 #!/bin/sh
 
-`dirname "$0"`/engine/engine.sh users
+`dirname "$0"`/engine/engine.sh users $*

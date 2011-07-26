@@ -34,8 +34,8 @@ BASEDIR=`cd "$PRGDIR/../.." ; pwd`
 
 
 
-JAVA_HOME="${BASEDIR}/lib/jdk1.6.0_25"
-ANT_HOME="${BASEDIR}/lib/apache-ant-1.8.2"
+export JAVA_HOME="${BASEDIR}/lib/jdk1.6.0_25"
+export ANT_HOME="${BASEDIR}/lib/apache-ant-1.8.2"
 chmod u+x ${ANT_HOME}/bin/*
 
 

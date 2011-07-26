@@ -1,3 +1,3 @@
 #!/bin/sh
 
-`dirname "$0"`/engine/engine.sh startup
+`dirname "$0"`/engine/engine.sh startup $*

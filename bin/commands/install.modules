@@ -23,8 +23,8 @@ scm.plugins
 scm.install-git
 scm.install-svn
 
-codereview
-codereview.drivers
+#codereview
+#codereview.drivers
 
 # Copy the configuration items
 runtime.configure
@@ -48,4 +48,4 @@ qualityTool.init
 server.startup
 directory.secure
 
-
+runtime.license

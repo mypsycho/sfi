@@ -1,4 +1,4 @@
-runtime.license
+
 #runtime : download ant ? already using it !
 runtime.download-plugins
 # we need ant contrib for some elaborate downloads
@@ -19,5 +19,10 @@ issueTool
 issueTool.download-plugins
 directory
 ldapClient
+scm
+scm.download-plugins
+scm.download-git
+scm.download-svn
+codereview
 
 runtime.license

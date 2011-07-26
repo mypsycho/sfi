@@ -2,6 +2,7 @@
 
 <project name="Apache-Tomcat-Execution" basedir="../.." >
 
+    <property name="xterm" value="xterm" />
     <property name="tomcat.shutdown.delay" value="40" />
     <property name="tomcat.startup.delay" value="20" />
     <property name="tomcat.base.dir"     location="${deploy.dir}/${sfi.server.install.tofile}" />
@@ -28,7 +29,7 @@
     </target>
 
     <target name="startConsole" unless="noConsole" >
-        <exec executable="xterm" dir="${tomcat.binaries.dir}" spawn="true" > <!-- The command to fork with a console -->
+        <exec executable="${xterm}" dir="${tomcat.binaries.dir}" spawn="true" > <!-- The command to fork with a console -->
             <env key="CATALINA_HOME" file="${tomcat.base.dir}" />
             <arg value="-e" />
             <arg file="${tomcat.binaries.dir}/catalina.sh" />

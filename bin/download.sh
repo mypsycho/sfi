@@ -1,3 +1,3 @@
 #!/bin/sh
 
-`dirname "$0"`/engine/engine.sh download
+`dirname "$0"`/engine/engine.sh download $*

@@ -20,12 +20,6 @@ changetype: modify
 add: uniqueMember
 uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
-# Define tomcat admin
-dn: cn=admin,ou=scm,ou=tomcat,${sfi.ldap.group.base}
-changetype: modify
-add: uniqueMember
-uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
-
 # Authorize webdav access
 dn: cn=share,ou=tomcat,${sfi.ldap.group.base}
 changetype: modify
@@ -45,7 +39,16 @@ add: uniqueMember
 uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
 # Define jenkins admin ?
-dn: cn=manager,ou=jenkins,${sfi.ldap.group.base}
+dn: cn=admin,ou=jenkins,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
 uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
+
+
+
+
+# Authorize webdav access
+dn: cn=commit,ou=scm,${sfi.ldap.group.base}
+changetype: modify
+add: uniqueMember
+uniqueMember: uid=jjones,${sfi.ldap.user.base}

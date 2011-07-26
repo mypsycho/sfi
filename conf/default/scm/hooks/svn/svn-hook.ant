@@ -2,19 +2,23 @@
 
 <project name="svn-hook" basedir=".">
 
-  <property name="svnkit.home" value="@deploy.dir@/tools/svn" />
-  <property name="tmp.dir" value="@tmp.dir@" />
-  <property name="drivers.dir" value="@repo.dir@/@java.drivers@" />
+  <!-- if sfi.redmine.lang not defined, no file will be found -->
+  <property file="redmine_@redmine.lang@.properties" />
+  <property file="redmine_${user.language}.properties" />
+  <property file="redmine.properties" />
+
+  <property file="svn-hook.properties" />
+
   <macrodef name="redmineRequest">
     <attribute name="result" />
     <element name="request" implicit="true" />
     <sequential>
       <tempfile property="sqlOutput" destdir="${tmp.dir}" prefix="sql" suffix=".out" />
 
-      <sql driver="@db.driver@" url="@db.url.root@/redmine?characterEncoding=utf8" 
-          userid="@redmine.db.user@" password="@redmine.db.password@" 
-          showheaders="false" showtrailers="false" print="true"
-          csvColumnSeparator="" output="${sqlOutput}" >
+      <sql driver="${db.driver}" url="${redmine.db.url}" 
+        userid="${redmine.db.user}" password="${redmine.db.password}"
+        showheaders="false" showtrailers="false" print="true" 
+        csvColumnSeparator="" output="${sqlOutput}">
         <classpath>
           <fileset dir="${drivers.dir}" includes="*.jar" />
         </classpath>
@@ -32,23 +36,30 @@
           </tokenfilter>
         </filterchain>
       </loadfile>
+      <property name="@{result}" value="" />
     </sequential>
   </macrodef>
 
-  <macrodef name="normalize">
+  <!-- Sorted a -->
+  <macrodef name="setsort"> <!-- alphabetical sorted (12 before 4) but reproductible -->
     <attribute name="value" />
     <attribute name="out" />
-
+    <attribute name="delims" default="," />
     <sequential>
       <loadresource property="@{out}">
-        <string>@{value},</string>
+        <string>@{value},</string><!-- trailing comma is turned into a line -->
+        <!-- Last value must contains a lien separator otherwise sortfilter fail -->
         <filterchain>
-          <tokenfilter delimoutput="\n">
+          <tokenfilter delimoutput="\n"><!-- split in lines -->
             <stringtokenizer delims="," />
             <trim />
           </tokenfilter>
-          <sortfilter />
+          <sortfilter /> <!-- sort lines -->
           <uniqfilter /> <!-- works only after sort filter -->
+
+          <tokenfilter delimoutput="," /> <!-- aggregate all lines in 1 -->
+          <replaceregex pattern="^(.*),$$" replace="\1" />
+
         </filterchain>
       </loadresource>
       <property name="@{out}" value="" /><!-- empty if not defined -->
@@ -128,9 +139,14 @@
     </sequential>
   </macrodef>
 
+  <target name="readCommit">
 
+    <fail unless="repository" />
+    <fail unless="transaction" />
+    <basename property="project.name" file="${repository}" />
+    <echo>repository : ${repository}</echo>
+    <echo>transaction : ${transaction}</echo>
 
-  <target name="pre-commit">
     <svnlook output="comment">
       <arg value="log" />
       <arg value="${repository}" />
@@ -139,68 +155,126 @@
     </svnlook>
     <echo>comment of ${transaction} : ${comment}</echo>
 
+    <svnlook output="author">
+      <arg value="author" />
+      <arg value="${repository}" />
+      <arg value="-t" />
+      <arg value="${transaction}" />
+    </svnlook>
+
     <assert name="emptyComment">
       <and>
         <isset property="comment" />
         <length string="${comment}" trim="true" when="gt" length="0" />
       </and>
     </assert>
+  </target>
 
-    <loadresource property="issues">
+  <target name="readIssues" depends="readCommit"> <!-- -->
+    <concat taskname="comment">
       <string>${comment}</string>
+    </concat>
+    <loadresource property="commit_pattern">
+      <string>${commit_ref_keywords},${commit_fix_keywords}</string>
       <filterchain>
-        <headfilter lines="1" />
-        <tokenfilter delimoutput="">
-          <containsregex
-            pattern="^(refs\s|references\s|IssueID\s|fixes\s|closes\s|\#)([ \t]*\d+([ \t]*,[ \t]*\d+)*).*"
-            replace="\2" />
-        </tokenfilter>
+        <replacestring from="," to="|" />
       </filterchain>
     </loadresource>
-      <echo>Provided issues : ${issues}</echo> 
-    <normalize value="${issues}" out="sortedIssues" />
-    <echo>Provided issues : ${sortedIssues}</echo> 
-      
-      
+
+    <!-- extract issues from comment -->
+    <loadresource property="issues">
+      <string>${comment}</string>
+      <filterchain> <!-- remove lines without ids, pack ids in separate lines -->
+        <tokenfilter delimoutput="\n">
+          <containsregex flags="g"
+            pattern="(${commit_pattern})[ \t]*((\#\d+)([ \t]*[\,\&amp;][ \t]*(\#\d+))*)" replace="&#xA;\2&#xA;" /> <!-- &#xA; <=> \n -->
+        </tokenfilter>
+
+        <tokenfilter delimoutput=""> <!-- remove space and sperator, create 1 line -->
+          <containsregex pattern="^(\#\d+)([ \t]*[\,\&amp;][ \t]*(\#\d+))*$$" />
+          <replaceregex flags="g" pattern="[ \t\,\&amp;]" replace="" />
+          <replaceregex flags="g" pattern="\#" replace="\," />
+        </tokenfilter>
+
+        <!-- remove leading and trailing separator -->
+        <replaceregex pattern="^(\,*)(.*)(\,*)$$" replace="\2" />
+      </filterchain>
+    </loadresource>
+
+
     <assert name="missingIssues">
       <isset property="issues" />
     </assert>
 
-    <redmineRequest result="closedIssues">
+    <setsort value="${issues}" out="sortedIssues" />
+    <echo>Provided issues : ${sortedIssues}</echo>
+
+
+
+  </target>
+
+
+  <!-- Pre-commit hook. @param repository @param transaction -->
+  <target name="pre-commit" depends="readIssues">
+
+    <redmineRequest result="illegalIssues">
       <string>
         SELECT i.id
         FROM Issues i
         INNER JOIN Issue_Statuses s ON s.id = i.status_id
-        WHERE I.id in (${issues}) AND s.is_closed = 1
+        INNER JOIN Projects p ON p.id = i.project_id
+
+        WHERE I.id in (${issues})
+        AND ( (s.is_closed = 1) OR ( p.name &lt;&gt; '${project.name}') )
       </string>
     </redmineRequest>
 
-      <echo>closedIssues : ${closedIssues}</echo>
-    <assert name="closedIssues">
+    <echo>illegalIssues : ${illegalIssues}</echo>
+    <assert name="illegalIssues">
       <not>
-        <isset property="closedIssues" />
+        <length string="${illegalIssues}" when="greater" length="0" />
       </not>
     </assert>
 
-    <redmineRequest result="existingIssues">
+    <redmineRequest result="accessibleIssues"> <!-- and related issues -->
       <string>
         SELECT i.id
         FROM Issues i
-        WHERE I.id in (${issues})
-        </string>
-    </redmineRequest>
-    <normalize value="${existingIssues}" out="sortedExistings" />
+        INNER JOIN Projects p ON p.id = i.project_id,
+        (
+        SELECT DISTINCT 1 as authorized
+        FROM Users u
+        LEFT JOIN Members m on m.user_id = u.id
+        LEFT JOIN Projects p on m.project_id = p.id
+        LEFT JOIN Member_Roles mr on mr.member_id = m.id
+        LEFT JOIN Roles r on r.id = mr.role_id
 
-    <echo>Existing issues : ${sortedExistings}</echo>
-    <assert name="undefinedIssues">
+        WHERE u.login = '${author}'
+        AND p.name = '${project.name}' AND r.name in (${editingRoles})
+
+        ) authorized
+
+        WHERE I.id in (${issues}) AND p.name = '${project.name}'
+      </string>
+    </redmineRequest>
+    <setsort value="${accessibleIssues}" out="sortedExistings" />
+
+
+    <echo>Existing issues : ${sortedExistings} ( ${accessibleIssues} )</echo>
+    <assert name="inaccessibleIssues">
       <equals arg1="${sortedExistings}" arg2="${sortedIssues}" trim="true" />
     </assert>
 
   </target>
 
-    
-    
-  <target name="post-commit">
 
+  <!-- Post-commit hook -->
+  <target name="post-commit">
   </target>
+
+
+
+
+
+
 </project>

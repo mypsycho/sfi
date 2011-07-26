@@ -40,4 +40,4 @@ chmod u+x ${ANT_HOME}/bin/*
 
 
 # -Dsfi.exec.mode=TEST
-"${ANT_HOME}/bin/ant" -f "${BASEDIR}/bin/engine/engine.ant"  exec
+echo $* | "${ANT_HOME}/bin/ant" -f "${BASEDIR}/bin/engine/engine.ant" exec

@@ -22,8 +22,6 @@ for /F "tokens=1,*" %%i in ( %BASEDIR%\lib\lib.txt ) do set %%i_HOME=%BASEDIR%\l
 set sfi.option=
 REM  -Dsfi.exec.mode=TEST
 
-call "%ANT_HOME%\bin\ant.bat" -f "%BASEDIR%\bin\engine\engine.ant" -Dsfi.profile=win32 %sfi.option% exec 
-REM  "-Dmodules=%*"
-REM example: echo config.install issueTool.init issueApp.install server.startup | exec
+echo %* | call "%ANT_HOME%\bin\ant.bat" -f "%BASEDIR%\bin\engine\engine.ant" -Dsfi.profile=win32 %sfi.option% exec 
 
 @endlocal

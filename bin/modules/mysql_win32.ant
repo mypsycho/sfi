@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="MysqlServer-Execution-Win32" default="createSchemas" basedir="../.." >
+<project name="Mysql-Server-Win32" basedir="../.." >
 
-    <import file="${ant.file.MysqlServer-Execution-Win32}/../mysql.ant" />
+    <import file="${ant.file.Mysql-Server-Win32}/../mysql.ant" />
 
     
     <target name="startQuiet" if="noConsole" >
         <exec executable="${mysql.binaries.dir}/mysqld.exe" dir="${mysql.base.dir}" spawn="true" >
             <arg value="--console"/>
+            <arg value="--log-error"/>
             <arg value="--basedir=${mysql.base.dir}" />
         </exec>
     </target>
@@ -19,6 +20,7 @@
              <!-- eq. spawn in a console -->
             <arg file="${mysql.binaries.dir}/mysqld.exe" />
             <arg value="--console"/>
+            <arg value="--log-error"/>
             <arg value="--basedir=${mysql.base.dir}" />
         </exec>
     </target>

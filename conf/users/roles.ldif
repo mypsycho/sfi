@@ -24,23 +24,19 @@
 # Define roles of 'Apache-Tomcat' : predefined 
 dn: ou=tomcat,${sfi.ldap.group.base}
 objectClass: organizationalUnit
-ou: tomcat
 
 # Define roles of application 'manager'
 dn: cn=manager,ou=tomcat,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: manager
 uniqueMember: ${sfi.ldap.bind.dn}
 
 # Define roles of 'Share/Webdav'
 dn: cn=share,ou=tomcat,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: share
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=share-read,ou=tomcat,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: share-read
 uniqueMember: ${sfi.ldap.bind.dn}
 
 
@@ -52,9 +48,15 @@ objectClass: organizationalUnit
 
 dn: cn=admin,ou=scm,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
+dn: cn=read,ou=scm,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+uniqueMember: ${sfi.ldap.bind.dn}
+
+dn: cn=write,ou=scm,${sfi.ldap.group.base}
+objectClass: groupOfUniqueNames
+uniqueMember: ${sfi.ldap.bind.dn}
 
 
 ##
@@ -62,26 +64,21 @@ uniqueMember: ${sfi.ldap.bind.dn}
 ## 
 dn: ou=jenkins,${sfi.ldap.group.base}
 objectClass: organizationalUnit
-ou: jenkins
 
 dn: cn=admin,ou=jenkins,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=project,ou=jenkins,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=developer,ou=jenkins,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=visitor,ou=jenkins,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
 
@@ -93,21 +90,17 @@ uniqueMember: ${sfi.ldap.bind.dn}
 # mapping on existing roles
 dn: ou=nexus,${sfi.ldap.group.base}
 objectClass: organizationalUnit
-ou: nexus
 
 dn: cn=admin,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: admin
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=deployment,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: deployment
 uniqueMember: ${sfi.ldap.bind.dn}
 
 dn: cn=developer,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
-cn: developer
 uniqueMember: ${sfi.ldap.bind.dn}
 
 

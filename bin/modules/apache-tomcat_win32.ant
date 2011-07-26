@@ -41,7 +41,8 @@
         <exec executable="cmd" dir="${tomcat.binaries.dir}" > <!-- The command does not fork -->
             <env key="CATALINA_HOME" file="${tomcat.base.dir}" />
             <arg value="/c" />
-            <arg file="${tomcat.binaries.dir}/shutdown.bat" />
+            <arg file="${tomcat.binaries.dir}/catalina.bat" />
+            <arg value="stop" />
         </exec>
         <echo>Wait for Server to stop (~${tomcat.shutdown.delay}s)</echo>
         <sleep seconds="${tomcat.shutdown.delay}" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="MysqlServer-Execution" basedir="../.." >
+<project name="Mysql-Server" basedir="../.." >
 
     <loadproperties>
         <string>    
@@ -15,6 +15,7 @@
     mysql.admin.builtin.password =
     mysql.admin.password = ${sfi.db.admin.password}
 
+	xterm = xterm
         </string>
     </loadproperties>
     
@@ -94,7 +95,7 @@
     
 
     <target name="startConsole" unless="noConsole">
-        <exec executable="xterm" dir="${mysql.base.dir}" spawn="true" >
+        <exec executable="${xterm}" dir="${mysql.base.dir}" spawn="true" >
             <arg value="-e" />
             <arg value="${mysql.binaries.dir}/mysqld" />
             <arg value="--defaults-file=${mysql.defaults.file}" />

@@ -31,7 +31,8 @@
       
       <chmod dir="${conf.dir}/${config}/scm/hooks/@{kind}" perm="ugo+rx" />
       <echo>${sfi.scm.repositories}/@{kind} : ${hook[@{kind}].pathes}</echo> 
-        
+      
+      <!-- Running on directory , we should use subant -->
       <antcontrib:for param="repoHooks" >
         <dirset dir="${sfi.scm.repositories}/@{kind}" includes="*/${hook[@{kind}].pathes}" />
         <sequential>
