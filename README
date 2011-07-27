@@ -59,7 +59,8 @@ Quick start
 
 8. Launch 'loadUsers' in 'bin' 
 
-9. Enjoy at http://localhost:8080/ . Application are:
+9. Enjoy at http://localhost:8080/ (if the configuration is unchanged)
+Application are:
 - http://localhost:8080/sonar
 - http://localhost:8080/redmine
 - http://localhost:8080/scm
