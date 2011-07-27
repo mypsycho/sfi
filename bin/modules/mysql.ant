@@ -44,11 +44,8 @@
                 print="true" onerror="stop"  
                     url="jdbc:mysql://localhost:${sfi.db.port}/@{schema}" 
                     userid="@{user}" password="@{password}" showtrailers="false" >
-                <resources>
 
-                       <sqlResources />
-
-                </resources>
+                <sqlResources />
             </sql>
         </sequential>
     </macrodef>
@@ -60,7 +57,6 @@
         <attribute name="options" default="CHARACTER SET utf8" />
         <sequential>
             <sqlScript schema="" show="false" >
-                <resources >
                 <string>
                     CREATE DATABASE IF NOT EXISTS @{schema} @{options};
                     GRANT ALL PRIVILEGES ON @{schema}.* to '@{user}'@@'localhost' IDENTIFIED BY '@{password}';
@@ -68,7 +64,6 @@
                     FLUSH PRIVILEGES;
                     SHOW DATABASES;
                 </string>
-                    </resources>
             </sqlScript>
         </sequential>
     </macrodef>

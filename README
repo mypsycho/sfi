@@ -33,29 +33,39 @@ Content
 
 This tool is provided with a consistent stack. This stack is mostly java-development oriented.
 
-The document folder contains:
-ProvidedStack.txt : Description of the provided selection of applications.
-BuildingStack.txt : Description of the engine and how to create a new stack it.
+The 'doc' folder contains :
+- ProvidedStack.txt : Description of the provided selection of applications.
+- BuildingStack.txt : Description of the engine and how to create a new stack for it.
 
 
-Quick start step
+Quick start
 --------------
 
 1. Download Apache ANT (>=1.8.2) and Java SDK 6
 
 2. Install them 'lib' folder, update 'lib/lib.txt' is necessary
 
-3. (Unix only) chmod +x bin/*.sh bin/*/*.sh
+3. (Unix only) Fix execution rights of file: chmod +x bin/*.sh bin/*/*.sh
 
-4. Launch 'bin/download' (duration approx. 30 min) 
+4. Launch 'download' in 'bin' (duration approx. 30 min) 
 
 5. (Optional) Update passwords in 'conf/default.properties'
 
-6. Launch 'bin/install' (duration approx. 10 min)
+6. Launch 'install' in 'bin' (duration approx. 10 min)
 
 7. (Optional) Defines users in 'conf/users/users.ldif' and rights in 
    'conf/users/authorisations.ldif'
+   By default 'pnico' (password:pnico) has all rights
 
-8. Launch 'bin/loadUsers' 
+8. Launch 'loadUsers' in 'bin' 
 
-9. Enjoy at http://localhost:8080/
+9. Enjoy at http://localhost:8080/ . Application are:
+- http://localhost:8080/sonar
+- http://localhost:8080/redmine
+- http://localhost:8080/scm
+- http://localhost:8080/nexus
+- http://localhost:8080/jenkins
+- http://localhost:8080/share
+
+
+

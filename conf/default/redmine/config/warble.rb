@@ -9,7 +9,13 @@ Warbler::Config.new do |config|
   # config.features = %w(gemjar)
 
   # Application directories to be included in the webapp.
-  config.dirs = %w(app config lib log vendor tmp extra files lang)
+  
+  # sfi-note : nothing included but rails.root is provided
+  # Rails root is only relative; Life is hard.
+  #config.dirs = %w<app config lib log vendor tmp extra files lang>
+  config.dirs = %w< >
+  config.webxml.rails.root = %q<../../../redmine>
+  
 
   # Additional files/directories to include, above those in config.dirs
   # config.includes = FileList["db"]
@@ -98,6 +104,7 @@ Warbler::Config.new do |config|
 
   # Value of RAILS_ENV for the webapp -- default as shown below
   config.webxml.rails.env = ENV['RAILS_ENV'] || 'production'
+  
 
   # Application booter to use, one of :rack, :rails, or :merb (autodetected by default)
   # config.webxml.booter = :rails

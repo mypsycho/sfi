@@ -30,7 +30,7 @@
     <echo>Define sfi.admin.uid in conf/default.properties</echo>
     <echo>type: exec qualityTool.letmeadmin </echo>
     <input addproperty="sfi.admin.uid">Enter administrator id</input>
-    <sqlScript schema="${sfi.sonar.db.user}">
+    <sqlScript schema="sonar" user="${sfi.sonar.db.user}" password="${sfi.sonar.db.password}" >
       <string>
 
       INSERT INTO Groups_Users (group_id, user_id)

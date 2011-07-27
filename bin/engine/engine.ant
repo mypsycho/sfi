@@ -6,7 +6,7 @@
     
   <property name="sfi.basedir" location="${ant.file.sfi-engine}/../../.." />
   <property name="binaries.dir" location="${sfi.basedir}/bin" />
-  <property name="instance.dir" location="${binaries.dir}/commands" />
+  <property name="meta-cmd.dir" location="${binaries.dir}/meta-cmd" />
   
   <property name="sfi.tmp.dir" value="${sfi.basedir}/run" />
   <property name="sfi.exeResume" value="${sfi.tmp.dir}/rerun.properties" />
@@ -89,8 +89,8 @@
     <loadproperties>
       <concat> <!-- Concatenation provides post-redefinition -->
         <path>
-          <pathelement location="${instance.dir}/engine.properties" />
-          <pathelement location="${instance.dir}/engine_${sfi.profile}.properties" />
+          <pathelement location="${meta-cmd.dir}/meta-inf.properties" />
+          <pathelement location="${meta-cmd.dir}/meta-inf_${sfi.profile}.properties" />
         </path>
       </concat>
     </loadproperties>
@@ -183,7 +183,7 @@
     <fail unless="command" message="command is required" />
     <!-- load the sequence file  -->
     <property name="commands.file" 
-        location="${instance.dir}/${command}.modules" />
+        location="${meta-cmd.dir}/${command}.modules" />
     
     <!-- Converting command in temporary folder : pseudo-for  -->
     <touch mkdirs="true" verbose="false" >
