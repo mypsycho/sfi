@@ -13,7 +13,9 @@
     <attribute name="result" />
     <element name="request" implicit="true" />
     <sequential>
-      <tempfile property="sqlOutput" destdir="${tmp.dir}" prefix="sql" suffix=".out" />
+      <tempfile property="sqlOutput" 
+          destdir="${tmp.dir}" prefix="sql" suffix=".out" 
+          deleteonexit="true" />
 
       <sql driver="${db.driver}" url="${redmine.db.url}" 
         userid="${redmine.db.user}" password="${redmine.db.password}"
@@ -144,8 +146,8 @@
     <fail unless="repository" />
     <fail unless="transaction" />
     <basename property="project.name" file="${repository}" />
-    <echo>repository : ${repository}</echo>
-    <echo>transaction : ${transaction}</echo>
+    <echo level="verbose" >repository : ${repository}</echo>
+    <echo level="verbose" >transaction : ${transaction}</echo>
 
     <svnlook output="comment">
       <arg value="log" />
@@ -153,7 +155,7 @@
       <arg value="-t" />
       <arg value="${transaction}" />
     </svnlook>
-    <echo>comment of ${transaction} : ${comment}</echo>
+    <echo level="verbose" >comment of ${transaction} : ${comment}</echo>
 
     <svnlook output="author">
       <arg value="author" />
@@ -208,7 +210,7 @@
     </assert>
 
     <setsort value="${issues}" out="sortedIssues" />
-    <echo>Provided issues : ${sortedIssues}</echo>
+    <echo level="verbose" >Provided issues : ${sortedIssues}</echo>
 
 
 
@@ -230,7 +232,7 @@
       </string>
     </redmineRequest>
 
-    <echo>illegalIssues : ${illegalIssues}</echo>
+    <echo level="verbose" >illegalIssues : ${illegalIssues}</echo>
     <assert name="illegalIssues">
       <not>
         <length string="${illegalIssues}" when="greater" length="0" />
@@ -261,7 +263,7 @@
     <setsort value="${accessibleIssues}" out="sortedExistings" />
 
 
-    <echo>Existing issues : ${sortedExistings} ( ${accessibleIssues} )</echo>
+    <echo level="verbose" >Existing issues : ${sortedExistings} ( ${accessibleIssues} )</echo>
     <assert name="inaccessibleIssues">
       <equals arg1="${sortedExistings}" arg2="${sortedIssues}" trim="true" />
     </assert>
