@@ -36,7 +36,9 @@ This tool is provided with a consistent stack. This stack is mostly java-develop
 The 'doc' folder contains :
 - ProvidedStack.txt : Description of the provided selection of applications.
 - BuildingStack.txt : Description of the engine and how to create a new stack for it.
-
+- Repository.txt : the list of files you shoud get once downloading is performed (TO.BE.REFRESH)
+- Samples.txt : tutorial using git project (IN PROGRESS)
+- SamplesUsingSvn.txt : tutorial using SVN project (IN PROGRESS)
 
 Quick start
 --------------
