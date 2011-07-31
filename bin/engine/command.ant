@@ -87,6 +87,7 @@
       </fileset>
     </chmod>
     
+	<!-- overwrite is required as <copy> checks the timestamps of files -->
     <copy todir="${module.exec.todir}" overwrite="true" >
       <fileset dir="${basedir}" >
         <exclude name="**/*.exe" />
@@ -124,7 +125,7 @@
       </chainedmapper>
     </pathconvert>
 
-    <!-- Note: Restict propagate Resource nature, Mapper don't -->
+    <!-- Note: Restrict propagate Resource nature, Mapper does not -->
     <subant genericantfile="${ant.file.sfi-command}" 
        target="filteredCopy" inheritall="true" >
       <restrict>
