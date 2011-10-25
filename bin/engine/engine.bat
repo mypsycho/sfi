@@ -17,7 +17,21 @@ REM   limitations under the License.
 
 @setlocal
 set BASEDIR=%~dp0.\..\..
-for /F "tokens=1,*" %%i in ( %BASEDIR%\lib\lib.txt ) do set %%i_HOME=%BASEDIR%\lib\%%j
+
+REM in batch, empty line are ignored by for
+for /F "usebackq tokens=1,*" %%i in ( "%BASEDIR%\lib\lib.txt" ) do set %%i_HOME=%BASEDIR%\lib\%%j
+
+if not exist %ANT_HOME% (
+  echo ANT_HOME is not valid. Please update '%BASEDIR%\lib\lib.txt' file.
+  echo Syntax : ANT ^<ApacheAnt-path-relativeTo-lib-folder^>
+  exit /b 1
+)
+
+if not exist %JAVA_HOME% (
+  echo JAVA_HOME is not valid. Please update '%BASEDIR%\lib\lib.txt' file.
+  echo Syntax : JAVA ^<JDK-path-relativeTo-lib-folder^>
+  exit /b 1
+)
 
 set sfi.option=
 REM  -Dsfi.exec.mode=TEST

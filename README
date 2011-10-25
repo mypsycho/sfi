@@ -45,21 +45,21 @@ Quick start
 
 1. Download Apache ANT (>=1.8.2) and Java SDK 6
 
-2. Install them 'lib' folder, update 'lib/lib.txt' is necessary
+2. Install them in 'lib' folder, update 'lib/lib.txt' if necessary with accurate pathes
 
-3. (Unix only) Fix execution rights of file: chmod +x bin/*.sh bin/*/*.sh
+3. (Unix only) Fix execution rights of scripts: chmod +x bin/*.sh bin/engine/*.sh
 
-4. Launch 'download' in 'bin' (duration approx. 30 min) 
+4. Launch 'download[.sh]' in 'bin' (duration approx. 30 min) 
 
 5. (Optional) Update passwords in 'conf/default.properties'
 
-6. Launch 'install' in 'bin' (duration approx. 10 min)
+6. Launch 'install[.sh]' in 'bin' (duration approx. 10 min)
 
 7. (Optional) Defines users in 'conf/users/users.ldif' and rights in 
    'conf/users/authorisations.ldif'
    By default 'pnico' (password:pnico) has all rights
 
-8. Launch 'loadUsers' in 'bin' 
+8. Launch 'loadUsers[.sh]' in 'bin' 
 
 9. Enjoy at http://localhost:8080/ (if the configuration is unchanged)
 Application are:

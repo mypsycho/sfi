@@ -32,11 +32,36 @@ done
 PRGDIR=`dirname "$PRG"`
 BASEDIR=`cd "$PRGDIR/../.." ; pwd`
 
+# Note: Following approach ignores last line
+# while read line; do echo $line; done < file
+
+while true ; do
+  # Reading input stream
+  read -r i j
+  eof=$?
+  if [[ -n "${i}" ]] ; then 
+    export ${i}_HOME="${BASEDIR}/lib/${j}"
+  fi
+  if [[ $eof != 0 ]] ; then 
+    break
+  fi
+# Define the file as input stream
+done < "${BASEDIR}/lib/lib.txt"
 
 
-export JAVA_HOME="${BASEDIR}/lib/jdk1.6.0_25"
-export ANT_HOME="${BASEDIR}/lib/apache-ant-1.8.2"
-chmod u+x ${ANT_HOME}/bin/*
+if [[ ! ( -d ${ANT_HOME} ) ]] ; then
+  echo "ANT_HOME is not valid. Please update '${BASEDIR}/lib/lib.txt' file."
+  echo "Syntax : ANT <ApacheAnt-path-relativeTo-lib-folder>"
+  exit 1
+fi
+if [[ ! ( -d ${JAVA_HOME} ) ]] ; then
+  echo "JAVA_HOME is not valid. Please update '${BASEDIR}/lib/lib.txt' file."
+  echo "Syntax : JAVA <JDK-path-relativeTo-lib-folder>"
+  exit 1
+fi
+
+
+chmod u+x "${ANT_HOME}/bin"/*
 
 
 "${ANT_HOME}/bin/ant" -f "${BASEDIR}/bin/engine/engine.ant" -Dcommand=$1 engine

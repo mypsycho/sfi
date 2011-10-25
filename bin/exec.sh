@@ -34,8 +34,28 @@ BASEDIR=`cd "$PRGDIR/.." ; pwd`
 
 
 
-JAVA_HOME="${BASEDIR}/lib/jdk1.6.0_25"
-ANT_HOME="${BASEDIR}/lib/apache-ant-1.8.2"
+while true ; do
+  read -r i j
+  eof=$?
+  if [[ -n "${i}" ]] ; then 
+    export ${i}_HOME="${BASEDIR}/lib/${j}"
+  fi
+  if [[ $eof != 0 ]] ; then 
+    break
+  fi
+done<"${BASEDIR}/lib/lib.txt"
+
+if [[ ! ( -d ${ANT_HOME} ) ]] ; then
+  echo "ANT_HOME is not valid. Please update '${BASEDIR}/lib/lib.txt' file."
+  echo "Syntax : ANT <ApacheAnt-path-relativeTo-lib-folder>"
+  exit 1
+fi
+if [[ ! ( -d ${JAVA_HOME} ) ]] ; then
+  echo "JAVA_HOME is not valid. Please update '${BASEDIR}/lib/lib.txt' file."
+  echo "Syntax : JAVA <JDK-path-relativeTo-lib-folder>"
+  exit 1
+fi
+
 chmod u+x ${ANT_HOME}/bin/*
 
 
