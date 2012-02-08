@@ -1,8 +1,8 @@
 This folder must contain the descriptor 'lib.txt' of required softwares.
 
 Required installations are:
-- Java Development Kit >=1.6 (or compatible)
-- Apache Ant >=1.8.1
+- Java Development Kit <=1.6 (or compatible)
+- Apache Ant <=1.8.1
 For license and plateform-dependency reasons, they are not bundled in the delivery.
 
 The folder should contain the installation of those softwares.

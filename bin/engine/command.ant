@@ -163,16 +163,14 @@
   </target>
 
 
-
-
   <target name="downloadList" if="module.exec.urls">
     <property name="module.exec.todir" value="." />
 
 	 <!-- car than cannot math a url : by default flatten -->
 	<property name="module.exec.base" value="&gt;" />
 	
-    <mkdir dir="${download.dir}/${module.exec.todir}" />
-	
+    <mkdir dir="${download.dir}/${module.exec.todir}" />     
+      
 	<pathconvert property="downloadedFiles" >
 	   <resourcelist>
         <file file="${module.exec.urls}" />
@@ -186,12 +184,14 @@
           <globmapper from="${module.exec.base}*" to="*"/>
           <flattenmapper/>
         </firstmatchmapper>
+	      <!-- remove http elements after ?, a better url->file conversion should be used -->
+	    <regexpmapper from="^([^?]*)(\?.*)$" to="\1"/>
 		<globmapper from="*" to="${download.dir}/${module.exec.todir}/*" />
       </chainedmapper>
 	</pathconvert>
 	  
 	<!-- Get does not create path but touch does -->
-
+      
 	<touch mkdirs="true">
       <path>
         <pathelement path="${downloadedFiles}"/>
@@ -213,10 +213,13 @@
         </filterchain>
       </resourcelist>
 
-	  <firstmatchmapper>
-        <globmapper from="${module.exec.base}*" to="*"/>
-        <flattenmapper/>
-      </firstmatchmapper>
+      <chainedmapper>
+	    <firstmatchmapper>
+          <globmapper from="${module.exec.base}*" to="*"/>
+          <flattenmapper/>
+        </firstmatchmapper>
+        <regexpmapper from="^([^?]*)(\?.*)$" to="\1"/> <!-- remove http elements after ? -->
+      </chainedmapper>
     </get>
   </target>
 

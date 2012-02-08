@@ -14,6 +14,7 @@
 
     <!-- We use script command, not java call to have the environment from setenv -->
     <target name="startQuiet" if="noConsole">
+        <echo>Starting without console</echo>
         <exec executable="cmd" dir="${tomcat.binaries.dir}" spawn="true" >
             <env key="CATALINA_HOME" file="${tomcat.base.dir}" />
             <arg value="/C" />
@@ -24,6 +25,7 @@
 
     
     <target name="startConsole" unless="noConsole" >
+        <echo>Starting with console</echo>
         <exec executable="cmd" dir="${tomcat.binaries.dir}" >
             <env key="CATALINA_HOME" file="${tomcat.base.dir}" />
             <arg value="/C" />
