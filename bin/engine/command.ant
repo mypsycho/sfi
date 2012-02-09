@@ -185,7 +185,7 @@
           <flattenmapper/>
         </firstmatchmapper>
 	      <!-- remove http elements after ?, a better url->file conversion should be used -->
-	    <regexpmapper from="^([^?]*)(\?.*)$" to="\1"/>
+	    <regexpmapper from="^([^?]*)(\?.*)?$" to="\1"/>
 		<globmapper from="*" to="${download.dir}/${module.exec.todir}/*" />
       </chainedmapper>
 	</pathconvert>
@@ -218,7 +218,7 @@
           <globmapper from="${module.exec.base}*" to="*"/>
           <flattenmapper/>
         </firstmatchmapper>
-        <regexpmapper from="^([^?]*)(\?.*)$" to="\1"/> <!-- remove http elements after ? -->
+        <regexpmapper from="^([^?]*)(\?.*)?$" to="\1"/> <!-- remove http elements after ? -->
       </chainedmapper>
     </get>
   </target>
@@ -230,7 +230,7 @@
     <property name="module.exec.todir" value="." />
     <mkdir dir="${download.dir}/${module.exec.todir}" />
     <property name="module.exec.tofile" value="${module.exec.todir}" />
-    <get src="${module.exec.url}" dest="${download.dir}/${module.exec.tofile}" verbose="true" />
+    <get src="${module.exec.url}" dest="${download.dir}/${module.exec.tofile}" verbose="false" />
   </target>
 
 
@@ -342,57 +342,4 @@
     <antcall target="module.move" />
   </target>
 
-<!--
-  <target name="module.get" >
-    <assert>
-      <isset property="module.exec.urls" />
-    </assert>
-    <property name="module.exec.todir" value="." />
-      
-    
-    <mkdir dir="${download.dir}/${module.exec.todir}" />
-
-    
-    <pathconvert property="downloadedFiles" >
-      <resourcelist>
-          <file file="${module.exec.urls}" />
-          <filterchain>
-            <expandproperties />
-          </filterchain>
-        </resourcelist>
-      
-        <chainedmapper>
-          <firstmatchmapper>
-            <globmapper from="${module.exec.base}*" to="*"/>
-            <flattenmapper/>
-          </firstmatchmapper>
-          <globmapper from="*" to="${download.dir}/${module.exec.todir}/*" />
-        </chainedmapper>
-      </pathconvert>
-        
-
-      <echo>downloadedFiles ${downloadedFiles}</echo>
-      <touch mkdirs="true">
-        <path>
-          <pathelement path="${downloadedFiles}"/>
-        </path>
-      </touch>
-      
-     
-      <get dest="${download.dir}/${module.exec.todir}" >
-        <resourcelist>
-          <file file="${module.exec.urls}" />
-          <filterchain>
-            <expandproperties />
-          </filterchain>
-        </resourcelist>
-
-        <firstmatchmapper>
-          <globmapper from="${module.exec.base}*" to="*"/>
-          <flattenmapper/>
-        </firstmatchmapper>
-      </get>
-    </target>
--->
-    
 </project>
