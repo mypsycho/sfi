@@ -69,7 +69,7 @@ Warbler::Config.new do |config|
   # The most recent versions of gems are used.
   # You can specify versions of gems by using a hash assignment:
   # config.gems["rails"] = "2.0.2"
-  config.gems["rails"] = "2.3.14"
+  config.gems["rails"] = "2.3.12"
   
   config.gems += ["rack","activerecord-jdbc-adapter","i18n"]
   config.gems["rack"] = "1.1.1"
