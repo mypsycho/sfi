@@ -21,18 +21,15 @@
           <!-- tomcat 6.x.x path  : include name="lib/**/*.jar" -->
           <!-- tomcat 5.5.x path  : include name="common/lib/**/*.jar" -->
           <include name="lib/**/*.jar" />
-		  <include name="bin/**/*.jar" />
+          <include name="bin/**/*.jar" />
         </fileset>
       </classpath>
     </javac>
     
     <copy todir="target/classes">
-      <fileset dir="src/main/resources" />
+      <fileset dir="src/main/resources" erroronmissingdir="false" />
     </copy>
-
-
-	<jar destfile="target/tomcat-patch.jar" basedir="target/classes" />
-	
+    <jar destfile="target/tomcat-patch.jar" basedir="target/classes" />	
   </target>
 
 </project>
