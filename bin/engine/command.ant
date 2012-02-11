@@ -125,7 +125,8 @@
       </chainedmapper>
     </pathconvert>
 
-    <!-- Note: Restrict propagate Resource nature, Mapper does not -->
+    <!-- Note: Restrict propagate Resource nature, Mapper does not. -->
+    <!--    Subant requires file as inner elements -->      
     <subant genericantfile="${ant.file.sfi-command}" 
        target="filteredCopy" inheritall="true" >
       <restrict>

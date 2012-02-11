@@ -16,15 +16,18 @@ hard-code
 -->
 
     <attribute-name-fullname>cn</attribute-name-fullname>
+    <attribute-name-group>cn</attribute-name-group>
     <attribute-name-id>uid</attribute-name-id>
     <attribute-name-mail>mail</attribute-name-mail>
-    <attribute-name-group>group</attribute-name-group>
     <base-dn>@ldap.root.dn@</base-dn>
     <connection-dn>@ldap.bind.dn@</connection-dn>
     <connection-password>@ldap.bind.password@</connection-password>
     <host-url>ldap://localhost:@ldap.port@</host-url>
+    <profile>Custom</profile>
     <search-filter>uid={0}</search-filter>
+    <search-filter-group>(&amp;(objectClass=groupOfUniqueNames)(uniqueMember={0}))</search-filter-group>
     <search-scope>one</search-scope>
     <unit-groups>ou=scm,@ldap.group.path@</unit-groups>
     <unit-people>@ldap.user.path@</unit-people>
+    <enabled>true</enabled>
 </ldap-config>

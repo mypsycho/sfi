@@ -3,3 +3,6 @@ http://mirrors.jenkins-ci.org/plugins/polarion/1.3/polarion.hpi
 http://mirrors.jenkins-ci.org/plugins/redmine/0.9/redmine.hpi
 http://mirrors.jenkins-ci.org/plugins/sonar/1.8/sonar.hpi
 http://mirrors.jenkins-ci.org/plugins/violations/0.7.10/violations.hpi
+http://mirrors.jenkins-ci.org/plugins/git/1.1.15/git.hpi
+http://mirrors.jenkins-ci.org/plugins/gerrit/0.7/gerrit.hpi
+http://mirrors.jenkins-ci.org/plugins/gerrit-trigger/2.3.1/gerrit-trigger.hpi 

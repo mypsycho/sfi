@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sfi-engine" default="engine" basedir="../.." >
+<project name="sfi-engine" default="engine" basedir="../..">
 
   <description>Interpret commands on the Software factory.</description>
-    
+
   <property name="sfi.basedir" location="${ant.file.sfi-engine}/../../.." />
   <property name="binaries.dir" location="${sfi.basedir}/bin" />
   <property name="meta-cmd.dir" location="${binaries.dir}/meta-cmd" />
-  
+
   <property name="sfi.tmp.dir" value="${sfi.basedir}/run" />
   <property name="sfi.exeResume" value="${sfi.tmp.dir}/rerun.properties" />
-  
+
   <property name="sfi.config.path" value="${config}" />
 
   <import file="${binaries.dir}/engine/command.ant" />
 
 
-  <target name="execCommand" >
-    <!-- basename property="module.command.id" file="${basedir}" /-->
-    <pathconvert property="module.id" > <!-- extract module.id from basedir -->
+  <target name="execCommand">
+    <!-- basename property="module.command.id" file="${basedir}" / -->
+    <pathconvert property="module.id"> <!-- extract module.id from basedir -->
       <file basedir="" file="${basedir}" />
       <regexpmapper handledirsep="true" from="^(.+)/([^/]+)\.([^/\.]+)$$" to="\2" />
     </pathconvert>
-    <pathconvert property="command.id" > <!-- extract command.id from basedir -->
+    <pathconvert property="command.id"> <!-- extract command.id from basedir -->
       <file basedir="" file="${basedir}" />
       <regexpmapper handledirsep="true" from="^(.+)/([^/]+)\.([^/\.]+)$$" to="\3" />
     </pathconvert>
 
     <message name="start.command" />
-    <antcall target="module.exec" >
+    <antcall target="module.exec">
       <param name="module.command" value="${command.id}" />
-      <propertyset >
+      <propertyset>
         <propertyref prefix="sfi.${module.id}." />
         <firstmatchmapper>
           <globmapper from="sfi.${module.id}.${command.id}.*" to="module.exec.*" />
           <globmapper from="sfi.${module.id}.*" to="module.*" />
         </firstmatchmapper>
-        
+
       </propertyset>
     </antcall>
 
     <!-- note : &#xA; <=> \n -->
     <echo file="${sfi.exeResume}" append="true">${module.id}.${command.id} done&#xA;</echo>
   </target>
-    
-  
-  <target name="loadConfiguration" >
-      <loadproperties prefix="message" >
-        <concat fixlastline="true" > <!-- Concatenation provides post-redefinition -->
-          <resources>
-            <file file="${binaries.dir}/engine/messages.properties" /> <!-- This one required -->
-            <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
-            <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
-          </resources>
-        </concat>
-      </loadproperties>
-      
-    <!-- 
-      Special runtime properties. 
-      Use java.home/.., because of ANT force its to inner jre.
-      We need relative path of ANT and JDK.
-    -->
-    <property name="sfi.jdk.home" location="${java.home}/.."  /> 
-    <property name="sfi.ant.home" location="${ant.home}"  />
-    <property name="sfi.basedir"  location="${basedir}" />
-    
-	<pathconvert property="sfi.basedir.java" dirsep="/" >
+
+  <target name="loadMessages">
+    <loadproperties prefix="message">
+      <concat fixlastline="true"> <!-- Concatenation provides post-redefinition -->
+        <resources>
+          <file file="${binaries.dir}/engine/messages.properties" /> <!-- This one required -->
+          <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
+          <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
+        </resources>
+      </concat>
+    </loadproperties>
+  </target>
+
+
+  <target name="loadSystemConf">
+      <!-- Special runtime properties. Use java.home/.., because of ANT force its to inner jre. We need 
+      relative path of ANT and JDK. -->
+    <property name="sfi.jdk.home" location="${java.home}/.." />
+    <property name="sfi.ant.home" location="${ant.home}" />
+    <property name="sfi.basedir" location="${basedir}" />
+
+    <pathconvert property="sfi.basedir.java" dirsep="/">
       <path location="${basedir}" />
     </pathconvert>
-    <pathconvert property="sfi.ant.home.java" dirsep="/" ><!-- @todo ant.java-home-->
+    <pathconvert property="sfi.ant.home.java" dirsep="/"><!-- @todo ant.java-home -->
       <path location="${sfi.ant.home}" />
     </pathconvert>
-    <pathconvert property="sfi.jdk.home.java" dirsep="/" ><!-- @todo jdk.java-home-->
+    <pathconvert property="sfi.jdk.home.java" dirsep="/"><!-- @todo jdk.java-home -->
       <path location="${sfi.jdk.home}" />
     </pathconvert>
 
-	
     <hostinfo prefix="sfi.hostinfo" />
 
     <loadfile property="sfi.profile" srcFile="profil.cfg" failonerror="false" quiet="true">
       <filterchain>
-        <trim/>
-        <striplinebreaks/>
+        <trim />
+        <striplinebreaks />
       </filterchain>
     </loadfile>
+  
+  </target>
 
-
+  <target name="loadMetaConf">
     <loadproperties>
       <concat> <!-- Concatenation provides post-redefinition -->
         <path>
@@ -97,57 +97,67 @@
 
     <loadproperties>
       <concat> <!-- Concatenation provides list handling with optional content -->
-        <restrict xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors" >
-          <filelist dir="${basedir}" files="${ext.properties}" /> 
+        <restrict xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors">
+          <filelist dir="${basedir}" files="${ext.properties}" />
           <rsel:exists />
         </restrict>
       </concat>
     </loadproperties>
-    
-    <fail unless="conf.dir" >'conf.dir' property is required</fail>
-    <fail unless="deploy.dir" >'deploy.dir' property is required</fail>
+    <fail unless="conf.dir">'conf.dir' property is required</fail>
+    <fail unless="deploy.dir">'deploy.dir' property is required</fail>
+
     <!-- define canonical path -->
     <property name="sfi.deploy.dir" location="${deploy.dir}" /> <!-- host native path -->
-	<property name="sfi.repo.dir" location="${repo.dir}" /> <!-- host native path -->
-    <pathconvert property="sfi.deploy.java-dir" dirsep="/" >
+    <property name="sfi.repo.dir" location="${repo.dir}" /> <!-- host native path -->
+    <pathconvert property="sfi.deploy.java-dir" dirsep="/">
       <path location="${sfi.deploy.dir}" />
     </pathconvert>
-
-    <property name="config" value="default" />
-    <loadresource property="sfi.config.propsPaths" >
-        <string>${config}</string>
-        <filterchain>
-          <tokenfilter delimoutput="\n">
-              <stringtokenizer />
-              <trim/>
-              <ignoreblank/>
-          </tokenfilter>
-          <prefixlines prefix="${conf.dir}/"/>
-          <suffixlines suffix=".properties" />
-          <tokenfilter delimoutput="${path.separator}" /> <!-- aggregate all lines in 1 -->
-          <replaceregex pattern="^(.*)\${path.separator}$$" replace="\1"/>
-          <!-- suppress last separator -->
-
-        </filterchain>
-    </loadresource>
-        
-    <loadproperties prefix="sfi" >
-        <concat>
-          <path path="${sfi.config.propsPaths}" />
-         </concat>
-    </loadproperties>
-  
-    <mkdir dir="${deploy.dir}" />
-    <!--                                                    -->
-    <!--    Convert properties sfi.* into filter values     -->
-    <!--                                                    -->
-    <tempfile property="command.dir" deleteonexit="false" destdir="${sfi.tmp.dir}" prefix="run" />  
-    <mkdir dir="${command.dir}" />
     
+  </target>
+
+  <target name="loadCustomConf">
+    <property name="config" value="default" />
+    
+    <!-- Convert config chain into resource path -->
+    <loadresource property="sfi.config.propsPaths">
+      <string>${config}</string>
+      <filterchain>
+        <tokenfilter delimoutput="\n">
+          <stringtokenizer />
+          <trim />
+          <ignoreblank />
+        </tokenfilter>
+        <prefixlines prefix="${conf.dir}/" />
+        <suffixlines suffix=".properties" />
+        <tokenfilter delimoutput="${path.separator}" /> <!-- aggregate all lines in 1 -->
+        <replaceregex pattern="^(.*)\${path.separator}$$" replace="\1" />
+        <!-- suppress last separator -->
+
+      </filterchain>
+    </loadresource>
+
+    <!-- Read config resources -->
+    <loadproperties prefix="sfi">
+      <concat>
+        <path path="${sfi.config.propsPaths}" />
+      </concat>
+    </loadproperties>
+  </target>
+
+
+  <target name="loadConfiguration" depends="loadMessages,loadSystemConf,loadMetaConf,loadCustomConf,setProxy" >
+
+    <mkdir dir="${deploy.dir}" />
+    <!-- -->
+    <!-- Convert properties sfi.* into filter values -->
+    <!-- -->
+    <tempfile property="command.dir" deleteonexit="false" destdir="${sfi.tmp.dir}" prefix="run" />
+    <mkdir dir="${command.dir}" />
+
     <property name="filter.file" location="${sfi.tmp.dir}/config.properties" />
 
     <!-- Creation of Filters -->
-    <echoproperties destfile="${filter.file}" >
+    <echoproperties destfile="${filter.file}">
       <propertyset>
         <propertyref prefix="sfi." />
         <mapper type="glob" from="sfi.*" to="*" />
@@ -155,38 +165,42 @@
     </echoproperties>
     <message name="showGeneratedConf" />
   </target>
-    
-  <target name="clean" >
+
+  <target name="clean">
     <delete dir="${deploy.dir}" />
   </target>
-  
-    
-  <target name="probeProxy" >
-    <condition property="proxy.enabled">
+
+
+  <target name="probeProxy">
+    <condition property="sfi.proxy.enabled">
       <and>
         <isset property="sfi.proxy.host" />
         <isreachable host="${sfi.proxy.host}" />
       </and>
     </condition>
+    <property name="sfi.proxy.port" value="80" /> <!-- force to valid integer -->
   </target>
 
-  <target name="setProxy" depends="probeProxy" if="proxy.enabled" >
+  <target name="doSetProxy" depends="probeProxy" if="sfi.proxy.enabled">
     <property name="sfi.proxy.port" value="80" />
     <property name="sfi.proxy.user" value="" />
     <property name="sfi.proxy.pass" value="" />
-    <setproxy proxyhost="${sfi.proxy.host}" proxyport="${sfi.proxy.port}"
-        proxyuser="${sfi.proxy.user}" proxypassword="${sfi.proxy.pass}" />
+    <setproxy proxyhost="${sfi.proxy.host}" proxyport="${sfi.proxy.port}" proxyuser="${sfi.proxy.user}"
+      proxypassword="${sfi.proxy.pass}" />
   </target>
 
-  
-  <target name="engine" depends="loadConfiguration,setProxy" >
+  <target name="setProxy" depends="probeProxy,doSetProxy">
+    <property name="sfi.proxy.enabled" value="false" /> <!-- if not set -->
+  </target>
+
+
+  <target name="engine" depends="loadConfiguration">
     <fail unless="command" message="command is required" />
-    <!-- load the sequence file  -->
-    <property name="commands.file" 
-        location="${meta-cmd.dir}/${command}.modules" />
-    
-    <!-- Converting command in temporary folder : pseudo-for  -->
-    <touch mkdirs="true" verbose="false" >
+    <!-- load the sequence file -->
+    <property name="commands.file" location="${meta-cmd.dir}/${command}.modules" />
+
+    <!-- Converting command in temporary folder : pseudo-for -->
+    <touch mkdirs="true" verbose="false">
       <resourcelist>
         <file file="${commands.file}" />
         <filterchain>
@@ -202,16 +216,14 @@
         </filterchain>
       </resourcelist>
     </touch>
-    <echo file="${sfi.exeResume}" >resume=${commands.file}&#xA;</echo>
+    <echo file="${sfi.exeResume}">resume=${commands.file}&#xA;</echo>
 
-    
+
     <!-- Running commands -->
-    <subant genericantfile="${ant.file.sfi-engine}" target="execCommand" inheritall="true" >
-      <resourcelist> 
-        <!-- Note:
-        to keep order, we must use ${commands.file} and resourceList.
-        Reading generated folder will not give us the order of execution.
-        -->
+    <subant genericantfile="${ant.file.sfi-engine}" target="execCommand" inheritall="true">
+      <resourcelist>
+        <!-- Note: to keep order, we must use ${commands.file} and resourceList. Reading generated folder 
+          will not give us the order of execution. -->
         <file file="${commands.file}" />
         <filterchain>
           <ignoreblank />
@@ -223,24 +235,23 @@
           </tokenfilter>
           <prefixlines prefix="${command.dir}/" />
         </filterchain>
-      </resourcelist>      
+      </resourcelist>
     </subant>
 
-    <delete includeEmptyDirs="true" >
+    <delete includeEmptyDirs="true">
       <fileset dir="${sfi.tmp.dir}" excludes="config.properties" />
     </delete>
   </target>
-  
 
-    
-  <target name="exec" >
+
+
+  <target name="exec">
     <input message="Commands of modules to execute ?" addproperty="modules" />
 
     <!-- Creating a temporary command file -->
-    <tempfile property="commands.file" 
-        destDir="${sfi.tmp.dir}" prefix="exec" suffix=".modules" />
-    
-    <concat destfile="${commands.file}" >
+    <tempfile property="commands.file" destDir="${sfi.tmp.dir}" prefix="exec" suffix=".modules" />
+
+    <concat destfile="${commands.file}">
       <resources>
         <string value="${modules}" />
       </resources>
@@ -250,14 +261,14 @@
         </tokenfilter>
       </filterchain>
     </concat>
-    
+
     <!-- Running commands -->
-    <antcall target="engine" >
+    <antcall target="engine">
       <param name="command" value="exec" />
     </antcall>
     <delete file="${commands.file}" />
   </target>
-  
 
-    
+
+
 </project>

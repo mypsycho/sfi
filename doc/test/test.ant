@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sfi-test" basedir=".." >
+<project name="sfi-test" basedir="../.." >
 
-  <property file="test/test.properties" />
+  <property file="${ant.file.sfi-test}/../test.properties" />
     
   <macrodef name="run" >
     <attribute name="name" />
@@ -26,11 +26,9 @@
   <target name="shutdown" ><run name="shutdown" /></target>
 
   <target name="testCommand" >
-      <ant antfile="${basedir}/bin/engine/engine.ant" target="exec" >
-        <property name="modules" value="${tested}" />
-      </ant>
+      <ant antfile="${basedir}/bin/engine/engine.ant" target="exec" />
   </target>
     
-  <target name="testModule" ><run name="../../test/test" /></target>
+  <target name="testModule" ><run name="../../doc/test/test" /></target>
 
 </project>

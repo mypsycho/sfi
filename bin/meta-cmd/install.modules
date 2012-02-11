@@ -39,11 +39,9 @@ directory.build
 dataBase.startup
 
 issueTool.init
-# Redmine build must be performed after init
 issueTool.build
-
 qualityTool.init
-
+#codereview.init
 
 server.startup
 directory.secure
