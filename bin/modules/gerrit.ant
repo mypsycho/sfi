@@ -5,9 +5,10 @@
 
   <property name="repo.dir" location="repository" />
   <property name="deploy.dir" location="deploy" />
-  <property name="sfi.codereview.install.todir" location="${deploy.dir}/tomcat/webapps" />
+  <property name="sfi.codereview.install.todir" location="apache-tomcat/webapps" />
   <property name="sfi.codereview.install.tofile" value="gerrit.war" />
   <property name="sfi.codereview.site" value="gerrit-site" />
+  <property name="sfi.codereview.jar" value="${deploy.dir}/${sfi.codereview.install.todir}/${sfi.codereview.install.tofile}" />
 
   <property name="sfi.dataBase.exec" value="${sfi.dataBase.name}.ant" />
   <import file="${sfi.basedir}/bin/modules/${sfi.dataBase.exec}" />
@@ -17,8 +18,10 @@
     <createSchema schema="reviewdb" options="CHARACTER SET latin1"
         user="${sfi.gerrit.db.user}" password="${sfi.gerrit.db.password}" />
 
-    <java jar="${sfi.codereview.install.todir}/${sfi.codereview.install.tofile}" fork="true">
-
+      <echo>${sfi.codereview.install.todir}/${sfi.codereview.install.tofile}</echo>
+    <java jar="${sfi.codereview.jar}" fork="true">
+      <arg value="init"/>
+      <arg value="--batch"/>
       <arg value="--no-auto-start"/>
       <arg value="--site-path"/><arg file="${deploy.dir}/${sfi.codereview.site}" />
     </java>

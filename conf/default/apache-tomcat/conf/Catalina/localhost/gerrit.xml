@@ -1,0 +1,10 @@
+<Context antiJARLocking="true" antiResourceLocking="true">
+  
+  <Resource name="jdbc/ReviewDB" auth="Container" type="javax.sql.DataSource"
+      maxActive="100" maxIdle="30" maxWait="10000"
+      driverClassName="@db.driver@"
+      username="@gerrit.db.user@" 
+      password="@gerrit.db.password@" 
+      url="@db.url.root@/reviewdb?autoReconnect=true" />
+
+</Context>

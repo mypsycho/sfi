@@ -1,4 +1,7 @@
-runtime.download-drivers
+#runtime.download-drivers
+#codereview.drivers
+#dataBase.startup
+
+codereview.install
 codereview.drivers
-dataBase.startup
 codereview.init
