@@ -1,3 +1,3 @@
 ${sfi.scm.download.baseurl}/sonia/scm/plugins/scm-auth-ldap-plugin/1.9/scm-auth-ldap-plugin-1.9.jar>sonia/scm/plugins/scm-auth-ldap-plugin/1.9/scm-auth-ldap-plugin-1.9.jar
-${sfi.scm.download.baseurl}/sonia/scm/plugins/scm-jenkins-plugin/1.2/scm-jenkins-plugin-1.2.jar>/sonia/scm/plugins/scm-jenkins-plugin/1.2/scm-jenkins-plugin-1.2.jar
+${sfi.scm.download.baseurl}/sonia/scm/plugins/scm-jenkins-plugin/1.2/scm-jenkins-plugin-1.2.jar>sonia/scm/plugins/scm-jenkins-plugin/1.2/scm-jenkins-plugin-1.2.jar
 

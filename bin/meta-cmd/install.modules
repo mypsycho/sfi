@@ -23,8 +23,8 @@ scm.plugins
 scm.install-git
 scm.install-svn
 
-#codereview
-#codereview.drivers
+codereview
+codereview.drivers
 
 # Copy the configuration items
 runtime.configure
@@ -41,7 +41,8 @@ dataBase.startup
 issueTool.init
 issueTool.build
 qualityTool.init
-#codereview.init
+codereview.init
+
 
 server.startup
 directory.secure

@@ -2,6 +2,9 @@
 #codereview.drivers
 #dataBase.startup
 
-codereview.install
-codereview.drivers
-codereview.init
+scm.download
+scm.download-plugins
+scm.download-git
+scm.download-svn
+codereview.download
+ldapClient.download
