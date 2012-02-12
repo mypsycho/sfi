@@ -1,2 +1,2 @@
-JAVA jdk1.6.0_25
+JAVA jdk1.6.0_30
 ANT apache-ant-1.8.2
