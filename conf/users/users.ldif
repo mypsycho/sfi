@@ -23,6 +23,14 @@ cn: nico p
 mail: p.nico@mycompany.com
 userPassword: pnico
 
+# Define a user entry for Nico
+dn: uid=jenkinsci0,${sfi.ldap.user.base}
+objectClass: inetOrgPerson
+sn: Jenkins
+gn: CI agent
+cn: Jenkins CI
+mail: noMail@nowhere.com
+userPassword: jenkinsci0
 
 # Define a user entry for Janet Jones
 dn: uid=jjones,${sfi.ldap.user.base}

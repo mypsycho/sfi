@@ -28,6 +28,11 @@
       <map from="${jgit.home}" to="." />
     </pathconvert>
       
+    <echo>
+        jgit.home = ${jgit.home}
+        jar.classpath = ${jar.classpath}
+    </echo>
+      
     <jar destfile="${jgit.home}/jgit-cli.jar" excludes="**/*" >
       <manifest>
         <attribute name="Main-Class" value="org.eclipse.jgit.pgm.Main" />

@@ -119,9 +119,12 @@ default:
   # scm_darcs_command:      darcs-1.0.9-i386-linux                    # (default: darcs)
   
   # Ambiguous approach is resolve by plateform specificities
-  scm_subversion_command: @deploy.dir@/tools/svn/jsvn
+  scm_subversion_command: @deploy.dir@/tools/svnkit/svn
+  # see svn kit compatibility at http://svnkit.com/documentation.html
+  scm_subversion_version: 1.6.5
   scm_mercurial_command: 
-  scm_git_command:        @deploy.dir@/tools/git/jgit
+  scm_git_command:        @deploy.dir@/tools/jgit/git
+  scm_subversion_version: 
   scm_cvs_command:
   scm_bazaar_command:
   scm_darcs_command:

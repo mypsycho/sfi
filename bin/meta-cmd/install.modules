@@ -18,10 +18,13 @@ repositoryTool
 issueTool
 issueTool.plugins
 
+# Note: exe wrappers are only required for Windows
 scm
 scm.plugins
 scm.install-git
+scm.install-git-exe
 scm.install-svn
+scm.install-svn-exe
 
 codereview
 codereview.drivers

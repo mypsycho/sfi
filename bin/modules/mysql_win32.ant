@@ -6,21 +6,22 @@
 
     
     <target name="startQuiet" if="noConsole" >
+        <echo>No console</echo>
         <exec executable="${mysql.binaries.dir}/mysqld.exe" dir="${mysql.base.dir}" spawn="true" >
-            <arg value="--console"/>
             <arg value="--log-error"/>
             <arg value="--basedir=${mysql.base.dir}" />
         </exec>
     </target>
     
     <target name="startConsole" unless="noConsole">
+        <echo>With console</echo>
         <exec executable="cmd" dir="${mysql.base.dir}" >
             <arg value="/c"/>
             <arg value="start"/> <arg value="&quot;mysql&quot;"/> <arg value="/min" />
              <!-- eq. spawn in a console -->
             <arg file="${mysql.binaries.dir}/mysqld.exe" />
             <arg value="--console"/>
-            <arg value="--log-error"/>
+            <!--arg value="- -log-error"/-->
             <arg value="--basedir=${mysql.base.dir}" />
         </exec>
     </target>

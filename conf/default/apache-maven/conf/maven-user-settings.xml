@@ -229,6 +229,14 @@ under the License.
         <svn.url>https://${svn.user}:${svn.password}@${svn.server}/${svn.path}</svn.url>
         <scm.root.url>scm:svn:${svn.url}</scm.root.url>
         
+        <scm.server>localhost</scm.server>
+        <scm.port>@server.port@</scm.port>
+        <scm.path>/scm/</scm.path>
+        <scm.user>x</scm.user>
+        <scm.password>x</scm.password>
+        <scm.urlbase>http://${svn.user}:${svn.password}@${svn.server}:${svn.port}${svn.path}</scm.urlbase>
+        <svn.urlbase>scm:svn:${svn.url}</svn.urlbase>
+        
       </properties>
       
       <repositories>

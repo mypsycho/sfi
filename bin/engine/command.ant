@@ -136,7 +136,8 @@
     </subant>
   </target>
 
-
+  <!-- Neutral target : used when an action is required only by some plateforms -->  
+  <target name="module.noop" /> 
   <target name="module.move" if="module.exec.tofile">
     <property name="module.exec.output" value="${module.exec.fromfile}" />
     <message name="exec.move" />
