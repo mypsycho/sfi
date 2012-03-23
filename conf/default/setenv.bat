@@ -22,7 +22,7 @@ set ANT_HOME=@ant.home@
 set GIT_HOME=@deploy.dir@\tools\jgit
 set SVN_HOME=@deploy.dir@\tools\svnkit
 
-set PATH=%SVN_HOME%;%GIT_HOME%;%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
+set PATH=%SVN_HOME%\bin;%GIT_HOME%;%M2_HOME%\bin;%JAVA_HOME%\bin;%RUBY_HOME%\bin;%ANT_HOME%\bin;%PATH%
 
 set RAILS_ENV=production
 

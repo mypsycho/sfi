@@ -71,9 +71,10 @@ Warbler::Config.new do |config|
   # config.gems["rails"] = "2.0.2"
   config.gems["rails"] = "2.3.14"
   
-  config.gems += ["rack","activerecord-jdbc-adapter","i18n"]
+  config.gems += ["rack","activerecord-jdbc-adapter","i18n","jruby-openssl"]
   config.gems["rack"] = "1.1.1"
   config.gems["i18n"] = "0.4.2"
+  
   
   # You can also use regexps or Gem::Dependency objects for flexibility or
   # fine-grained control.

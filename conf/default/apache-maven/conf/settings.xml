@@ -170,16 +170,7 @@ under the License.
       <url>http://my.repository.com/repo/path</url>
     </mirror>
      -->
-     <!-- sfi-comment: declare artifactory as mirror -->
-    <!--mirror> 
-      <id>artifacory</id>
-      <mirrorOf>*</mirrorOf>
-      <name>The proxy repository Archifactory</name>
-      <url>http://localhost:@server.port@/artifactory/repo</url>
-    </mirror-->
      
-
-
     <mirror>
       <id>Nexus</id>
       <name>Your Nexus Public Mirror</name>
@@ -224,18 +215,10 @@ under the License.
         <sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
 
         <!-- tools -->
-        <sonar.host.url>${main.server.url}/sonar</sonar.host.url>
-        <deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
-        <ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
-        <issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
+        <distrib.url.root>${main.server.url}/nexus/content/repositories</distrib.url.root>
         
-        <scm.server>localhost</scm.server>
-        <scm.port>@server.port@</scm.port>
-        <scm.path>/scm/</scm.path>
         <scm.user>jenkinsci0</scm.user>
         <scm.password>jenkinsci0</scm.password>
-        <scm.urlbase>http://${svn.user}:${svn.password}@${svn.server}:${svn.port}${svn.path}</scm.urlbase>
-        <svn.urlbase>scm:svn:${svn.url}</svn.urlbase>
         
       </properties>
 
@@ -260,7 +243,7 @@ under the License.
         <repository>
           <id>thirdparty</id>
           <name>3rd party repo</name>
-          <url>${deploy.url.root}/thirdparty</url>
+          <url>${distrib.url.root}/thirdparty</url>
         </repository>
         
         <repository>
@@ -269,36 +252,17 @@ under the License.
           </snapshots>
           <id>releases</id>
           <name>releases repo</name>
-          <url>${deploy.url.root}/releases</url>
+          <url>${distrib.url.root}/releases</url>
         </repository>
         
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>snapshots repo</name>
-          <url>${deploy.url.root}/snapshots</url>
+          <url>${distrib.url.root}/snapshots</url>
         </repository>
         
       </repositories>
-      
-      <pluginRepositories>
-      <!--
-        <pluginRepository>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <id>central</id>
-          <name>plugins-releases</name>
-          <url>http://localhost:@server.port@/artifactory/plugins-releases</url>
-        </pluginRepository>
-        <pluginRepository>
-          <snapshots />
-          <id>snapshots</id>
-          <name>plugins-snapshots</name>
-          <url>http://localhost:@server.port@/artifactory/plugins-snapshots</url>
-        </pluginRepository>
-        -->
-      </pluginRepositories>
       
     </profile>
 

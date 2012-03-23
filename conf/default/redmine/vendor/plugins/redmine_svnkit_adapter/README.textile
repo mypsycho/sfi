@@ -1,0 +1,31 @@
+h1. Redmine SVNKit Plugin
+
+This plugin overrides the default Redmine Subversion adapter to make 
+it use the free SVNKit java library from TMate Software instead of 
+calling svn command line client.
+
+h2. Requirements
+
+This plugin has the following requirements:
+* Redmine deployment using JRuby (I use the glassfish GEM)
+* the free SVNKit java library from TMate Software
+  (get it at http://www.svnkit.com)
+
+h2. Installation and Setup
+
+General instructions can be found in the Redmine online documentation 
+(http://www.redmine.org/wiki/redmine/Plugins).
+Additionally you need to copy the following JAR files from the SVNKit 
+distribution to the ./lib folder in the plugin directory
+(usually $REDMINE_ROOT/vendor/plugins/redmine_svnkit) :
+* svnkit.jar
+* trilead.jar
+* [jna.jar] (optionally; see SVNKit documentation for more info)
+
+The adapter has been tested with Redmine >= 0.9 and SVNKit 1.3.2.
+
+h2. Usage
+
+Once the plugin is installed, all subversion repositories are accessed
+through SVNKit. 
+

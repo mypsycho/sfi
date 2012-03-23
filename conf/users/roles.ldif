@@ -85,21 +85,20 @@ uniqueMember: ${sfi.ldap.bind.dn}
 
 ##
 ##  Nexus management
-## 
+##   note : mapping on existing roles
 
-# mapping on existing roles
 dn: ou=nexus,${sfi.ldap.group.base}
 objectClass: organizationalUnit
 
-dn: cn=admin,ou=nexus,${sfi.ldap.group.base}
+dn: cn=nx-admin,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 uniqueMember: ${sfi.ldap.bind.dn}
 
-dn: cn=deployment,ou=nexus,${sfi.ldap.group.base}
+dn: cn=nx-deployment,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 uniqueMember: ${sfi.ldap.bind.dn}
 
-dn: cn=developer,ou=nexus,${sfi.ldap.group.base}
+dn: cn=nx-developer,ou=nexus,${sfi.ldap.group.base}
 objectClass: groupOfUniqueNames
 uniqueMember: ${sfi.ldap.bind.dn}
 

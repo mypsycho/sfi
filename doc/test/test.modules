@@ -12,14 +12,14 @@
 #runtime.configure
 #scm.install-git
 #scm.install-git-exe
+
+
+#issueTool.download-plugins
+#scm.download-svn
 #scm.install-svn
 #scm.install-svn-exe
 
 
+issueTool.plugins
+issueTool.scm-svn
 issueTool.init
-issueTool.build
-qualityTool.init
-codereview.init
-
-
-server.startup

@@ -114,10 +114,14 @@ under the License.
   
     <server>
       <id>releases</id>
+      <username>[x]</username>
+      <password>[y]</password>      
     </server>
     
     <server>
       <id>snapshots</id>
+      <username>[x]</username>
+      <password>[y]</password>      
     </server>
     
     <!-- server
@@ -216,26 +220,14 @@ under the License.
         <sonar.jdbc.password>@sonar.db.password@</sonar.jdbc.password>
 
         <!-- tools -->
-        <sonar.host.url>${main.server.url}/sonar</sonar.host.url>
-        <deploy.url.root>${main.server.url}/nexus/content/repositories</deploy.url.root>
-        <ciManagement.url.root>${main.server.url}/jenkins</ciManagement.url.root>
-        <issueManagement.url.root>${main.server.url}/redmine/projects</issueManagement.url.root>
+        <distrib.url.root>${main.server.url}/nexus/content/repositories</distrib.url.root>
+
+        <sonar.url>${main.server.url}/sonar</sonar.url>
+        <releases.url.default>${main.server.url}/nexus/content/repositories/releases</releases.url.default>
+        <snapshots.url.default>${main.server.url}/nexus/content/repositories/releases</snapshots.url.default>
         
-        <svn.server>@hostinfo.NAME@</svn.server>
-        <svn.port>443</svn.port>
-        <svn.path>/svn/soft_factory</svn.path>
-        <svn.user>x</svn.user>
-        <svn.password>x</svn.password>
-        <svn.url>https://${svn.user}:${svn.password}@${svn.server}/${svn.path}</svn.url>
-        <scm.root.url>scm:svn:${svn.url}</scm.root.url>
-        
-        <scm.server>localhost</scm.server>
-        <scm.port>@server.port@</scm.port>
-        <scm.path>/scm/</scm.path>
-        <scm.user>x</scm.user>
-        <scm.password>x</scm.password>
-        <scm.urlbase>http://${svn.user}:${svn.password}@${svn.server}:${svn.port}${svn.path}</scm.urlbase>
-        <svn.urlbase>scm:svn:${svn.url}</svn.urlbase>
+        <scm.user>[x]</scm.user>
+        <scm.password>[y]</scm.password>
         
       </properties>
       
@@ -244,7 +236,7 @@ under the License.
         <repository>
           <id>thirdparty</id>
           <name>3rd party repo</name>
-          <url>${deploy.url.root}/thirdparty</url>
+          <url>${distrib.url.root}/thirdparty</url>
         </repository>
         
         <repository>
@@ -253,14 +245,14 @@ under the License.
           </snapshots>
           <id>releases</id>
           <name>releases repo</name>
-          <url>${deploy.url.root}/releases</url>
+          <url>${distrib.url.root}/releases</url>
         </repository>
         
         <repository>
           <snapshots />
           <id>snapshots</id>
           <name>snapshots repo</name>
-          <url>${deploy.url.root}/snapshots</url>
+          <url>${distrib.url.root}/snapshots</url>
         </repository>
         
       </repositories>

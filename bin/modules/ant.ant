@@ -20,7 +20,7 @@
     </classpath>
   </taskdef>
     
-  <!-- We use  < and > beacuse they cannot be used in url or path -->
+  <!-- We use  < and > because they cannot be used in url or path -->
   <target name="module.downloads" >
     <assert name="missingUrl">
       <isset property="module.exec.urls" />

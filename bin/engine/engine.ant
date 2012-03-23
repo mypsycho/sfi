@@ -48,7 +48,7 @@
     <loadproperties prefix="message">
       <concat fixlastline="true"> <!-- Concatenation provides post-redefinition -->
         <resources>
-          <file file="${binaries.dir}/engine/messages.properties" /> <!-- This one required -->
+          <file file="${binaries.dir}/engine/messages.properties" /> <!-- This one is required -->
           <fileset file="${binaries.dir}/engine/messages_${user.language}.properties" />
           <fileset file="${binaries.dir}/engine/messages_${user.language}_${user.country}.properties" />
         </resources>

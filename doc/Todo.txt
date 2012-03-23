@@ -1,3 +1,28 @@
 Create a system user in:
 - jenkins (from redmine)
 - scm (from redmine, jenkins)
+
+in svnkit adapter
+
+getType return 64 not 'A'
+
+      def handleLogEntry(le)
+        begin
+          paths = le.getChangedPaths.collect do |path, lepath|   ## path=String, lepath=SVNLogEntryPath
+            { :action => lepath.getType,
+              :path => path,
+              :from_path => lepath.getCopyPath,
+              :from_revision => lepath.getCopyRevision.to_s }
+          end
+          paths.sort! { |x,y| x[:path] <=> y[:path] }
+          @revisions << Revision.new({:identifier => le.getRevision.to_s,
+                                      :author => le.getAuthor,
+                                      :time => Time.parse(le.getDate.toString).localtime,
+                                      :message => le.getMessage,
+                                      :paths => paths
+                                    })
+        rescue
+          logger.error("#{$!}\n#{$!.backtrace.join("\n")}")
+          raise
+        end
+      end

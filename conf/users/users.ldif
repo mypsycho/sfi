@@ -29,7 +29,7 @@ objectClass: inetOrgPerson
 sn: Jenkins
 gn: CI agent
 cn: Jenkins CI
-mail: noMail@nowhere.com
+mail: noMail@nowhere.net
 userPassword: jenkinsci0
 
 # Define a user entry for Janet Jones

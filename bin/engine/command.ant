@@ -242,16 +242,18 @@
       <or>
         <isset property="module.exec.fromfile" />
         <isset property="module.exec.fromdir" />
+        <isset property="module.exec.fromfulldir" />
       </or>
     </assert>
 
     <property name="module.exec.fromfile" value="**/*" />
     <property name="module.exec.fromdir" value="." />
     <property name="module.exec.todir" value="." />
+    <property name="module.exec.fromfulldir" value="${repo.dir}/${module.exec.fromdir}" />
         
     <assert name="emptyFrom" >
       <resourcecount when="greater" count="0" >
-        <fileset dir="${repo.dir}/${module.exec.fromdir}" includes="${module.exec.fromfile}" />
+        <fileset dir="${module.exec.fromfulldir}" includes="${module.exec.fromfile}" />
       </resourcecount>
     </assert>
   </target>
@@ -262,7 +264,7 @@
     <message name="exec.copy" />
     <mkdir dir="${deploy.dir}/${module.exec.todir}" />
     <copy todir="${deploy.dir}/${module.exec.todir}" overwrite="true">
-      <fileset dir="${repo.dir}/${module.exec.fromdir}" includes="${module.exec.fromfile}" />
+      <fileset dir="${module.exec.fromfulldir}" includes="${module.exec.fromfile}" />
     </copy>
 
     <!-- Set the expected name -->
@@ -279,7 +281,7 @@
     <property name="module.exec.compress[${module.exec.compress}]" value="" />
       
     <unzip dest="${deploy.dir}/${module.exec.todir}" overwrite="true">
-      <fileset dir="${repo.dir}/${module.exec.fromdir}">
+      <fileset dir="${module.exec.fromfulldir}">
         <or>
           <selector unless="module.exec.compress" >
             <and>
@@ -296,7 +298,7 @@
       </fileset>
     </unzip>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="none" overwrite="true">
-      <fileset dir="${repo.dir}/${module.exec.fromdir}">
+      <fileset dir="${module.exec.fromfulldir}">
         <or>
           <selector unless="module.exec.compress" >
             <and>
@@ -311,7 +313,7 @@
       </fileset>
     </untar>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="gzip" overwrite="true">
-      <fileset dir="${repo.dir}/${module.exec.fromdir}">
+      <fileset dir="${module.exec.fromfulldir}">
         <or>
           <selector unless="module.exec.compress" >
             <and>
@@ -326,7 +328,7 @@
       </fileset>
     </untar>
     <untar dest="${deploy.dir}/${module.exec.todir}" compression="bzip2" overwrite="true">
-      <fileset dir="${repo.dir}/${module.exec.fromdir}">
+      <fileset dir="${module.exec.fromfulldir}">
         <or>
           <selector unless="module.exec.compress" >
             <and>

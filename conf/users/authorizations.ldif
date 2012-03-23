@@ -13,6 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Jenkins user should be able to commit
+dn: cn=admin,ou=scm,${sfi.ldap.group.base}
+changetype: modify
+add: uniqueMember
+uniqueMember: uid=jenkinsci0,${sfi.ldap.user.base}
+
 
 # Define tomcat admin
 dn: cn=manager,ou=tomcat,${sfi.ldap.group.base}
@@ -33,7 +39,7 @@ add: uniqueMember
 uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
 
 # Define nexus admin
-dn: cn=admin,ou=nexus,${sfi.ldap.group.base}
+dn: cn=nx-admin,ou=nexus,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
 uniqueMember: uid=${sfi.admin.uid},${sfi.ldap.user.base}
@@ -52,3 +58,4 @@ dn: cn=commit,ou=scm,${sfi.ldap.group.base}
 changetype: modify
 add: uniqueMember
 uniqueMember: uid=jjones,${sfi.ldap.user.base}
+

@@ -5,10 +5,13 @@
     <import file="${ant.file.Apache-Tomcat-Win32}/../apache-tomcat.ant" />
 
     <target name="startup" depends="startQuiet,startConsole" >
-        <echo>Wait for Server to start (~${tomcat.startup.delay}s)</echo>
+        <tstamp> <format property="start.time" pattern="HH:mm:ss" /> </tstamp>
+        <echo>Wait for Server to start (at least ${tomcat.startup.delay}s) at ${start.time}</echo>
         <sleep seconds="${tomcat.startup.delay}" />
         <tempfile prefix="tomcat" property="tomcat.run" deleteonexit="true"/>
         <get dest="${tomcat.run}" src="http://localhost:${sfi.server.port}"/>
+        <tstamp> <format property="started.time" pattern="HH:mm:ss" /> </tstamp>
+        <echo>Server started at ${started.time}</echo>
     </target>
 
 

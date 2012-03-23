@@ -13,6 +13,8 @@
     
     <property name="sfi.redmine.lang" value="${user.language}" />
     
+    
+
     <target name="init" >
         <createSchema schema="redmine" user="${sfi.redmine.db.user}" password="${sfi.redmine.db.password}" /> 
         

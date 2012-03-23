@@ -23,7 +23,7 @@ export GIT_HOME=@deploy.dir@/tools/jgit
 export SVN_HOME=@deploy.dir@/tools/svnkit
 
 
-export PATH=$SVN_HOME;$GIT_HOME;$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$ANT_HOME/bin;$PATH
+export PATH=$SVN_HOME/bin;$GIT_HOME;$M2_HOME/bin;$JAVA_HOME/bin;$RUBY_HOME/bin;$ANT_HOME/bin;$PATH
 
 export RAILS_ENV=production
 

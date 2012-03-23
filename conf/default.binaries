@@ -1,0 +1,2 @@
+redmine/vendor/plugins/redmine_svnkit_adapter/init.rb
+redmine/vendor/plugins/redmine_svnkit_adapter/lib/redmine/scm/adapters/subversion_svnkit_adapter.rb
